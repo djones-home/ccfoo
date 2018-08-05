@@ -28,7 +28,9 @@ ln -s `pwd`/bin/ccfoo.js  $HOME/bin/ccfoo
 
 NPM is really interesting. I think it could do all the above  with it's features. 
 
-To exercise the commander cli code, I use bash and "ccfoo config" commands:
+To exercise the commander cli code, I will make the following bash function, which use  "ccfoo config" commands, and borrow settings from the azure-cli config.
+Assuming you have been working with the "az" command, it
+will have created the .azure folder and content.
 
 ````bash
 setupConfig() {
@@ -44,7 +46,7 @@ cleanConfig() {
    ccfoo config show
 }
 ````
-Forexample, the first function removes my local config, and then showes defaults that are wired into the node package lib/settings.js file:
+Forexample, the first function removes my local ccfoo-config, and then showes defaults that are wired into the ccfoo node package ( in lib/settings.js).
 
 
 ````bash
@@ -59,9 +61,7 @@ dj@dj15:~$ cleanConfig
 }
 ''''
 
-Incidently none of thise settings apply to Azure - they are for another tool. 
-
-Now take the settings from the CLI - just rob it blind!
+Now take the settings from the azure-cli - just robbing it blind :-),
 
 ````bash
 dj@dj15:~$ cleanConfig >/dev/null; setupConfig
