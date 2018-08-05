@@ -5,28 +5,26 @@ const path = require("path");
 var config = require('../lib/settings');
 //var cidata = require('../lib/cidata')
 //var cache = require('../lib/cache')
-var inquirer =  require('inquirer-promise')
+//var inquirer =  require('inquirer-promise')
+const package = require('../package')
+const subject = __filename.split('-').pop()
 
-var basePath,  program
-
-// path to the package install folder, or cwd if repl
-// later.. I will  move to a module, where __filename is alway defined by wrapper function.
-var basePath = (typeof __filename === 'undefined') ?  process.cwd() : path.dirname(fs.realpathSync(__filename));
-
-
-// Define the program options,  action-based sub-commands, and exec (serached for) sub-command.
+// Define the program globals
+// const program = require('..lib/commanderGlobals')
 var program = require('commander') 
- .version('0.1.0')
- .option('-p --profile <Name>', 'provider profile name', process.env.CCFOO_PROFILE)
+ .version(package.version)
+ .option('-p --profile <Name>', 'provider profile name', 
+    process.env[package.name.toUpperCase() + "_PROFILE"]
  .option('-d --ciData <dataFile>', 'CIDATA project settings', process.env.CIDATA)
  .option('-c --config <path>', 'Config', config.path )
  .option('-D --debug', 'Debug messages')
+ .option('-B --bash-completions', 'Generate bash-completion functions')
 
 // exec (external) commands
-var execCmds = [ "network", "vm", "storage", "security", 'bash-completion' ]
+var execCmds = [ "network", "vm", "storage", "security",  'user' ]
 execCmds.sort().forEach( n=>{
   // name an exec command, like: ./bin/ccfoo-$n.js 
-  program.command(n, `Run sub-command ${n} (sloppy help line.. I know, sorry)`)
+  program.command(n, `Act on ${n} subjects`)
 })  
 
 // action (built-in) commands 
@@ -55,5 +53,30 @@ program.command('config <cmd> [key] [value]')
         process.exit(1)
     }
   })
+
+// Hide dev/test command with an environment variable.
+if (process.env.DEVTEST) {
+   process.env.DEVTEST.trim().split(" ").forEach( n=>{
+   // name an exec command, like: ./bin/ccfoo-$n.js 
+   program.command(n, `Act on ${n} subjects`)
+  })  
+  program.command('test <task> [arg]')
+   .description( "Test/developer function")
+   .action( (task, arg, options)=>{
+      let tasks = [ "login" ]
+      program.debug && console.log('task:',task,'\narg: ', arg,'\noptions: ', options)
+      let o = config
+      let settings = o.localSettingsFile
+      o.deleteSettingsFile
+      switch (task) {
+        case 'login' :
+          console.log(JSON.stringify(config, null,2))
+          break;
+        default : 
+          console.error(`ERROR: unknown task: ${task}\n select from: ${tasks.join(", ")}` )
+          process.exit(1)
+      }
+    })
+}
 program.parse(process.argv);
 
