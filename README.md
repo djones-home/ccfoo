@@ -26,11 +26,10 @@ cd ccfoo && npm install &&
 ln -s `pwd`/bin/ccfoo.js  $HOME/bin/ccfoo
 ````
 
-NPM is really interesting. I think it could do all the above  with it's features. 
+NPM could easily done the above too. 
 
-To exercise the commander cli code, I will make the following bash function, which use  "ccfoo config" commands, and borrow settings from the azure-cli config.
-Assuming you have been working with the "az" command, it
-will have created the .azure folder and content.
+To exercise the commander cli code, I  make the following bash two function, which will run  "ccfoo config" commands,  borrow settings from the azure-cli config.
+
 
 ````bash
 setupConfig() {
@@ -61,7 +60,7 @@ dj@dj15:~$ cleanConfig
 }
 ````
 
-Now take the settings from the azure-cli - just robbing it blind :-),
+Now take my settings from the azure-cli - just robbing it blind :-),
 
 ````bash
 dj@dj15:~$ cleanConfig >/dev/null; setupConfig
@@ -89,3 +88,8 @@ dj@dj15:~$ vi ~/.config/ccfoo/config.json
 
 
 ````
+
+# Now what?
+Back to the bin folder I have a ccfoo-vm.js script to work. It just has a stub now:
+
+![](images/Screenshot_2018-08-04_20-11-42.png)
