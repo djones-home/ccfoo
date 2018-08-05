@@ -59,7 +59,7 @@ dj@dj15:~$ cleanConfig
   "uri": "/widget",
   "localSettingsFile": "/home/jondoe/.config/ccfoo/config.json"
 }
-''''
+````
 
 Now take the settings from the azure-cli - just robbing it blind :-),
 
