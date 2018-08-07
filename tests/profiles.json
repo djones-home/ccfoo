@@ -6,7 +6,7 @@
         "a" : { "foo": "bar-a", "infoA": "profile-a"},
         "b" : { "foo": "bar-b", "Profiles": [ "c", "d" ], "infoB": "profile-b"},
         "c" : { "foo": "bar-c", "image": "rebeliousOne", "infoC": "profile-c nested in b"},
-        "d" : { "Profiles" : [ "b", "d"] }
+        "d" : { "Profiles" : [ "b", "d"], "infoD": "nest b, cyclic to d" }
     },
     "subjectRoles": {
         "x": { "foo": "barx", "role": "x"},
