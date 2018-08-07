@@ -1,18 +1,15 @@
 const config = require('../lib/settings')
 
-// From Steve Strong:
+// See Steve Strong email: this code will work, Thu 8/2/2018 12:48 PM
 const msRestAzure = require("ms-rest-azure");
 
 const { ComputeManagementClient } = require("azure-arm-compute");
 
- 
 const AzureEnvironment = msRestAzure.AzureEnvironment;
-
- 
 
 const clientId = process.env.CLIENT_ID || config.CLIENT_ID || "";
 
-const secret = process.env.APPLICATION_SECRET || config.AZURE_PASSWORD || "";
+const secret = process.env.APPLICATION_SECRET || config.APPLICATION_SECRET || "";
 
 const domain = process.env.DOMAIN || config.DOMAIN || "";
 

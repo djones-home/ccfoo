@@ -49,8 +49,7 @@ program.command('config <cmd> [key] [value]')
         fs.writeFileSync( settings, JSON.stringify(o, null, 2), 'utf8')
         break;
       default : 
-        console.error("ERROR: unknown cmd: " + cmd )
-        process.exit(1)
+        throw new Error(`unknown cmd: ${cmd}` )
     }
   })
 
@@ -73,8 +72,7 @@ if (process.env.DEVTEST) {
           console.log(JSON.stringify(config, null,2))
           break;
         default : 
-          console.error(`ERROR: unknown task: ${task}\n select from: ${tasks.join(", ")}` )
-          process.exit(1)
+          throw new Error(`unknown task: ${task}\n select from: ${tasks.join(", ")}`)
       }
     })
 }

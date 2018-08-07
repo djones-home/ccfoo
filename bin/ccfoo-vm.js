@@ -45,8 +45,7 @@ program.command('config <cmd> [key] [value]')
         fs.writeFileSync( settings, JSON.stringify(o, null, 2), 'utf8')
         break;
       default : 
-        console.error("ERROR: unknown cmd: " + cmd )
-        process.exit(1)
+        throw new Error(`unknown cmd: cmd}` )
     }
   })
 program.parse(process.argv);

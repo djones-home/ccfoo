@@ -1,0 +1,18 @@
+{
+    "Project" : "SAM",
+    "Description": "SAMple Project settings for effective-settings tests",
+    "Profiles": {
+        "default" : { "image": "linux_of_coarse" , "sg":"default"},
+        "a" : { "foo": "bar-a", "infoA": "profile-a"},
+        "b" : { "foo": "bar-b", "Profiles": [ "c", "d" ], "infoB": "profile-b"},
+        "c" : { "foo": "bar-c", "image": "rebeliousOne", "infoC": "profile-c nested in b"},
+        "d" : { "Profiles" : [ "b", "d"] }
+    },
+    "subjectRoles": {
+        "x": { "foo": "barx", "role": "x"},
+        "y": { "foo": "bary", "role": "y", "Profiles": ["b", "c"]},
+        "z": { "foo": "barz", "role": "z", "Profiles": ["c", "b"]}
+    },
+    "foo": "global",
+    "bar": "global"   
+}

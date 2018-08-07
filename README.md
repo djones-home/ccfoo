@@ -121,7 +121,7 @@ To write it in less code, we take advantage of the JS ecosystem, as shown here W
 
  The [ciStack]  function is the main driver for this shell library. 
  Together with templates, it is used to manage a project resource stack, from one provider service, AWS EC2 service.
- The rational for ciStack is to provide a facade interface, to reduced risk without roductivity loss.
+ The rational for ciStack is to provide a facade interface, to reduced risk without productivity loss.
  Risk is lowered by using IAM policies and roles that implement technical controls. (I believe) productivity is not impacted, prossbly improved
  by the automation and reusability it provides.
 
@@ -144,26 +144,25 @@ To write it in less code, we take advantage of the JS ecosystem, as shown here W
 
  Environment: CIDATA is set when given an optional third argument, for examle:
  
-  "ciStack show AWS_WASP.json" not only describes instances in project VPC, it also sets IDATA to AWS_WASP.json.
+  "ciStack show AWS_WASP.json" not only describes instances in project VPC, it also sets CIDATA to AWS_WASP.json.
  
- Two IAM Instance Roles are provided by the create_vpc_policy function. If attached to nstances, it provides
- VPC lock-down of allowed operations. Attach the VPC-{vpcName} profile to your Bastion nstance, and the VPC-{vpcName}-ro
- to instances that Bastion users (or applications) should control.  Limit logins to dministrators, or operators for the project,
+ Two IAM Instance Roles are provided by the create_vpc_policy function. If attached to instances, it provides
+ VPC lock-down of allowed operations. Attach the VPC-{vpcName} profile to your Bastion instance, and the VPC-{vpcName}-ro
+ to instances that Bastion users (or applications) should control.  Limit logins to administrators, or operators for the project,
  on any instance that you assign it the VPC-{vpcName} role.
 
 # Subject tasked sub-commands
 
-One nice upgrade that comes with the [Commander.js] framework, are sub-commands.  VMs are just  one of the subjects, simmilar CRUD-like tasks are applicable to others: on virtual-networking, on cloud storage, on security rules, and users.
-A popular CLI pattern is to do  this with sub-commands, like
+One nice upgrade that comes with the [Commander.js] framework, are sub-commands.  VMs are just  one of the subjects, simmilar CRUD-like tasks are applicable to others: on virtual-networking, on cloud storage, on security rules, and on user principles.
+A popular CLI pattern is to do this with sub-commands, like
 "mycli cmd-subject sub-command --options". For example:
 
 > ccfoo vm launch -n bastion -u id-gibbrish
 > 
 > ccfoo network list
+> 
 > ccfoo
 
-The azure-cli and  aws-cli, use this pattern, of git-like sub-commands.
-
-We are not going to replace "az vm list"  or "aws ec2 describe-instances".
+The azure-cli and  aws-cli, use this pattern, of git-like sub-commands.  We are not going to replace "az vm list"  or "aws ec2 describe-instances", but following the same CLI pattern, in our local extension to the provider CLIs or SDKs.
 
 Listing VMs was an exercise to try first, (aside from credrentials) should not be much of a challenge compared to the more needy "launch" command tasks - launchs will need templates and settings, that's the end goal of this exercise, to map external settings (our local settings however we choose) into an Azure resource deployment, or an AWS deployment employ templates, CM, and layered security.

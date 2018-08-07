@@ -7,10 +7,16 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "effectiveSettings",
+            "program": "${workspaceFolder}/lib/effectiveSettings.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch Program-help",
             "program": "${workspaceFolder}/bin/ccfoo.js",
             "args": [
-                '--help'
+                "--help"
             ]
         },
         {
