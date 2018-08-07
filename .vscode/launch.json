@@ -7,8 +7,17 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "effectiveSettings",
-            "program": "${workspaceFolder}/lib/effectiveSettings.js"
+            "name": "Mocha Tests",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "-u",
+                "tdd",
+                "--timeout",
+                "999999",
+                "--colors",
+                "${workspaceFolder}/tests/test"
+            ],
+            "internalConsoleOptions": "openOnSessionStart"
         },
         {
             "type": "node",
