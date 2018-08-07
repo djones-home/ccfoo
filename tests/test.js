@@ -1,9 +1,11 @@
 // Require the built in 'assertion' library
 var assert = require('assert');
 var data = require('../tests/projectSettings')
-var es = require('../lib/effectiveSettings')
+var es = require('../lib/profiles')
 process.env.CIDATA='/home/djones/ws/ciData/ciStack.json'
+
 es.getRole('vm','bastion')
+var fs = require('fs')
 showMeRoles()
 
 // Create a test suite (group) called Math
