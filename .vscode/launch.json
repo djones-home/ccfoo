@@ -7,6 +7,12 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "try",
+            "program": "${workspaceFolder}/tests/try.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "vm-list",
             "program": "${workspaceFolder}/bin/ccfoo-vm-show.js"
         },
