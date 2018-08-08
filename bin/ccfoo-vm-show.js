@@ -22,7 +22,7 @@ async function main() {
   console.log(JSON.stringify(vms,null,2));
 
 }
-
+msRestAzure.UserTokenCredentials
  
 
 main().catch((err) => {
