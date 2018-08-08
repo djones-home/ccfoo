@@ -1,0 +1,8 @@
+var cache = require('../lib/cache')
+console.log( cache.info() )
+cache.init()
+console.log( cache.info() )
+cache.clean()
+console.log( cache.info() )
+cache.clean( 300 )
+console.log( cache.info() )
