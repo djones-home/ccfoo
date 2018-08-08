@@ -14,7 +14,7 @@ const subject = __filename.split('-').pop()
 var program = require('commander') 
  .version(package.version)
  .option('-p --profile <Name>', 'provider profile name', 
-    process.env[package.name.toUpperCase() + "_PROFILE"]
+    process.env[package.name.toUpperCase() + "_PROFILE"])
  .option('-d --ciData <dataFile>', 'CIDATA project settings', process.env.CIDATA)
  .option('-c --config <path>', 'Config', config.path )
  .option('-D --debug', 'Debug messages')

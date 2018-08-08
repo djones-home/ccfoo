@@ -7,11 +7,12 @@ var config = require('../lib/settings');
 const package = require('../package')
 const subject = __filename.split('-').pop()
 
+
 // Define the program globals
 var program = require('commander') 
- .version(require(package.version)
+ .version(package.version)
  .option('-p --profile <Name>', 'provider profile name', 
-    process.env[package.name.toUpperCase() + "_PROFILE"]
+    process.env[package.name.toUpperCase() + "_PROFILE"])
  .option('-D --debug', 'Debug messages')
  .option(`-n --name <${subject}Name>`, `Specify ${subject}-[name|id|tag|role|filterRE]`, "None")
  .option(`-u --unit <${subject}Unit>`, 'Organizational parent-[container|filterRE|id|tag]', config.id)
