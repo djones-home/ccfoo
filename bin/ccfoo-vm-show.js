@@ -1,6 +1,7 @@
 const config = require('../lib/settings')
 const msRestAzure = require("ms-rest-azure");
 const { ComputeManagementClient } = require("azure-arm-compute");
+const cache = require('../lib/cache')
 
 const AzureEnvironment = msRestAzure.AzureEnvironment;
 const clientId = process.env.CLIENT_ID || config.CLIENT_ID || "";
@@ -11,18 +12,18 @@ const password = process.env.AZURE_PASSWORD || config.AZURE_PASSWORD || config.p
 const subscriptionId = process.env.AZURE_SUBSCRIPTION_ID || config.AZURE_SUBSCRIPTION_ID || config.id ||"";
 
 async function main() {
-  const loginOptions = { environment: AzureEnvironment.AzureUSGovernment };
-  //const creds = await msRestAzure.loginWithServicePrincipalSecret(clientId, secret, domain, loginOptions);
-  let creds = await msRestAzure.loginWithUsernamePassword(username, password, loginOptions );
-
-  const client = new ComputeManagementClient(creds, subscriptionId, AzureEnvironment.AzureUSGovernment.resourceManagerEndpointUrl);
-
-  const vms = await client.virtualMachines.listAll( );
-
+  let cmdId = "listAll"
+  let vms = cache.cGet(cmdId, 600 )
+  if ( ! vms ) {
+    const loginOptions = { environment: AzureEnvironment.AzureUSGovernment };
+    //const creds = await msRestAzure.loginWithServicePrincipalSecret(clientId, secret, domain, loginOptions);
+    let creds = await msRestAzure.loginWithUsernamePassword(username, password, loginOptions );
+    const client = new ComputeManagementClient(creds, subscriptionId, AzureEnvironment.AzureUSGovernment.resourceManagerEndpointUrl);
+    vms = await client.virtualMachines.listAll( );
+    cache.cPut(cmdId, vms)
+  }
   console.log(JSON.stringify(vms,null,2));
-
 }
-msRestAzure.UserTokenCredentials
  
 
 main().catch((err) => {
