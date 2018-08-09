@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require("path");
 var config = require('../lib/settings');
 const package = require('../package')
-const subject = __filename.split('-').pop()
+const subject = __filename.split('-').pop().split('.')[0]
 
 
 // Define the program globals
@@ -16,9 +16,9 @@ var program = require('commander')
  .option('-D --debug', 'Debug messages')
  .option(`-n --name <${subject}Name>`, `Specify ${subject}-[name|id|tag|role|filterRE]`, "None")
  .option(`-u --unit <${subject}Unit>`, 'Organizational parent-[container|filterRE|id|tag]', config.id)
- .option('-N --noop', 'No operations that effect cloud changes.')
+ .option('-N --noop', 'No operations that effect cloud changes.');
 
- // exec (external) commands
+// exec (external) commands
 var execCmds = [ "show", "terminate", "stop", "start", "launch" ]
 execCmds.sort().forEach( n=>{
   program.command(n, `${n} ${subject}`)
