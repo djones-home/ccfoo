@@ -20,7 +20,7 @@
   "author": "Dan Jones",
   "license": "ISC",
   "dependencies": {
-    "commander": "^2.17.0",
+    "commander": "^2.17.1",
     "shelljs": "^0.8.2"
   },
   "devDependencies": {
