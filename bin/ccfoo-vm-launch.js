@@ -14,6 +14,7 @@ const password = process.env.AZURE_PASSWORD || config.AZURE_PASSWORD || config.p
 const subscriptionId = process.env.AZURE_SUBSCRIPTION_ID || config.AZURE_SUBSCRIPTION_ID || config.id ||"";
 const profiles = require('../lib/profiles')
 const program = require('commander')
+const tokens = require('../lib/accessTokens')
 
 async function main() {
   // make an id (cmdId) for indexing cashe.
@@ -41,6 +42,34 @@ async function main() {
       (program.verbose > 1 ? program : "")
     )
 }
+
+async function resourcDeploy(client, config, subject, roleName ) {
+  const loginOptions = { environment: AzureEnvironment.AzureUSGovernment };
+  //const creds = await msRestAzure.loginWithServicePrincipalSecret(clientId, secret, domain, loginOptions);
+  //let creds = await tokens.get(loginOptions)
+  let creds = await msRestAzure.loginWithUsernamePassword(username, password, loginOptions );
+  const client = new resourceManagement.ResourceManagementClient(creds, subscriptionId, AzureEnvironment.AzureUSGovernment.resourceManagerEndpointUrl);
+
+  await client
+            .resourceGroups
+            .createOrUpdate(config.group.name, config.group.properties)
+
+  var deploymentParameters = {
+              "properties": {
+                  "parameters": {},
+                  "template": template,
+                  "mode": "Incremental"
+              }
+          };
+  // list resource, see if rg exist, or create. Determine roleName-index
+  // Define a unique deployment name
+  var deploymentName = `${config.group.prefix}-${roleName}-${i}`;
+  // Render template YTBD, so just take it from the file
+  // var template = await renderTemplate(config, subject, roleName )
+  var template = JSON.parse(fs.readFileSync(config.template.sharedResourcesPath, 'utf8'));
+       
+  await client.resourceGroups.createOrUpdate(config.group.name, config.group.properties)
+  await client.deployments.createOrUpdate(rgName, deploymentName, deploymentParameters)
 
 var subject = __filename.split('-')[1]
 
