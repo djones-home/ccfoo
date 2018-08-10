@@ -3,22 +3,12 @@
 const fs = require('fs'); 
 const path = require("path");
 var config = require('../lib/settings');
-//var cidata = require('../lib/cidata')
-//var cache = require('../lib/cache')
-//var inquirer =  require('inquirer-promise')
 const package = require('../package')
-const subject = __filename.split('-').pop()
+//const subject = __filename.split('-').pop()
 
-// Define the program globals
-// const program = require('..lib/commanderGlobals')
 var program = require('commander') 
  .version(package.version)
- .option('-p --profile <Name>', 'provider profile name', 
-    process.env[package.name.toUpperCase() + "_PROFILE"])
- .option('-d --ciData <dataFile>', 'CIDATA project settings', process.env.CIDATA)
- .option('-c --config <path>', 'Config', config.path )
- .option('-D --debug', 'Debug messages')
- .option('-B --bash-completions', 'Generate bash-completion functions')
+ 
 
 // exec (external) commands
 var execCmds = [ "network", "vm", "storage", "security",  'user' ]
@@ -30,6 +20,11 @@ execCmds.sort().forEach( n=>{
 // action (built-in) commands 
 program.command('config <cmd> [key] [value]')
   .description( "Configure local settings: config [show|set <key value>|del <k>]")
+  .option('-p --profile <Name>', 'provider profile name', 
+     process.env[package.name.toUpperCase() + "_PROFILE"])
+  //.option('-d --ciData <dataFile>', 'CIDATA project settings', process.env.CIDATA)
+  .option('-c --config <path>', 'Config', config.path )
+  .option('-D --debug', 'Debug messages')
   .action( (cmd, k, v, options)=>{
     program.debug && console.log('cmd:',cmd,'\nk: ', k,'\nv: ', v, '\noptions: ', options)
     let o = config
