@@ -15,9 +15,9 @@ const profiles = require('../lib/profiles')
 const program = require('commander')
 
 async function main() {
-  // the cmdId is used to index cache
+  // make an id (cmdId) for indexing cashe.
   let cmdId = `${(profiles.env|| "az") + subject}.cmc.vm.listAll`
-  let vms = cache.cGet(cmdId, 600 )
+  let vms = cache.cGet(cmdId, program.ttl )
   if ( ! vms ) {
     const loginOptions = { environment: AzureEnvironment.AzureUSGovernment };
     //const creds = await msRestAzure.loginWithServicePrincipalSecret(clientId, secret, domain, loginOptions);
@@ -50,8 +50,9 @@ function increaseVerbosity(v, total) {
 program
   .version(package.version)
   .option(`-n --Name <${subject}Name>`, `Specify ${subject} name`)
-  .option(`-u --unit <${subject}Unit>`, 'Organizational parent-container|filterRE|id')
+  .option(`-u --unit <regexp-filter>`, 'RegExp filter on Id')
   .option('-v, --verbose [1]', 'Verbose log level', increaseVerbosity)
+  .option('-t --ttl <seconds>', 'Cache  Time-To-Live ', config.ttl || 600)
 
   program.parse(process.argv)
 
