@@ -14,11 +14,8 @@
             "type": "node",
             "request": "launch",
             "name": "vm-list",
-            "program": "${workspaceFolder}/bin/ccfoo-vm-show.js",
-            "args": [
-                "-n", 
-                "ci"
-            ]
+            "program": "${workspaceFolder}/bin/ccfoo-vm-launch.js"
+            
         },
         {
             "type": "node",
