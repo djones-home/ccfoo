@@ -153,7 +153,7 @@ To write it in less code, we take advantage of the JS ecosystem, as shown here W
 
 # Subject tasked sub-commands
 
-One nice upgrade that comes with the [Commander.js] framework, are sub-commands.  VMs are just  one of the subjects, simmilar CRUD-like tasks are applicable to others: on virtual-networking, on cloud storage, on security rules, and on user principles.
+One nice upgrade that comes with the [Commander.js] framework, are sub-commands.  VMs are just  one of the subjects, simmilar CRUD-like tasks are applicable to others: on virtual-networking, on cloud storage, on security rules, and on user principals.
 A popular CLI pattern is to do this with sub-commands, like
 "mycli cmd-subject sub-command --options". For example:
 
@@ -166,3 +166,17 @@ A popular CLI pattern is to do this with sub-commands, like
 The azure-cli and  aws-cli, use this pattern, of git-like sub-commands.  We are not going to replace "az vm list"  or "aws ec2 describe-instances", but following the same CLI pattern, in our local extension to the provider CLIs or SDKs.
 
 Listing VMs was an exercise to try first, (aside from credrentials) should not be much of a challenge compared to the more needy "launch" command tasks - launchs will need templates and settings, that's the end goal of this exercise, to map external settings (our local settings however we choose) into an Azure resource deployment, or an AWS deployment employ templates, CM, and layered security.
+
+## List Resource
+
+For either provider, AWS or Azure, we can use their CLI or SDK to get information on our infrastructure resources.
+
+> aws ec2 describe-instances | jq "$myAwsFilter"
+
+> az vm list | jq "$myAzFilter"
+
+We can tell the CLIs to return JSON ouput, then pipe this to JQ to extract or formate just what we want. So this (ccfoo tool) can do no better, or can it do better ?  
+
+
+
+## Launch, create or update Resources
