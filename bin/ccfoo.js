@@ -27,7 +27,7 @@ var program = require('commander')
       ' | ' +
       chalk.green(package.version) +
       ' | ' +
-      chalk.red('profile: ' + settings.currentProfile())
+      chalk.red('profile: ' + settings.activeProfileName())
   );
   log(chalk.green(figlet.textSync('Cloud CLI', { horizontalLayout: 'full' })));
 }
