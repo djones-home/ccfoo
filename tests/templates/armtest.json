@@ -1,0 +1,121 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": { },
+    "variables": {},
+    "resources": [
+  
+      {
+          "apiVersion": "2015-06-15",
+          "type": "Microsoft.Network/publicIPAddresses",
+          "name": "ciel7-2-PublicIP",
+          "location": "[resourceGroup().location]",
+          "tags": {
+              "displayName": "PublicIPAddress"
+          },
+          "properties": {
+              "publicIPAllocationMethod": "Dynamic",
+              "dnsSettings": {
+                  "domainNameLabel": "[toLower('ciel7-2')]"
+              }
+          }
+      },
+      {
+          "apiVersion": "2015-06-15",
+          "type": "Microsoft.Network/virtualNetworks",
+          "name": "ciel7-2-VirtualNetwork",
+          "location": "[resourceGroup().location]",
+          "tags": {
+              "displayName": "VirtualNetwork"
+          },
+          "properties": {
+              "addressSpace": {
+                  "addressPrefixes": [
+                      "10.0.0.0/16"
+                  ]
+              },
+              "subnets": [
+                  {
+                      "name": "ciel7-2-VirtualNetwork-Subnet",
+                      "properties": {
+                          "addressPrefix": "10.0.0.0/24"
+                      }
+                  }
+              ]
+          }
+      },
+      {
+          "apiVersion": "2015-06-15",
+          "type": "Microsoft.Network/networkInterfaces",
+          "name": "ciel7-2-NetworkInterface",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+              "Microsoft.Network/publicIPAddresses/ciel7-2-PublicIP",
+              "Microsoft.Network/virtualNetworks/ciel7-2-VirtualNetwork"
+          ],
+          "tags": {
+              "displayName": "ciel7-2-NetworkInterface"
+          },
+          "properties": {
+              "ipConfigurations": [
+                  {
+                      "name": "ipconfig1",
+                      "properties": {
+                          "privateIPAllocationMethod": "Dynamic",
+                          "publicIPAddress": {
+                              "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'ciel7-2-PublicIP')]"
+                          },
+                          "subnet": {
+                              "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', 'ciel7-2-VirtualNetwork'), '/subnets/ciel7-2-VirtualNetwork-Subnet')]"
+                          }
+                      }
+                  }
+              ]
+          }
+      },
+      {
+          "apiVersion": "2017-03-30",
+          "type": "Microsoft.Compute/virtualMachines",
+          "name": "ciel7-2",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+              "[concat('Microsoft.Storage/storageAccounts/', toLower('ciel7-2storage'))]",
+              "Microsoft.Network/networkInterfaces/ciel7-2-NetworkInterface"
+          ],
+          "tags": {
+              "displayName": "ciel7-2"
+          },
+          "properties": {
+              "hardwareProfile": {
+                  "vmSize": "Standard_D1"
+              },
+              "osProfile": {
+                  "computerName": "ciel7-2",
+                  "adminUsername": "ADMIN_USERNAME",
+                  "adminPassword": "ADMIN_PASSWORD"
+              },
+              "storageProfile": {
+                  "imageReference": {
+                      "publisher": "Canonical",
+                      "offer": "UbuntuServer",
+                      "sku": "16.04-LTS",
+                      "version": "latest"
+                  },
+                  "osDisk": {
+                      "name": "ciel7-2-OSDisk",
+                      "caching": "ReadWrite",
+                      "createOption": "FromImage"
+                  }
+              },
+              "networkProfile": {
+                  "networkInterfaces": [
+                      {
+                          "id": "[resourceId('Microsoft.Network/networkInterfaces', 'ciel7-2-NetworkInterface')]"
+                      }
+                  ]
+              }
+          }
+      }
+    ],
+    "outputs": {}
+}

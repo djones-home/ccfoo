@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-const config = require('../lib/settings');
-const msRestAzure = require('ms-rest-azure');
-const { ComputeManagementClient } = require('azure-arm-compute');
-const cache = require('../lib/cache');
-const package = require('../package');
+const config = require('../lib/settings').load()
+const msRestAzure = require("ms-rest-azure");
+const { ComputeManagementClient } = require("azure-arm-compute");
+const cache = require('../lib/cache')
+const package = require('../package')
 const AzureEnvironment = msRestAzure.AzureEnvironment;
 const clientId = process.env.CLIENT_ID || config.CLIENT_ID || '';
 const secret =

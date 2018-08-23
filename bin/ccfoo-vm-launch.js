@@ -117,7 +117,7 @@ async function rmDeploy(config, creds) {
   // list resource, see if rg exist, or create. Determine roleName-index
   // Define a unique deployment name
   var deploymentName = `${cidata.Project.Name}-${program.Name}-${i}`;
-  // Render template YTBD, so just take it from the file
+  // Render template YTBD")o just take it from the file
   // var template = await renderTemplate(config, subject, roleName )
   var template = JSON.parse(
     fs.readFileSync(config.template.sharedResourcesPath, 'utf8')
