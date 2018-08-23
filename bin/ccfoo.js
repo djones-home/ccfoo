@@ -9,7 +9,7 @@ const util = require('util');
 const fs = require('fs'); 
 const path = require("path");
 const settings = require('../lib/settings')
-var profile = settings.load()
+
 
 const package = require('../package')
 const log = console.log;
@@ -34,19 +34,19 @@ var program = require('commander')
  
 
 // exec (external) commands
-var execCmds = [ "network", "vm", "storage", "security",  'user' ]
-execCmds.sort().forEach( n=>{
-  // name an exec command, like: ./bin/ccfoo-$n.js 
-  program.command(n, `Act on ${n} subjects`)
-})  
+// var execCmds = [ "network", "vm", "storage", "security",  'user' ]
+// execCmds.sort().forEach( n=>{
+//   // name an exec command, like: ./bin/ccfoo-$n.js 
+//   program.command(n, `Act on ${n} subjects`)
+// })  
 
 // action (built-in) commands 
-program.command('config <cmd> [key] [value]')
-  .description( "Configure local settings: config [show|set <key value>|del <k>]")
-  .action( (cmd, k, v, options) => {
-    settings.action(program, profile, cmd, k, v);
-   });
+settings.initCommand(program);
 
-banner();
+if ( process.argv.length <= 2) {
+  banner();
+  program.outputHelp();
+}
+
 program.parse(process.argv);
 
