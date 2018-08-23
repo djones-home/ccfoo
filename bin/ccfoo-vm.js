@@ -13,6 +13,7 @@ var program = require('commander')
  .option(`-u --unit <regexp-filter>`, 'RegExp filter on Id')
  .option('-v, --verbose [1]', 'Verbose log level', incVerbose)
  .option('-t --ttl <seconds>', 'Cache  Time-To-Live ', config.ttl || 600)
+ .option('-o --output <table|json>', 'Type of output', config.output || 'json')
 
  program.command('launch')
  .description('Launch VM instance')
