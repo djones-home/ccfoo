@@ -3,13 +3,15 @@
 const package = require('../package')
 const subject = __filename.split('-').pop().split('.')[0]
 const {show, terminate, stop, start, launch} = require('../lib/vm')
-const { incVerbose } = require('../lib/commmon')
+const { incVerbose } = require('../lib/common')
+const cfg = require('../lib/settings')
+const config = cfg.load()
 
 var program = require('commander') 
  .version(package.version)
  .option(`-n --Name <${subject}Name>`, `Specify ${subject} name`)
  .option(`-u --unit <regexp-filter>`, 'RegExp filter on Id')
- .option('-v, --verbose [1]', 'Verbose log level', incrVerbose)
+ .option('-v, --verbose [1]', 'Verbose log level', incVerbose)
  .option('-t --ttl <seconds>', 'Cache  Time-To-Live ', config.ttl || 600)
 
  program.command('launch')
