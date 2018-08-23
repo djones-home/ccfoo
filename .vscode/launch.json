@@ -7,8 +7,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "try",
-            "program": "${workspaceFolder}/bin/ccfoo-vm-show.js"
+            "name": "vm show",
+            "program": "${workspaceFolder}/bin/ccfoo-vm", "args": ["show"]
         },
         {
             "type": "node",
