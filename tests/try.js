@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const config = require('../lib/settings')
+const config = require('../lib/settings').load()
 const msRestAzure = require("ms-rest-azure");
 const { ComputeManagementClient } = require("azure-arm-compute");
 const cache = require('../lib/cache')

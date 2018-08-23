@@ -2,7 +2,7 @@
 "use strick"
 const fs = require('fs'); 
 const path = require("path");
-var cfg = require('../lib/settings')
+const cfg = require('../lib/settings')
 var config = cfg.load()
 const package = require('../package')
 //const subject = __filename.split('-').pop()

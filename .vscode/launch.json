@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "try",
-            "program": "${workspaceFolder}/tests/try.js"
+            "program": "${workspaceFolder}/bin/ccfoo-vm-show.js"
         },
         {
             "type": "node",
@@ -35,11 +35,9 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program-help",
-            "program": "${workspaceFolder}/bin/ccfoo.js",
-            "args": [
-                "--help"
-            ]
+            "name": "doit",
+            "program": "${workspaceFolder}/tests/doit.js"
+            
         },
         {
             "type": "node",
