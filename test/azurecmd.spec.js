@@ -3,7 +3,7 @@ const assert = require("assert");
 const log = console.log;
 const out = process.stdout.write;
 
-const azureCMD = require("../cmd/azureCMD");
+//const azureCMD = require("../cmd/azureCMD");
 
 
 describe('test to call azure commands.. ', () => {

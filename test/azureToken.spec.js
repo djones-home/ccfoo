@@ -2,7 +2,7 @@ const assert = require("assert");
 
 const log = console.log;
 
-const settings = require('./settings')
+const settings = require('../lib/settings')
 const tokenCashe = require("../lib/azureToken");
 
 

@@ -5,7 +5,7 @@ const util = require('util');
 const path = require('path');
 const async = require('async');
 
-const azureProfile = require('./azureTokenCashe');
+const azureProfile = require('./azureToken');
 //const creds = require('./azureCredentials');
 
 const azure = require('ms-rest-azure');
