@@ -39,18 +39,18 @@ describe('Test commands of azureTokenCash.. ', () => {
     //   })
     // });
 
-    it('should get azure creds for profile steve...', () => {
-      tokenCashe.setProfile('steve', true).then(_ =>
-      {
-        return tokenCashe.getCredentials();
-      })
-      .then(credentials => {
-        assert(credentials);
-      })
-      .catch(err => {
-        log(err)
-      })
-    });
+    // it('should get azure creds for profile steve...', () => {
+    //   tokenCashe.setProfile('steve', true).then(_ =>
+    //   {
+    //     return tokenCashe.getCredentials();
+    //   })
+    //   .then(credentials => {
+    //     assert(credentials);
+    //   })
+    //   .catch(err => {
+    //     log(err)
+    //   })
+    // });
 
   });
 });

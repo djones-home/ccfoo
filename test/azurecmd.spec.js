@@ -11,17 +11,17 @@ describe('test to call azure commands.. ', () => {
 
   describe('call for VM list', () =>  {
 
-    it('get a list of vms...', () => {
-      //this assume you can login
-      azureCMD.listAllVMs()
-      .then(result => {
-        log(result);
-        assert(result);
-      })
-      .catch(err => {
-        log(err);
-      })
-    });
+    // it('get a list of vms...', () => {
+    //   //this assume you can login
+    //   azureCMD.listAllVMs()
+    //   .then(result => {
+    //     log(result);
+    //     assert(result);
+    //   })
+    //   .catch(err => {
+    //     log(err);
+    //   })
+    // });
 
   });
 });

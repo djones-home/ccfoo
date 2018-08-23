@@ -11,7 +11,7 @@
     "Locations": {}
   },
   "Source": {
-    "Description" : "SCM locations ",
+    "Description": "SCM locations ",
     "ScmId": "$Id: $",
     "SCM_prefix": "https://svn.nps.edu/repos/metoc",
     "ScmHeadURL": "$HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/ciStack.json $",
@@ -21,35 +21,42 @@
   },
   "Storage": {
     "Description": "Stores  scoped: common to CIE projects, project specific, systems specific",
-    "azUsGov" : {
-      "CommonCIE" : "s3://cibootstrap",
+    "azUsGov": {
+      "CommonCIE": "s3://cibootstrap",
       "Project": "s3://fnmoc.ci.common.data",
       "System": "s3://fnmoc.ci.cistack.systems"
     },
     "awsUsGov": {
-      "CommonCIE" : "s3://cibootstrap",
+      "CommonCIE": "s3://cibootstrap",
       "Project": "s3://fnmoc.ci.common.data",
       "System": "s3://fnmoc.ci.cistack.systems"
-
     }
   },
   "Vm": {
     "Roles": {
-      "lmgr": { "Subnet": "web-a", "SG" : "lmgr", "Profile": "el7" },
+      "lmgr": { "Subnet": "web-a", "SG": "lmgr", "Profile": "el7" },
       "ubuntu": { "ImageId": "ami-77199016", "Profile": "app" },
-      "build": { "Subnet": "app-a", "SG" : "app", "Profile": "el6" },
+      "build": { "Subnet": "app-a", "SG": "app", "Profile": "el6" },
       "bastion": { "Profile": "bastion" },
       "proxy": { "Profile": "public" },
       "nexus": { "Profile": "app" },
-      "openldapA": { "Profile": "app", "InstanceType": "t2.medium", "Subnet": "app-a" },
-      "openldapB": { "Profile": "app", "InstanceType": "t2.medium", "Subnet": "app-b" },
-      "openproject": {"Profile": "app", "InstanceType": "t2.medium"},
-      "logger": {"Profile": "app"},
-      "jenkins": {"Profile": "el7"},
-      "gitlab": {"Profile": "public","InstanceType": "t2.xlarge"}
+      "openldapA": {
+        "Profile": "app",
+        "InstanceType": "t2.medium",
+        "Subnet": "app-a"
+      },
+      "openldapB": {
+        "Profile": "app",
+        "InstanceType": "t2.medium",
+        "Subnet": "app-b"
+      },
+      "openproject": { "Profile": "app", "InstanceType": "t2.medium" },
+      "logger": { "Profile": "app" },
+      "jenkins": { "Profile": "el7" },
+      "gitlab": { "Profile": "public", "InstanceType": "t2.xlarge" }
     }
-  },  
-  "Network": {   
+  },
+  "Network": {
     "VpcId": "vpc-cd1ad7a8",
     "Vnetwork": {},
     "PublicIPs": {
@@ -57,17 +64,15 @@
       "lmgr-0": "eipalloc-d463d3b1",
       "proxy-0": "eipalloc-c64990a3"
     },
-    "subnets":{
-      "web":  {
-
-      }, 
-      "db" : { },
+    "subnets": {
+      "web": {},
+      "db": {},
       "app": {}
     }
   },
   "Profiles": {
     "default": {
-      "Cookbook" : "fnmoc_ci",
+      "Cookbook": "fnmoc_ci",
       "note": "Default settings included.",
       "SG": "app",
       "Subnet": "app-a",
@@ -141,11 +146,11 @@
       "fnmoc": "152.80.48.0/24",
       "nmci0": "138.163.0.0/24",
       "nps": "205.155.65.226/32",
-      "NAVGEM": [ "54.202.210.249/32", "34.201.0.92/32" ],
-      "ciStack": [ "205.155.65.226/32" ],
-      "remoteUsers": [ "205.155.65.226/32", "71.84.12.33/32" ],
-      "GDIT": [ "155.95.90.242/32", "155.95.90.0/24", "155.95.80.0/24" ],
-      "anywhere": [ "0.0.0.0/0", "::/0" ]
+      "NAVGEM": ["54.202.210.249/32", "34.201.0.92/32"],
+      "ciStack": ["205.155.65.226/32"],
+      "remoteUsers": ["205.155.65.226/32", "71.84.12.33/32"],
+      "GDIT": ["155.95.90.242/32", "155.95.90.0/24", "155.95.80.0/24"],
+      "anywhere": ["0.0.0.0/0", "::/0"]
     }
   }
-} 
+}
