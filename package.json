@@ -26,6 +26,7 @@
     "figlet": "^1.2.0",
     "azure": "^2.3.1-preview",
     "commander": "^2.17.1",
+    "easy-table": "^1.1.1",
     "shelljs": "^0.8.2",
     "vorpal": "^1.12.0",
     "azure-arm-compute": "^5.1.1",
