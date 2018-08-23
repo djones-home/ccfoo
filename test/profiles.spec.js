@@ -1,7 +1,7 @@
 // Require the built in 'assertion' library
 var assert = require('assert');
 var prof = require('../lib/profiles');
-var data = require('../tests/profiles');
+var data = require('./profiles.json');
 
 // Create a test suite (group) called Math
 describe('Roles x,y,z Profile Settings', function() {
