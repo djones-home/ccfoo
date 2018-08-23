@@ -9,7 +9,7 @@ const util = require('util');
 const fs = require('fs'); 
 const path = require("path");
 const settings = require('../lib/settings')
-
+const azureToken = require('../lib/azureToken')
 
 const package = require('../package')
 const log = console.log;
@@ -42,6 +42,7 @@ var program = require('commander')
 
 // action (built-in) commands 
 settings.initCommand(program);
+azureToken.initCommand(program);
 
 if ( process.argv.length <= 2) {
   banner();
