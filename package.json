@@ -4,7 +4,8 @@
   "description": "Just like Foo is a nonsense place-holder word,  this is just a placeholder for Cloud Crud Facade interface WIP",
   "main": "index.js",
   "scripts": {
-    "test": "testfoo"
+    "start": "node index.js",
+    "test": "mocha"
   },
   "bin": {
     "foo": "./bin/ccfoo.js"
@@ -22,7 +23,19 @@
   "dependencies": {
     "commander": "^2.17.1",
     "shelljs": "^0.8.2",
-    "vorpal": "^1.12.0"
+    "vorpal": "^1.12.0",
+    "azure": "^2.3.1-preview",
+    "azure-arm-compute": "^5.1.1",
+    "azure-arm-network": "^5.3.0",
+    "azure-arm-resource": "^3.1.1-preview",
+    "azure-arm-storage": "^5.1.0-preview",
+    "azure-arm-website": "^4.0.0",
+    "azure-graph": "^3.0.0",
+    "csvtojson": "^1.0.3",
+    "lodash": "^4.16.4",
+    "ms-rest-azure": "^2.5.7",
+    "ms-rest-azure-env": "^0.1.0",
+    "opn": "^5.3.0"
   },
   "devDependencies": {
     "mocha": "^5.2.0"
