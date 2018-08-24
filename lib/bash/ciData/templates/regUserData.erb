@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#  $HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/templates/regUserData.erb $
+#  $Id: regUserData.erb 54332 2016-09-29 15:16:22Z dljones@nps.edu $
+
+
+###
+# user-data for just a regular script
+#
+
+type aws || {
+  yum install -y  unzip curl wget
+  curl https://s3.amazonaws.com/aws-cli/awscli-bundle.zip -o awscli-bundle.zip
+  unzip awscli-bundle.zip 
+ ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws 
+  PATH=$PATH:/usr/local/aws/bin
+}
+mkdir ~/setup
+aws --r us-gov-west-1 s3 sync s3://cibootstrap ~/setup
+chmod +x ~/setup/bootstrap.sh
+(cd ~/setup; ./bootstrap.sh)
+

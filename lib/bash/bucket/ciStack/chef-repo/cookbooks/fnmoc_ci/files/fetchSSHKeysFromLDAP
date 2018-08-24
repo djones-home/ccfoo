@@ -1,0 +1,17 @@
+#!/bin/bash
+#md+
+###
+# Authorized ssh keys from LDAP are retrieved by this script.
+# For addtional reference see source this was derived: http://pig.made-it.com/ldap-openssh.html.
+#
+# # sshd_config Setup 
+# Add the following lines to Centos7:
+#
+#       AuthorizedKeysCommand /usr/local/bin/fetchSSHKeysFromLDAP
+#       AuthorizedKeysCommandRunAs root
+#
+#export LDAPBASE=
+#export LDAPURI=
+ldapsearch -xLLL '(&(objectClass=person)(uid='"$1"'))' 'sshPublicKey' | \
+    sed -n '/^ /{H;d};/sshPublicKey:/x;$g;s/\n *//g;s/sshPublicKey: //gp'
+

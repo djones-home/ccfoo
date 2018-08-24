@@ -1,0 +1,34 @@
+#
+# # LDAP Application schema (RFC 4519).
+# With some inspiration from http://stackoverflow.com/questions/15855676/how-to-extend-inetorgperson-object-class-in-openldap-with-attributes-used-by-an
+dn: cn=ad,cn=schema,cn=config
+objectClass: olcSchemaConfig
+cn: ad
+olcAttributeTypes: {0}( 1.2.840.113556.1.4.750 NAME 'groupType' SYNTAX 1.3.6
+ .1.4.1.1466.115.121.1.27 )
+olcAttributeTypes: {1}( 1.3.114.7.4.2.0.33 NAME 'memberOf' SYNTAX 1.3.6.1.4.
+ 1.1466.115.121.1.26 SUP distinguishedName )
+olcAttributeTypes: {2}( 1.2.840.113556.1.4.656 NAME 'userPrincipalName' EQUA
+ LITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.14
+ 66.115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: {3}( 1.2.840.113556.1.4.52 NAME 'lastLogon' SYNTAX 1.3.6.
+ 1.4.1.1466.115.121.1.27 )
+olcAttributeTypes: {4}( 1.2.840.113556.1.4.159 NAME 'accountExpires' SYNTAX 
+ 1.3.6.1.4.1.1466.115.121.1.27 )
+olcAttributeTypes: {5}( 1.2.840.113556.1.4.96 NAME 'pwdLastSet' SYNTAX 1.3.6
+ .1.4.1.1466.115.121.1.27 )
+olcAttributeTypes: {6}( 1.2.840.113556.1.4.221 NAME 'sAMAccountName' EQUALIT
+ Y caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.
+ 115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: {7}( 1.2.840.113556.1.4.8 NAME 'userAccountControl' SYNTA
+ X 1.3.6.1.4.1.1466.115.121.1.27 )
+olcAttributeTypes: {8}( 1.2.840.113556.1.4.90 NAME 'unicodePwd' SYNTAX 1.3.6
+ .1.4.1.1466.115.121.1.40 )
+olcObjectClasses: {0}( 1.2.840.113556.1.5.9 NAME 'user' DESC 'a user' SUP in
+ etOrgPerson STRUCTURAL MUST cn MAY ( userPassword $ memberOf $ userPrincipa
+ lName $ distinguishedName $ lastLogon $ accountExpires $ pwdLastSet $ sAMAc
+ countName $ userAccountControl $ unicodePwd ) )
+olcObjectClasses: {1}( 1.2.840.113556.1.5.8 NAME 'group' DESC 'a group of us
+ ers' SUP top STRUCTURAL MUST ( groupType $ cn ) MAY member )
+olcObjectClasses: {2}( 1.2.840.113556.1.3.23 NAME 'container' DESC 'a contai
+ ner' SUP top STRUCTURAL MUST ( cn ) )

@@ -1,0 +1,19 @@
+[mrepo_ern_rhel]
+name=RHEL 6.4
+baseurl=https://incubator.nps.edu/mrepo/rhel6-x86_64/RPMS.all
+enabled=1
+gpgcheck=0
+sslcacert=/etc/pki/tls/certs/dod-root-certs.pem
+sslverify=1
+sslclientcert=/var/lib/yum/client.cert
+sslclientkey=/var/lib/yum/client.key
+
+[mrepo_ern_FNMOC]
+name=FNMOC local RPMs
+baseurl=https://incubator.nps.edu/mrepo/FNMOC-rhel6-x86_64/RPMS.all
+enabled=1
+gpgcheck=0
+sslcacert=/etc/pki/tls/certs/dod-root-certs.pem
+sslverify=1
+sslclientcert=/var/lib/yum/client.cert
+sslclientkey=/var/lib/yum/client.key

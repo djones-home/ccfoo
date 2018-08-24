@@ -1,0 +1,47 @@
+#  $HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/users.yaml $
+#  $Id: users.yaml 65856 2017-11-16 17:02:35Z dljones@nps.edu $
+
+users:
+ - default
+ - name: djones
+   gecos: Dan Jones
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCYdoDhJhGhKBIGNwjxbOnQEELzbLt/mgw6Mld+pHKXeD5VRngRWjA8U36FilWRBzAXe5QN+WIOhOAd0pVNvShinswPa7MnwVqZNGDjo8UNXYvkzkEkG8EYXiW4KtPJSRtHEAXWc800MS+/W7wqHS5/eSFCiU8Rp4I8khvgsYrZgxCp4C2UAeAB0qJ9qSCCsEYjGovug0Sa3zih6Y99lj/PwDJ4QFTgXdqx4g1hrVg8yB14hmKboTIzccJJQg+3PJk5hlwu0O6mf+CybQu75IwzWF9/DrK1R1QK7kzioNM/JorkY1sT01d6L7pzPYF3kHWFeAthC6+ffrUSqdCvRJL5 JONES.DANIEL.L.1265422345 notAfter=Aug 31 23:59:59 2020 GMT
+ - name: ksezen
+   gecos: Kevin Sezen
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel 
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCP+Nmd48hkSlrBvi5xCqFpZ5PpamDrElMkShy9O91f6/9VqbrTBU8dVzPtrM+o9jYOT5sZyP9drEO7cp5qhmvp63mP1AT8Lhd62dqENYZrQyhGyGHGeAaVsEx4NCp4epK2X225w3G/N7hwlM0OCXcMvXdYZIJFwkgLNixdxcjVzn0UVBQBSGm+3DefpVD6Tm4RPT+XLHfi3uUbwZq80TCrZusdWxbj0kM6W49S3PAVLyjsw9QUWN9rGshp5xdLFinp9pmYIV3LESbz24ZN5Wbg/mFzQdwRdcO7pQBorBmgMKIFmQRHPccalior2cRKB3gN/gONNNvMaxt1qwDBgDzB SEZEN.KEVIN.SERMET.1412295257 notAfter=Aug 31 23:59:59 2020 GMT
+ - name: tranl
+   gecos: Loan_Tran
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel 
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDPhM//DWv1zVEs2G5H+dQintCl5VMt9e9qwNHEylBlzF5RpzkrKe35KVLVXaFQdsNKXvpC/NcQhbr3E0S1QpXA1O1kuPxRCFYtDRRoVWzd3au+Rgk4UUURqzd2J+LM/tFbADjNpfAHGzyJ0yQMwX0RjjlBvNaltEhOU5c4ahk8BfnRpHXOqTLYNNk8wGwKcVGi6kFgAsqx5PJK529zv63/lz4Y3alQbzXLfkiEnnjy7W7R66klwAbJMNyLQr94O2UD/e73giiTfqS2jwBxPzciwmBSv3DlCDFBjipnc0nmoZxxz1VL/y67C2EM80/hmR211eMynsiNFtU9gVtmMQUR TRAN.LOAN.T.1538247517 notAfter=Jun  7 23:59:59 2020 GMT
+ - name: vukcevim
+   gecos: Milan_Vukcevich
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel 
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC83HkbAEO69rU9XO/DY58OGaDkw7A7NT6jBo6ljkpJXS8E0GsXzoX387826SctuxifFEctyGV2k3noOM+/hWR6gQVeGu3PBZzuV+7yf6pYMN0jQe5IacQL/edX53uETqwnjkJw6Db//XxMSrg10ehGThhTfPlTCc80eAgdw2PVFcL3ob/N2WmUnXEhpJQ+7GC9SDCrYSQVaZJydKd7xubchnv0mI4eWhjh/pyYk45D1M1fCpMLsZTKkPswcG174+H9FLPRHebxDiudTplBl0dBg9MVKsug1pBQRpAw+nzDq/UeK7pMmUsVU9KxJHqU3Yd42X2N/F4xcx8iO+vEVMyB VUKCEVICH.MILAN.1277678566 notAfter=Sep 28 23:59:59 2019 GMT
+# vim:syntax=yaml expandtab
+

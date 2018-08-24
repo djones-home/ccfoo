@@ -1,0 +1,11 @@
+name 'install_jenkins'
+maintainer 'The Authors'
+maintainer_email 'you@example.com'
+license 'all_rights'
+description 'Installs/Configures install_jenkins'
+long_description 'Installs/Configures install_jenkins'
+version '0.1.0'
+
+depends 'jenkins', '~> 5.0.5'
+depends 'sonarqube', '~> 0.3.3'
+depends 'java'

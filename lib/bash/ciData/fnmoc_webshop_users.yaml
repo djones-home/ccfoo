@@ -1,0 +1,64 @@
+#  $HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/fnmoc_webshop_users.yaml $
+#  $Id: fnmoc_webshop_users.yaml 66701 2017-12-12 17:26:58Z dljones@nps.edu $
+
+users:
+ - default
+ - name: djones
+   gecos: Dan Jones
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCYdoDhJhGhKBIGNwjxbOnQEELzbLt/mgw6Mld+pHKXeD5VRngRWjA8U36FilWRBzAXe5QN+WIOhOAd0pVNvShinswPa7MnwVqZNGDjo8UNXYvkzkEkG8EYXiW4KtPJSRtHEAXWc800MS+/W7wqHS5/eSFCiU8Rp4I8khvgsYrZgxCp4C2UAeAB0qJ9qSCCsEYjGovug0Sa3zih6Y99lj/PwDJ4QFTgXdqx4g1hrVg8yB14hmKboTIzccJJQg+3PJk5hlwu0O6mf+CybQu75IwzWF9/DrK1R1QK7kzioNM/JorkY1sT01d6L7pzPYF3kHWFeAthC6+ffrUSqdCvRJL5 JONES.DANIEL.L.1265422345 notAfter=Aug 31 23:59:59 2020 GMT
+ - name: ksezen
+   gecos: Kevin Sezen
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel 
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCP+Nmd48hkSlrBvi5xCqFpZ5PpamDrElMkShy9O91f6/9VqbrTBU8dVzPtrM+o9jYOT5sZyP9drEO7cp5qhmvp63mP1AT8Lhd62dqENYZrQyhGyGHGeAaVsEx4NCp4epK2X225w3G/N7hwlM0OCXcMvXdYZIJFwkgLNixdxcjVzn0UVBQBSGm+3DefpVD6Tm4RPT+XLHfi3uUbwZq80TCrZusdWxbj0kM6W49S3PAVLyjsw9QUWN9rGshp5xdLFinp9pmYIV3LESbz24ZN5Wbg/mFzQdwRdcO7pQBorBmgMKIFmQRHPccalior2cRKB3gN/gONNNvMaxt1qwDBgDzB SEZEN.KEVIN.SERMET.1412295257 notAfter=Aug 31 23:59:59 2020 GMT
+ - name: bristerr
+   gecos: Robert Brister
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel 
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxFekUZv+4ClUaTvX3yqjPTyt/goyjWJv8if1875LPBiamvsBdIeJUU7aXCuv/QZr3GpTEJ8WOGDlmRoBR29V4tS9z54RnTMWw90l0hmwhSKlV1tSZeP0n0pHo2Ycn4cwNALUB2ChoVF+aFDoe0IgWNMfVdqOevvb2OknbTSOsXUkc5MKIMau3F8kV4X8qLKLqrdyxD9uLAh+vTvynKq+E4CeCKO/MV9MslBweQ/Idrkh+6gCqxO3+lGJmKWmdBs2I/M2TwjKdBEIjP/T5pzBhRtOOn8h4uDC/DL++Inoeb5LQ1vQrQiAP1LRKrCcZmO+53MgSJ0Iwyj0jV4cPrrLb BRISTER.ROBERT.L.1300040736
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCRaRDNop5p6N7sAVpE/aqiuqHdBIz9GfhVjW+kCKRJvrE5EtQoFbALnZ4MymE5nWIhEl0c1krsnABCuOQwtmyl2c4DyqCpSeWfRZAYNu5wmnOp+F6WGkm+5C9NRBAZlB13DPy0MJaNWDONdt8F6iKJT7NHuzb09atk2P0jrE2ftRisvUfj9apLl+voJamnXMmFbOUhQzDy9/4V/EvtQK/20la5bY6pJUxfA94CXtnyfz+yp7p1sdcf8TEEfz3taIBPPIz+2ZUF7AgzInCFvy897WjcuEolU6nf00+5Ca4sRt2cjvBGkbKlJX/Wshoiz8IX1k9bqGWR05diRKE/Rip BRISTER.ROBERT.L.1300040736
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6xyb3f0FcdZgQfvvRGU2CPSSPIlS0wFhrab6mMfwAVPONFvU47e8gLRWuOb/Lnd18OBK9vFWmtZBIKF9uvD3M3DfptwHETH5aQyDpm/KfcHncGL5vdoc1w9VBM/61O3xCm2fLbdR4O33JqiV/Cia1wtJ/zZDQ9e/XSdm+jTq7UrrPCFfLD2b3j8M3mfmneLArhtYpe5+dUvGwyXHlqtMl9C05jyjavEe2j83uGfxSoyNWvdPQCZThqbwKo4eoMs/1UNcVbsIkYLvgxJjQzw0hzIeZktJJVQ7atcd+7ipqIRGIicS8wPgfsEnmXNgJdwUP4ha8dLIDl5XpBnl3q6vh BRISTER.ROBERT.L.1300040736
+ - name: sojkad
+   gecos: Danny Sojka
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel 
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCS98Qr+TwKsV9hFJd7alJrir83oVzxgLtQLXVaeu+K/zbc1w87jS+RRzv5uCJHLzMt6ctxEdr3bgBmbKUMwOuYME7c77Nu8kADwbEysC9Exu3ddKapS2IagEnm8tcLqrnmmD0GyrSHagcc4vwxiaJjUgd8VW8ugHm387Rlf2nZOTvlmf3zmmu1hZKXLzlyprNolMld6irBKJ8fEJydLiVRv6x+UFFvAsXc6dFg8vpIMF+t08756ht7xyOvIYyHDxDnLv4q/y4QZv4fxEaoXV8FpjAXcIakOLx1xaJjTpAJ1VOez7JAYwxKxO+E28Q7x5NjRWWOxljKn5TSTgwBsFAn SOJKA.DANNY.R.1265426898
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9/1Au36mVdvvJ1QHw58enlAs7+4DTjeRc6s1NBnFSzRWISpabdDrtc/K2y12oZ7Rgeug+/fiX3x8kc310qj0UI7kuhhOSUuv/oEQNdJAXUA9h4J7oEj4wFgF6tnm+1RsoMn+RqGCy06h+G0n9tg+31Jqn4owhEGir/LF2r5QtqqZy3sc4QJowmRmlSOgGHYRScULzwpOLnSw28Zd3JrQTPwXNTylvz3fSXu3ZG32tHDsGmAYMugtu/KxoK9KCdKiocyq5wKeUuvVACaYrcEm8zF+/sduBKhKFMLd5nwy/WBol41LfePTXUwAUebdHnxn6njpP9EmL+tXVp8tuGZFd SOJKA.DANNY.R.1265426898
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDoc6/rjN8d0+xNLPqsnQ1v1SczK+I3gqcSxBRmzpEUeQm9X9Plvia56seMOfcgi8V3sl+Ip16IPgf+N1mCpAJtbuoCmZDbs7oHOps5XpGQrz7/DTAjSss5OD17IHadIfm6rhCIwXaKUHB8Ur9p3u35WulK1Vxb0SQiDN1qkoqixGR65lUvjwqnR4rf1t0/d9KVtEG5SNuzWhDUR/m7TzBAW2iciZeePFAqN1V7ZXYwDbNupBFhe++RvAAo1XaIbjtv4Ulwwj3xNOFn2EN5qfAjHVpWYabidwTy+ImkdWyZtiRE9UnaScBIM3vK7KL2Umv7SLSG+6mIcZ57JK1tKRzd SOJKA.DANNY.R.1265426898
+ - name: pacek
+   gecos: Susie Pace
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel 
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzuwOZy4RAWpyfE8+CPdo27BE+6D9IhssPgmwDAyTytJPYGm8HLhkHZ0bfxBuhOU5WMew+xg4vRBWWKZEPvpIF5Isvgn519XwLPiTS5odI1/O5SRw+fs8oWjlUCesqXeOVAVzo1OCpxug4H10PWvW8WG1og3xNP8IsZo6vp91SSccQVeBg96MQhG7nNb+FaYA5PWD755MlzuElwfKRAjJw3/QT9R15sqVw8X6NucRhoRuohr9ri61KAKfUzlrxWSoKZTh0Btr6m5PA1p2KSuE22R6P8FUzHgICTErxWrUbpWdrLpQOkl8lPXig6hNQhWvhjb4Wfp+gP+D9ePMYo1eX PACE.KYONGSUK.PEDROZA.1116864165
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCp+ewHq3/1Ay9BopvpZXItzh1sZcalUes0C5OCQf8IzfOrH6KmGT90F1RIFvWh4rqzufHAp3CbZxmxmDsBMuxkClnAMLZPD6qprnld7J80pFvhl7YX0pbefJRmQBj3ZOdKlxrVvP3DnJG2N0SAvnfkjiOemMhw2T3TjR6YaM0LhkfpnK1YZuhQqtFfJ0+gPGh0VzV6rWRuhrTZ7U6bhNWimgwMS4ibyHzc3XxZqeDS6z+eIYPSIRGZqQqgKYJ4Um1YzfwXUzg/A4X4yRT7pzqcSAvtIzXzeDXL0ckd4EufWE54kfrYKZiEaWuTg10BaXJ8t7dJSDKesTiH5rAT8fnl PACE.KYONGSUK.PEDROZA.1116864165
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCtFZkS0M/sU8SBplIaThgMZCqZDapDO8D9cDYaEYEzNdThZ4YswhoCw+SJcHlTIFrGZ4umEW3btd8u+U//n59DTWO7GFTuxQI/s7+ny9EQsVBPfq1GMQjfeTm4a8kRUAUwwJlPResOHoMtLUUt9O0xq94Mc03Ik5n32v7S81DYZWXVsxunIbZYLCpC5VKWIJ+q7V2OlQa1515dOx1FHxifSQ6oP+2wiPpKq5OcLTrp9eew4HcbS9VtHlJig94Xc40FPtRVwaz04Hhu1OVG9vaqf7tnYGo4IGCV0QBG87ZmxRTTPXLi5pW8PwOSbtu6iyueGxnhMhzcb0rr08TsaXJ7 PACE.KYONGSUK.PEDROZA.1116864165
+
+# vim:syntax=yaml expandtab
+

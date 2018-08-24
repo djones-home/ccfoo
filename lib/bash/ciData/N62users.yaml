@@ -1,0 +1,39 @@
+#  $HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/users.yaml $
+#  $Id: users.yaml 66701 2017-12-12 17:26:58Z dljones@nps.edu $
+
+users:
+ - default
+ - name: steffenr
+   gecos: Russ Steffen
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCPpXbdbuV28+QpFY1raoQ8q8GG3N6ezCgOPWKXIdGajyP25gcgh285kH8A1NClomz65w+08kSfObtlOOfmyI7KXnewXLhUEcorrj5UBHqb31abVJ9QkqVRp+iq7zpNoXzYRp/LePoRzePAo0/HriBwVMVz0JcF03f5U+1qFxo3nu6+5MI1z2dAVMBOz/pzGvlqLWyOj8JMYuONOlo3zzGvH67bYmXS8hSPQyiWOnvB7op5hizrDyo5AdWg0jv1DYyinFsOKK04qeBCj1bqMsZ6uxRx9YCiV459WTXlNEcRGECHySIluJARuD0jvYOWn/ERBMAB5ysqzIJTKmSCr0Il STEFFEN.RUSSELL.RAY.1259934598 notAfter=Oct 30 23:59:59 2020 GMT
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCYpajB3KoRmbtNhN7Au2pRLelqzCutZm2slfQ8jjHtayCxDoBqzrKnRLpNlEgp/co1G4Ak4HXxdCHG5Iz1MXnLOv3PTu2XwrziHzcjVoHdKTLQSZ+gF5vVZX04kSU4+XUaO+ux0TjsNQX80VaA8GEHXiarZH3HQybSOiWkx2WH0tdX9pfVl7vBIhM7MsJtuCuq7kyaoix8I1J+0zUwhDl16hZIlZfbOQ23zLZ+1gm5QEP9A+nMIQlux10CPIAA3HZXGfnqTNfitZ78IuPU7YGQHXnFgYWD8lUdsOBHHuGLIOTvdVFRd8gLUG/DeIrmdgNKReKUkSbgAA8aKJZm4gOx STEFFEN.RUSSELL.RAY.1259934598 notAfter=Oct 30 23:59:59 2020 GMT
+ - name: djones
+   gecos: Dan Jones
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCYdoDhJhGhKBIGNwjxbOnQEELzbLt/mgw6Mld+pHKXeD5VRngRWjA8U36FilWRBzAXe5QN+WIOhOAd0pVNvShinswPa7MnwVqZNGDjo8UNXYvkzkEkG8EYXiW4KtPJSRtHEAXWc800MS+/W7wqHS5/eSFCiU8Rp4I8khvgsYrZgxCp4C2UAeAB0qJ9qSCCsEYjGovug0Sa3zih6Y99lj/PwDJ4QFTgXdqx4g1hrVg8yB14hmKboTIzccJJQg+3PJk5hlwu0O6mf+CybQu75IwzWF9/DrK1R1QK7kzioNM/JorkY1sT01d6L7pzPYF3kHWFeAthC6+ffrUSqdCvRJL5 JONES.DANIEL.L.1265422345 notAfter=Aug 31 23:59:59 2020 GMT
+ - name: bencep
+   gecos: Paul Bence
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDrYgOE5Y6zqy39t7Rkn29PJsbKerLYwj+Gic0z3VVCr/4Oc/nznXMoHnFq5HTenJIFT4AkGKlydLsglgdfU17CPxUSeiRKVpvdV7CW+BnEXkJq+KKvErh97wyMqhgwhTsdv1LszDKCC4a2318e8tLY1DBJ8Gc8j945ylGezNMevoaDmwdLmXOUAaZhqCIUseXHHbkGtv7+2do+8pITOr3IQmSVpL7Nu+VzsHnbm5QiuMoS4E7t0U8US/zpSUACWS/m33/QKjFqn8ZjF9t9/LKJNa45MkbTObovrK2cPksMFo8OiQKFM9LC0njJvOus6cmjNtBw64bZp1EEK1satgwv BENCE.PAUL.A.1231665028 notAfter=Jun 12 23:59:59 2019 GMT
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCZUgep3eDelnbtZFOKfZrC76TMn0TeYz7+pPADqF23bUVku2XCuZujiPSYpoEzpkzaeaiC0o2iqipsn1fPOKsm744Ozrj35SYckqUhtGMYJOwaSrThT1WQv/nt3fKRnuNp5le4e9MPYQ1szFmCiMaOSgrGFOTE8XcfshNdgrmgwHJgoI/QG0ptjsb+4IATYBSVI+RTh4Rmws5zsaRM0VoGdyNlLLRcW4Rfhc4vb+YgoTkP5X966eL/rLqQwNZkC1Y3xa5Smjo/fayE5V08us1LDbHMABBJ4dHpkjt/xFt5K10y4P+WmMRplXBrSUU5JVsCS7im7UGOfe/l/TDPkrVt BENCE.PAUL.A.1231665028 notAfter=Jun 12 23:59:59 2019 GMT
+# vim:syntax=yaml expandtab
+

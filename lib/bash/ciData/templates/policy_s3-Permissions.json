@@ -1,0 +1,18 @@
+{
+    "Statement": [
+        {
+            "Resource": [
+                "arn:aws-us-gov:s3:::cibootstrap",
+                "arn:aws-us-gov:s3:::cibootstrap/*",
+                "arn:aws-us-gov:s3:::fnmoc.acaf.data",
+                "arn:aws-us-gov:s3:::fnmoc.acaf.data/*"
+            ],
+            "Action": [
+                "s3:Get*",
+                "s3:List*"
+            ],
+            "Effect": "Allow"
+        }
+    ],
+    "Version": "2012-10-17"
+}

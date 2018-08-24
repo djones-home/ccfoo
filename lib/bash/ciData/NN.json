@@ -1,0 +1,139 @@
+{
+  "s3Store": "s3://cibootstrap",
+  "Cookbook": "nn_ci",
+  "s3ProjectStore": "s3://fnmoc.nn.data",
+  "s3SysStore": "s3://fnmoc.nn.systems",
+  "MapVolumes": {},
+  "ReleaseGroup": "None",
+  "RuncmdFile": "runcmd.yaml",
+  "SCM_prefix": "https://svn.nps.edu/repos/metoc",
+  "ScmHeadURL": "$HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/NN.json $",
+  "VpcId": "vpc-42fb6e27",
+  "VpcName": "NN",
+  "Volumes": {},
+  "Version": "0.0.1-SNAPSHOT",
+  "UsersFile": "NNusers.yaml",
+  "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+  "s3Home": "s3://fnmoc.home",
+  "EIPs": {
+    "bastion": "true"
+  },
+  "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+  "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+  "Components": [],
+  "Description": "Data used by CI processes for build, test, and release.",
+  "DevMappingTemplateFile": "templates/devMapping.erb",
+  "Schema": "20170226",
+  "Project": "NN",
+  "Environment": "Evaluation",
+  "Profiles": {
+    "el6": {
+      "ImageDescription": "Enterprize Linux 6",
+      "ImageId": "ami-92961cf3"
+    },
+    "amazon": {
+      "ImageDescription": "Amazon Linux",
+      "ImageId": "ami-5725ae36"
+    },
+    "RHEL7": {
+      "ImageDescription": "RHEL7",
+      "ImageId": "ami-d820aab9"
+    },
+    "el7": {
+      "ImageDescription": "Enterprize Linux 7",
+      "ImageId": "ami-82941ee3"
+    },
+    "db": {
+      "Subnet": "db-a",
+      "SG": "db"
+    },
+    "windows2012": {
+      "UserDataTemplateFile": "templates/userdataWindows.erb",
+      "ImageId": "ami-e49d1885",
+      "KeyName": "admin1"
+    },
+    "app": {
+      "Subnet": "app-a",
+      "SG": "app"
+    },
+    "default": {
+      "KeyName": "JONES.DANIEL.L.1265422345",
+      "Schedule": "6-18:1-5:PST8PDT",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-NN-ro"
+      },
+      "InstanceType": "t2.micro",
+      "priceListAttributes": {
+        "operatingSystem": "Linux",
+        "terms": "OnDemand",
+        "location": "AWS GovCloud (US)"
+      },
+      "ImageId": "ami-82941ee3",
+      "note": "Default settings included.",
+      "SG": "app",
+      "Subnet": "app-a",
+      "Profile": "el7"
+    },
+    "bastion": { "IamInstanceProfile": { "Name": "CI-vpc-NN" }, "Subnet": "web-a", "SG": "bastion" },
+    "public": {
+      "Subnet": "web-a",
+      "SG": "web"
+    }
+  },
+  "InstanceRoles": {
+    "jenkins": { "IamInstanceProfile": { "Name": "CI-vpc-NN" }, "Subnet": "app-a", "SG": "app", "InstanceType": "t2.small", "Profile": "el7"  },
+    "logger": {
+      "Profile": "app"
+    },
+    "app6": { "Profiles": [ "app", "el6" ] },
+    "buildSvr": { "Profiles": [ "app", "el6" ],
+        "InstanceType": "t2.large",
+        "BlockDeviceMappings" : [ 
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : 22, "VolumeType": "gp2" } },
+          { "DeviceName" : "/dev/sdf", "Ebs" : { "VolumeSize" : 40, "VolumeType": "gp2",
+              "SnapshotId": "snap-07cf1736d65139752", "DeleteOnTermination": true } 
+          } 
+         ]
+       },
+    "app": { "Profile": "app" },
+    "ww3": { "Profile": "app", "InstanceType" : "c4.2xlarge" },
+    "web": {
+      "Profile": "public"
+    },
+    "bastionwin": {
+      "UserDataTemplateFile": "templates/userdataWindows.erb",
+      "ImageId": "ami-e49d1885",
+      "Profiles": [
+        "windows2012",
+        "bastion"
+      ]
+    },
+    "bastion": {
+      "Profile": "bastion"
+    }
+  },
+  "ScmId": "$Id: NN.json 71640 2018-06-14 18:01:36Z dljones@nps.edu $",
+  "Security": {
+    "SrcCidr": {
+      "anywhere": "0.0.0.0/0",
+      "nps": "205.155.65.226/32",
+      "nmci0": "138.163.0.0/24",
+      "fnmoc": "152.80.48.0/24"
+    },
+    "SGinBound": {
+      "app": "80,443,8080,8443:sg-web,sg-bastion 22:sg-bastion,sg-login",
+      "web": "80,443:nps,fnmoc 22:sg-bastion, 443:nmci0",
+      "db": "5432:sg-app 22:sg-bastion",
+      "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+      "bastion": "22,443:myIP,nps,fnmoc,nmci0"
+    },
+    "SGoutBound": {
+      "web": "",
+      "bastion": "",
+      "app": "",
+      "db": "",
+      "nat": "80,443:anywhere"
+    }
+  },
+  "UserDataTemplateFile": "templates/userdata.erb"
+}

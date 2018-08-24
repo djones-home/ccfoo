@@ -1,0 +1,25 @@
+{
+  "Global": {
+  "Description": "Global cidata shared by all projects",
+      "Endpoints": { 
+           "LDAP" : { 
+               "us-gov-west-1a" : { "URL":"ldap://10.0.20.4", "BASE": "dc=exern,dc=nps,dc=edu"},
+               "us-gov-west-1b" : { "URL":"ldap://10.0.20.4", "BASE":"dc=exern,dc=nps,dc=edu" }
+           },
+           "Vhosts" : {
+                "first" : "ci10.ccs.nps.edu" , 
+                "last" : "ci29.ccs.nps.edu" , 
+                "NN:jenkins-0" : "ci10.ccs.nps.edu" , 
+                "ciStack:jenkins-1" : "ci11.ccs.nps.edu" , 
+                "ACAF:app-0" : "ci11.ccs.nps.edu" , 
+                "nites:build-1" : "ci11.ccs.nps.edu" , 
+                "ciStack:jenkins-2" : "ci12.ccs.nps.edu" , 
+                "ciStack:build-2" : "ci12.ccs.nps.edu" , 
+                "ACAF:acaf-dev-2" : "ci13.ccs.nps.edu" , 
+                "ciStack:proxy-0" : "incubator2.nps.edu" , 
+                "WW:jenkins-0" : "ci14.ccs.nps.edu" , 
+                "ciStack:proxy-1" : "incubator2.nps.edu" } 
+      }
+  }
+}
+

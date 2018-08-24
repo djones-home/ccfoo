@@ -1,0 +1,150 @@
+{
+  "Cookbook" : "navgem_ci",
+  "Environment": "Evaluation",
+  "s3Store": "s3://cibootstrap",
+  "s3ProjectStore": "s3://fnmoc.navgem.data",
+  "s3SysStore": "s3://fnmoc.navgem.systems",
+  "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+  "ReleaseGroup": "None",
+  "RuncmdFile": "runcmd.yaml",
+  "SCM_prefix": "https://svn.nps.edu/repos/metoc",
+  "ScmHeadURL": "$HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/NAVGEM.json $",
+  "VpcId": "vpc-3b34f35d",
+  "VpcName": "NAVGEM",
+  "Volumes": {},
+  "Version": "0.0.1-SNAPSHOT",
+  "s3Home": "s3://fnmoc.home",
+  "EIPs": {
+    "bastion": "true",
+    "lmgr": "true",
+    "bastion-0": "eipalloc-b51c0d8f",
+    "lmgr-0": "eipalloc-123d2728"
+  },
+  "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+  "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+  "Components": [],
+  "Description": "Data used by CI processes for build, test, and release.",
+  "DevMappingTemplateFile": "templates/devMapping.erb",
+  "MapVolumes": {},
+  "Schema": "20170226",
+  "Project": "NAVGEM",
+  "Profiles": {
+    "intel_sw": {
+    },
+    "el6": {
+      "ImageDescription": "Enterprize Linux 6",
+      "ImageId": "ami-fd03bc9c"
+    },
+    "oregon" : { "ImageId": "ami-22b2bb5b" },
+    "ohio" : {
+      "ImageDescription": "cfncluster ami centos7 us-east-2 https://github.com/awslabs/cfncluster/blob/master/amis.txt",
+      "ImageId": "ami-c3d2f4a6"
+    },
+    "RHEL7": {
+      "ImageDescription": "RHEL7",
+      "ImageId": "ami-299e2248"
+    },
+    "el7": {
+      "ImageDescription": "Enterprize Linux 7",
+      "ImageId": "ami-cb942aaa"
+    },
+    "db": {
+      "Subnet": "db-a",
+      "SG": "db"
+    },
+    "windows2012": {
+      "UserDataTemplateFile": "templates/userdataWindows.erb",
+      "ImageId": "ami-e49d1885",
+      "KeyName": "admin1"
+    },
+    "app": {
+      "Subnet": "app-a",
+      "SG": "app"
+    },
+    "default": {
+      "KeyName": "JONES.DANIEL.L.1265422345",
+      "Schedule": "6-18:1-5:PST8PDT",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-NAVGEM-ro"
+      },
+      "InstanceType": "t2.micro",
+      "priceListAttributes": {
+        "operatingSystem": "Linux",
+        "terms": "OnDemand",
+        "location": "AWS GovCloud (US)"
+      },
+      "ImageId": "ami-6df1e514",
+      "note": "Default settings included.",
+      "SG": "app",
+      "Subnet": "app-a",
+      "Profile": "el7"
+    },
+    "bastion": {
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-NAVGEM"
+      },
+      "Subnet": "web-a",
+      "SG": "bastion"
+    },
+    "public": {
+      "Subnet": "web-a",
+      "SG": "web"
+    }
+  },
+  "InstanceRoles": {
+    "lmgr": { "Subnet": "web-a", "SG" : "lmgr", "Profile" : "amazon" },
+    "build": { "Subnet": "web-a", "SG" : "bastion", "Profiles" : [ "oregon", "intel_sw"] },
+    "build1v": { "Subnet": "web-a", "SG" : "bastion", "Profiles" : [ "amazon", "intel_sw"] },
+    "logger": { "Profile": "app" },
+    "app6": {
+      "Profiles": [
+        "app",
+        "el6"
+      ]
+    },
+    "app": {
+      "Profile": "app"
+    },
+    "web": {
+      "Profile": "public"
+    },
+    "bastionwin": {
+      "UserDataTemplateFile": "templates/userdataWindows.erb",
+      "ImageId": "ami-e49d1885",
+      "Profiles": [
+        "windows2012",
+        "bastion"
+      ]
+    },
+    "bastion": {
+      "Profile": "bastion"
+    }
+  },
+  "ScmId": "$Id: NAVGEM.json 67992 2018-02-04 15:39:19Z dljones@nps.edu $",
+  "Security": {
+    "SrcCidr": {
+      "anywhere": "0.0.0.0/0",
+      "nps": "205.155.65.226/32",
+      "nrl": "192.138.87.99/32",
+      "nmci0": "138.163.0.0/24",
+      "fnmoc": "152.80.48.0/24"
+    },
+    "SGinBound": {
+      "app": "80,443,8080,8443:sg-web,sg-bastion 22:sg-bastion,sg-login",
+      "web": "80,443:nps,fnmoc 22:sg-bastion, 443:nmci0",
+      "db": "5432:sg-app 22:sg-bastion",
+      "lmgr": "27009:anywhere 22:sg-bastion,sg-web,sg-db 53329:sg-bastion,sg-web,sg-db",
+      "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+      "bastion": "22,443:myIP,nps,fnmoc,nmci0,nrl"
+    },
+    "SGoutBound": {
+      "web": "",
+      "bastion": "",
+      "app": "",
+      "db": "",
+      "nat": "80,443:anywhere"
+    }
+  },
+  "UserDataTemplateFile": "templates/userdata.erb",
+  "UsersFile": "usersNAVGEM.yaml"
+}

@@ -1,0 +1,224 @@
+{
+  "name": "cidata",
+  "description": "Import of the project ciData JSON",
+  "chef_type": "environment",
+  "json_class": "Chef::Environment",
+  "default_attributes": {
+    "cidata": {
+      "Cookbook": "fnmoc_ci",
+      "Environment": "Evaluation",
+      "VpcId": "vpc-cd1ad7a8",
+      "Schema": "20170226",
+      "UserDataTemplateFile": "templates/userdata.erb",
+      "DevMappingTemplateFile": "templates/devMapping.erb",
+      "UsersFile": "users.yaml",
+      "RuncmdFile": "runcmd.yaml",
+      "Project": "ciStack",
+      "Description": "Data used by CI processes for build, test, and release.",
+      "Version": "0.0.2-SNAPSHOT",
+      "ScmId": "$Id: ciStack.json 69018 2018-03-20 21:18:00Z dljones@nps.edu $",
+      "VpcName": "ciBootStrap",
+      "Components": [],
+      "Volumes": {
+        "vol4": {
+          "size": "50",
+          "VolumeId": "None",
+          "mount": "/scratch",
+          "InstanceName": "djones"
+        },
+        "vol3": {
+          "size": "50",
+          "VolumeId": "None"
+        }
+      },
+      "Profiles": {
+        "default": {
+          "note": "Default settings included.",
+          "SG": "app",
+          "Subnet": "app-a",
+          "Profile": "el7",
+          "Schedule": "6-18:1-5:PST8PDT",
+          "KeyName": "JONES.DANIEL.L.1265422345",
+          "InstanceType": "t2.micro",
+          "IamInstanceProfile": {
+            "Name": "CI-vpc-ciBootStrap-ro"
+          },
+          "priceListAttributes": {
+            "location": "AWS GovCloud (US)",
+            "terms": "OnDemand",
+            "operatingSystem": "Linux"
+          }
+        },
+        "bastion": {
+          "SG": "bastion",
+          "Subnet": "web-a",
+          "IamInstanceProfile": {
+            "Name": "CI-vpc-ciBootStrap"
+          }
+        },
+        "public": {
+          "SG": "web",
+          "Subnet": "web-a"
+        },
+        "amazon": {
+          "ImageId": "ami-7b4df41a",
+          "ImageDescription": "Amazon Linux"
+        },
+        "el6": {
+          "ImageId": "ami-fd03bc9c",
+          "ImageDescription": "Enterprize Linux 6"
+        },
+        "el7": {
+          "ImageId": "ami-cb942aaa",
+          "ImageDescription": "Enterprize Linux 7"
+        },
+        "RHEL7": {
+          "ImageId": "ami-299e2248",
+          "ImageDescription": "RHEL7"
+        },
+        "db": {
+          "SG": "db",
+          "Subnet": "db-a"
+        },
+        "app": {
+          "SG": "app",
+          "Subnet": "app-a"
+        }
+      },
+      "InstanceRoles": {
+        "lmgr": {
+          "Subnet": "web-a",
+          "SG": "lmgr",
+          "Profile": "el7"
+        },
+        "ubuntu": {
+          "ImageId": "ami-77199016",
+          "Profile": "app"
+        },
+        "build": {
+          "Subnet": "app-a",
+          "SG": "app",
+          "Profile": "el6"
+        },
+        "bastion": {
+          "Profile": "bastion"
+        },
+        "proxy": {
+          "Profile": "public"
+        },
+        "nexus": {
+          "Profile": "app"
+        },
+        "openldap": {
+          "Profile": "app",
+          "InstanceType": "t2.medium"
+        },
+        "openproject": {
+          "Profile": "app",
+          "InstanceType": "t2.medium"
+        },
+        "logger": {
+          "Profile": "app"
+        },
+        "jenkins": {
+          "Profile": "el7"
+        },
+        "gitlab": {
+          "Profile": "public",
+          "InstanceType": "t2.xlarge"
+        }
+      },
+      "EIPs": {
+        "bastion-0": "eipalloc-c9c463ac",
+        "lmgr-0": "eipalloc-d463d3b1",
+        "proxy-0": "eipalloc-c64990a3"
+      },
+      "MapVolumes": {},
+      "SCM_prefix": "https://svn.nps.edu/repos/metoc",
+      "ReleaseGroup": "None",
+      "s3Store": "s3://cibootstrap",
+      "s3ProjectStore": "s3://fnmoc.ci.common.data",
+      "s3SysStore": "s3://fnmoc.ci.cistack.systems",
+      "Security": {
+        "SGoutBound": {
+          "nat": "80,443:anywhere",
+          "db": "",
+          "app": "",
+          "bastion": "",
+          "lmgr": "",
+          "web": ""
+        },
+        "SGinBound": {
+          "bastion": "22,443:myIP,nps,fnmoc,nmci0",
+          "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+          "db": "5432:sg-web 22:sg-bastion",
+          "web": "80,443:nps,fnmoc 22:sg-bastion, 443:nmci0,remoteUsers",
+          "lmgr": "27009:sg-app,NAVGEM,ciStack 22:sg-bastion",
+          "app": "80,8080,8180,8280,8380,8443,8543,8643:sg-web,sg-bastion 22:sg-bastion,sg-login 389,636:anywhere"
+        },
+        "SrcCidr": {
+          "fnmoc": "152.80.48.0/24",
+          "nmci0": "138.163.0.0/24",
+          "nps": "205.155.65.226/32",
+          "NAVGEM": [
+            "54.202.210.249/32",
+            "34.201.0.92/32"
+          ],
+          "ciStack": [
+            "205.155.65.226/32"
+          ],
+          "remoteUsers": [
+            "205.155.65.226/32",
+            "71.84.12.33/32"
+          ],
+          "GDIT": [
+            "155.95.90.242/32",
+            "155.95.90.0/24",
+            "155.95.80.0/24"
+          ],
+          "anywhere": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
+        }
+      },
+      "ScmHeadURL": "$HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/ciStack.json $",
+      "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+      "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+      "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+      "Global": {
+        "Description": "Global cidata shared by all projects",
+        "Endpoints": {
+          "LDAP": {
+            "us-gov-west-1a": {
+              "URL": "ldap://10.0.20.4",
+              "BASE": "dc=exern,dc=nps,dc=edu"
+            },
+            "us-gov-west-1b": {
+              "URL": "ldap://10.0.20.4",
+              "BASE": "dc=exern,dc=nps,dc=edu"
+            }
+          },
+          "Vhosts": {
+            "first": "ci10.ccs.nps.edu",
+            "last": "ci29.ccs.nps.edu",
+            "NN:jenkins-0": "ci10.ccs.nps.edu",
+            "ciStack:jenkins-1": "ci11.ccs.nps.edu",
+            "ACAF:app-0": "ci11.ccs.nps.edu",
+            "nites:build-1": "ci11.ccs.nps.edu",
+            "ciStack:jenkins-2": "ci12.ccs.nps.edu",
+            "ciStack:build-2": "ci12.ccs.nps.edu",
+            "ACAF:acaf-dev-2": "ci13.ccs.nps.edu",
+            "ciStack:proxy-0": "incubator2.nps.edu",
+            "WW:jenkins-0": "ci14.ccs.nps.edu",
+            "ciStack:proxy-1": "incubator2.nps.edu"
+          }
+        }
+      }
+    }
+  },
+  "override_attributes": {},
+  "cookbook_versions": {
+    "fnmoc_ci": ">= 0.1.0"
+  }
+}

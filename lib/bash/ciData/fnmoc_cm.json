@@ -1,0 +1,127 @@
+{
+  "Cookbook" : "fnmoc_cm_ci",
+  "Environment": "Evaluation",
+  "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+  "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+  "EIPs": {
+    "bastion": "true"
+  },
+  "s3Home": "s3://fnmoc.home",
+  "Version": "0.0.1-SNAPSHOT",
+  "Volumes": {},
+  "VpcName": "fnmoc_cm",
+  "VpcId": "vpc-e3d77086",
+  "s3Store": "s3://cibootstrap",
+  "s3ProjectStore": "s3://fnmoc.fnmoc_cm.data",
+  "s3SysStore": "s3://fnmoc.fnmoc_cm.systems",
+  "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+  "Schema": "20170226",
+  "Project": "fnmoc_cm",
+  "Profiles": {
+    "amazon": {
+      "ImageDescription": "Amazon Linux",
+      "ImageId": "ami-7b4df41a"
+    },
+    "el6": {
+      "ImageDescription": "Enterprize Linux 6",
+      "ImageId": "ami-fd03bc9c"
+    },
+    "el7": {
+      "ImageDescription": "Enterprize Linux 7",
+      "ImageId": "ami-cb942aaa"
+    },
+    "RHEL7": {
+      "ImageDescription": "RHEL7",
+      "ImageId": "ami-299e2248"
+    },
+    "db": {
+      "Subnet": "db-a",
+      "SG": "db"
+    },
+    "app": {
+      "Subnet": "app-a",
+      "SG": "app"
+    },
+    "default": {
+      "SG": "app",
+      "note": "Default settings included.",
+      "Profile": "el7",
+      "Subnet": "app-a",
+      "KeyName": "JONES.DANIEL.L.1265422345",
+      "Schedule": "6-18:1-5:PST8PDT",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-fnmoc_cm-ro"
+      },
+      "InstanceType": "t2.micro",
+      "priceListAttributes": {
+        "operatingSystem": "Linux",
+        "terms": "OnDemand",
+        "location": "AWS GovCloud (US)"
+      },
+      "ImageId": "ami-6fc9770e"
+    },
+    "bastion": {
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-fnmoc_cm"
+      },
+      "Subnet": "web-a",
+      "SG": "bastion"
+    },
+    "public": {
+      "Subnet": "web-a",
+      "SG": "web"
+    }
+  },
+  "InstanceRoles": {
+    "logger": {
+      "Profile": "app"
+    },
+    "app": {
+      "Profile": "app"
+    },
+    "web": {
+      "Profile": "public"
+    },
+    "bastionwin": {
+      "UserDataTemplateFile": "templates/userdataWindows.erb",
+      "ImageId": "ami-e49d1885",
+      "Profile": "bastion"
+    },
+    "bastion": {
+      "Profile": "bastion"
+    }
+  },
+  "ScmId": "$Id$",
+  "Security": {
+    "SrcCidr": {
+      "anywhere": "0.0.0.0/0",
+      "nps": "205.155.65.226/32",
+      "nmci0": "138.163.0.0/24",
+      "fnmoc": "152.80.48.0/24"
+    },
+    "SGinBound": {
+      "app": "80,443,8080,8443:sg-web,sg-bastion 22:sg-bastion,sg-login",
+      "web": "80,443:nps,fnmoc 22:sg-bastion, 443:nmci0",
+      "db": "5432:sg-app 22:sg-bastion",
+      "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+      "bastion": "22,443:myIP,nps,fnmoc,nmci0"
+    },
+    "SGoutBound": {
+      "web": "",
+      "bastion": "",
+      "app": "",
+      "db": "",
+      "nat": "80,443:anywhere"
+    }
+  },
+  "UserDataTemplateFile": "templates/userdata.erb",
+  "UsersFile": "users.yaml",
+  "MapVolumes": {},
+  "DevMappingTemplateFile": "templates/devMapping.erb",
+  "Description": "Data used by CI processes for build, test, and release.",
+  "Components": [],
+  "ScmHeadURL": "$HeadURL$",
+  "SCM_prefix": "https://svn.nps.edu/repos/metoc",
+  "RuncmdFile": "runcmd.yaml",
+  "ReleaseGroup": "None"
+}

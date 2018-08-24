@@ -1,0 +1,164 @@
+#!/bin/bash
+#
+#	/etc/rc.d/init.d/flexlm
+#
+#	Manage the Intel license server
+#
+# chkconfig: 2345 90 10
+# description: Start or stop the Intel flex license manager
+#              There are two daemons: the master and the vendor.
+
+### BEGIN INIT INFO
+# ref: http://refspecs.linux-foundation.org/LSB_3.2.0/LSB-Core-generic/LSB-Core-generic/facilname.html
+# Provides: flexlm
+# Required-Start: $syslog
+# Required-Stop: 
+# Default-Start: 2345
+# Default-Stop: 10
+# Short-Description: Intel flex license manager daemons.
+# Description:      Start or stop the master and vendor daemons to support Intel floating licenses.
+### END INIT INFO
+
+
+# exit codes
+  # standard codes per
+  # http://refspecs.freestandards.org/LSB_3.1.1/LSB-Core-generic/LSB-Core-generic/iniscrptact.html
+  rc_OK=0
+  rc_dead_and_pid_file_exists=1
+  rc_dead_and_lock_exists=2
+  rc_not_running=3
+  rc_unimplemented=3
+  rc_unknown=4
+  # app-specific codes (150-199)
+
+prog=$(basename $0)
+
+# Source function library.
+. /etc/init.d/functions
+
+# read the config file if it exists
+config=/etc/sysconfig/flexlm
+[ -r ${config} ] && . ${config}
+
+# default values (if not defined in config)
+basedir=${basedir:-/opt/intel/licenseserver}
+#license_file=${basedir}/${license_file:-server.lic}
+license_file=${license_file:-/opt/intel/serverlicenses/COM_L___FTNG-6ZTWLCVM.lic}
+export INTEL_LICENCE_FILE=$license_file
+logdir=${logdir:-/var/log/flexlm}
+log_file=${logdir}/${log_file:-lmgrd.intel.log}
+masterd=${masterd:-lmgrd}
+vendord=${vendord:-INTEL}
+pid_dir=/var/run/flexlm
+user=${user:-svc_flexlm}
+### this should be in the install script:
+getent passwd $user >/dev/null 2>&1 || adduser -c "Intel lmgr service" -d /opt/intel/licenseserver -M -r $user
+[ ! -d $logdir ] && install -d -o $user -g $user  $logdir
+[ ! -d $pid_dir ] && mkdir -p $pid_dir
+
+# programs
+lmstat=${basedir}/lmstat
+
+# functions
+
+check_status() {
+	# see implementation_notes document with this rpm
+	$lmstat -c $license_file 2>&1 | grep 'not running' &> /dev/null && _rc=$rc_unknown || _rc=0
+
+	if [ $_rc -eq 0 ]; then
+	  # appear to be running, so check pid files
+	  master_pid_expected=$(cat $pid_dir/masterd 2> /dev/null)
+	  master_pid_actual=$(pidof $masterd 2> /dev/null)
+	  if [[ $master_pid_expected != $master_pid_actual ]]; then
+	    echo "master pid file is missing or stale" >&2
+	    _rc=$rc_unknown
+	  fi
+	  vendor_pid_expected=$(cat $pid_dir/vendord 2> /dev/null)
+	  vendor_pid_actual=$(pidof $vendord 2> /dev/null)
+	  if [[ $vendor_pid_expected != $vendor_pid_actual ]]; then
+	    echo "vendor pid file is missing or stale" >&2
+	    _rc=$rc_unknown
+	  fi
+	else
+	  # not running, so pid files should not exist
+	  if [[ -r $pid_dir/masterd ]] || [[ -r $pid_dir/vendord ]]; then
+	    echo "flexlm is dead and pid file exists" >&2
+	    _rc=$rc_dead_and_pid_file_exists
+	  fi
+	fi
+
+	return $_rc
+}
+
+start() {
+	echo -n "Starting flexlm master and vendor daemons: "
+
+	su -c "cd $basedir && $basedir/$masterd -c $license_file -l $log_file 2>&1" - $user >> $logdir/startup.errors
+        sleep 5
+	pidof $masterd > $pid_dir/masterd
+	pidof $vendord > $pid_dir/vendord
+
+	# per http://refspecs.freestandards.org/LSB_3.1.1/LSB-Core-generic/LSB-Core-generic/iniscrptact.html
+	# this should return 0 if we are started, even on a service already running
+	check_status
+	_rc=$?
+
+	[ $_rc -eq 0 ] && echo_success || echo_failure
+	echo
+	return $_rc
+}	
+
+stop() {
+	echo -n "Stopping flexlm master and vendor daemons: "
+
+	for pid in $(pidof $masterd); do
+	  kill -9 $pid
+	done
+
+	for pid in $(pidof $vendord); do
+	  kill -9 $pid
+	done
+
+	rm -f $pid_dir/masterd
+	rm -f $pid_dir/vendord
+
+	# per http://refspecs.freestandards.org/LSB_3.1.1/LSB-Core-generic/LSB-Core-generic/iniscrptact.html
+	# we should return 0 if stopped, even if we were already stopped or not enabled
+	check_status &> /dev/null && _rc=1 || _rc=0
+
+	[ $_rc -eq 0 ] && echo_success || echo_failure
+	echo
+	return $_rc
+}
+
+status() {
+        echo -n "Status of flexlm: "
+
+	check_status
+	_rc=$?
+
+	[ $_rc -eq 0 ] && echo_success || echo_failure
+	echo
+	return $_rc
+}
+
+case "$1" in
+    start)
+	start
+	;;
+    stop)
+	stop
+	;;
+    status)
+	status
+	;;
+    restart)
+    	stop
+	start
+	;;
+    *)
+	echo "Usage: flexlm {start|stop|status|restart}"
+	exit $rc_unimplemented
+	;;
+esac
+exit $?

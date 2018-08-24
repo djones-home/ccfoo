@@ -1,0 +1,151 @@
+{
+  "Cookbook" : "wasp_ci",
+  "InstanceRoles": {
+    "bastion": {
+      "Profile": "bastion"
+    },
+    "web": {
+      "Profile": "public"
+    },
+    "app": {
+      "Profile": "app"
+    },
+    "logger": {
+      "Profile": "app"
+    }
+  },
+  "Profiles": {
+    "app": {
+      "SG": "app",
+      "Subnet": "app-a"
+    },
+    "default": {
+      "note": "Default settings included.",
+      "SG": "app",
+      "Subnet": "app-a",
+      "Profile": "el7",
+      "Schedule": "6-18:1-5:PST8PDT",
+      "KeyName": "JONES.DANIEL.L.1265422345",
+      "InstanceType": "t2.micro",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-WASP-ro"
+      },
+      "ImageId": "ami-6fc9770e",
+      "priceListAttributes": {
+        "location": "AWS GovCloud (US)",
+        "terms": "OnDemand",
+        "operatingSystem": "Linux"
+      }
+    },
+    "bastion": {
+      "SG": "bastion",
+      "Subnet": "web-a",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-WASP"
+      }
+    },
+    "public": {
+      "SG": "web",
+      "Subnet": "web-a"
+    },
+    "amazon": {
+      "ImageId": "ami-7b4df41a",
+      "ImageDescription": "Amazon Linux"
+    },
+    "el6": {
+      "ImageId": "ami-fd03bc9c",
+      "ImageDescription": "Enterprize Linux 6"
+    },
+    "el7": {
+      "ImageId": "ami-cb942aaa",
+      "ImageDescription": "Enterprize Linux 7"
+    },
+    "RHEL7": {
+      "ImageId": "ami-299e2248",
+      "ImageDescription": "RHEL7"
+    },
+    "db": {
+      "SG": "db",
+      "Subnet": "db-a"
+    }
+  },
+  "Schema": "20170226",
+  "Components": [],
+  "Environment": "evaluation",
+  "VpcName": "WASP",
+  "VpcId": "vpc-3bfd335e",
+  "Version": "0.0.2-SNAPSHOT",
+  "Description": "Data used by CI processes for build, test, and release.",
+  "SCM_prefix": "https://svn.nps.edu/repos/metoc",
+  "ReleaseGroup": "None",
+  "s3Store": "s3://cibootstrap",
+  "s3ProjectStore": "s3://fnmoc.ci.nrl.data",
+  "s3SysStore": "s3://fnmoc.ci.wasp.systems",
+  "Security": {
+    "SrcCidr": {
+      "anywhere": "0.0.0.0/0",
+      "nps": "205.155.65.0/24",
+      "nrlmry": "199.9.0.0/24",
+      "nrlmry_dev": "192.138.87.0/24",
+      "nrl_dev2": "216.228.5.0/24",
+      "andy_gilroy": "47.143.82.29/32",
+      "onr": "10.19.221.0/24",
+      "fnmoc": "152.80.48.0/24"
+    },
+    "SGinBound": {
+      "app": "80,8080,8180,8280,8380,8443,8543,8643:sg-web,sg-bastion 22:sg-bastion,sg-login",
+      "web": "80,443:nps,fnmoc,nrl_dev2,nrlmry,nrlmry_dev,andy_gilroy,onr 22:sg-bastion",
+      "db": "4444:sg-web,sg-bastion 22:sg-bastion",
+      "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+      "bastion": "22:myIP,nps,fnmoc,nrl_dev2,nrlmry_dev,nrlmry,andy_gilroy,onr"
+    },
+    "SGoutBound": {
+      "web": "",
+      "bastion": "",
+      "app": "",
+      "db": "",
+      "nat": "80,443:anywhere"
+    }
+  },
+  "KeyName": "JONES.DANIEL.L.1265422345",
+  "ScmId": "$Id: AWS_WASP.json 67992 2018-02-04 15:39:19Z dljones@nps.edu $",
+  "ScmHeadURL": "$HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/AWS_WASP.json $",
+  "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+  "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+  "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+  "RuncmdFile": "runcmd.yaml",
+  "UsersFile": "nrl_users.yaml",
+  "UserDataTemplateFile": "templates/userdata.erb",
+  "DevMappingTemplateFile": "templates/devMapping.erb",
+  "ChangeLog": [
+    {
+      "date": "1494360253",
+      "msg": "Initial"
+    },
+    {
+      "date": "1494360253",
+      "msg": "djones migrateSchema: to version 20170226"
+    }
+  ],
+  "Project": "WASP",
+  "Volumes": {
+    "Volumes": {
+      "vol4": {
+        "size": "50",
+        "VolumeId": "vol-012345",
+        "mount": "/scratch",
+        "InstanceName": "test-0"
+      },
+      "vol3": {
+        "size": "50",
+        "VolumeId": "none",
+        "InstanceName": "test-1"
+      }
+    }
+  },
+  "EIPs": {
+    "Bastion": "eipalloc-a5882cc0",
+    "Proxy": "eipalloc-true"
+  },
+  "MapVolumes": {}
+}

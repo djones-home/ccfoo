@@ -1,0 +1,56 @@
+//md+
+// ## Jenkins plugin install and setup from Init Groovy Script
+// 
+// This script is templated and installed (by chef/erb) as JENKINS_HOME/init.groovy.d/01_ciePlugins.groovy.
+// It takes a string (__plugins__) that lists must-have plugins for the typical FNMOC CIE instance of Jenkins.
+// 
+//  - Run by Jenkins init hook on startup
+import jenkins.model.*
+import java.util.logging.Logger
+
+def plugins = ("reverse-proxy-auth-plugin matrix-auth " + "<%=node[:jenkins_plugins].join(" ")%>").split()
+def pm =  Jenkins.instance.getPluginManager()
+def uc = Jenkins.instance.getUpdateCenter()
+def logger = Logger.getLogger("")
+def installed = false
+def initialized = false
+def instance = Jenkins.getInstance()
+
+//  - Log the must-have plugin that checks for, via Plugin Managager( __Jenkins.instance.getPluginManager__).
+//  - When missing a plugin, use the Update Center (__Jenkins.instance.getUpdateCenter__) to find it.
+logger.info("ciePlugins: " + plugins)
+plugins.each {
+  logger.info("ciePlugins: Checking " + it)
+  if (!pm.getPlugin(it)) {
+    logger.info("ciePlugins: Looking in UpdateCenter for " + it)
+    if (!initialized) {
+      uc.updateAllSites()
+      initialized = true
+    }
+    def plugin = uc.getPlugin(it)
+    if (plugin) {
+      logger.info("ciePlugins: Installing " + it)
+    	def installFuture = plugin.deploy()
+      while(!installFuture.isDone()) {
+        logger.info("ciePlugins: Waiting for plugin install: " + it)
+        sleep(3000)
+      }
+      installed = true
+    }
+  }
+}
+//  - After all plugins have been checked, if any plugin/s installed, initiate a restart.
+if (installed) {
+  logger.info("Plugins installed, initializing a restart!")
+  instance.save()
+  instance.restart()
+} else {
+//  - Create marker file, to help test/sequence other init.groovy scripts, if no installs or restart
+  def myFile = new File ( System.getenv("HOME") + "/.groovy_ciePlugins")
+  myFile.createNewFile()
+  myFile.write( plugins.join(" ") + "\n" )
+}
+
+
+
+

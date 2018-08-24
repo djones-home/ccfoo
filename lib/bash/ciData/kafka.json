@@ -1,0 +1,141 @@
+{
+  "Schema": "20170226",
+  "Project": "kafka",
+  "Cookbook": "kafka_ci",
+  "Environment": "Evaluation",
+  "Profiles": {
+    "app": {
+      "SG": "app",
+      "Subnet": "app-a"
+    },
+    "default": {
+      "note": "Default settings included.",
+      "SG": "app",
+      "Subnet": "app-a",
+      "Profile": "el7",
+      "Schedule": "6-18:1-5:PST8PDT",
+      "KeyName": "JONES.DANIEL.L.1265422345",
+      "InstanceType": "c4.large",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-kafka-ro"
+      },
+      "ImageId": "ami-3c8c185d",
+      "priceListAttributes": {
+        "location": "AWS GovCloud (US)",
+        "terms": "OnDemand",
+        "operatingSystem": "Linux"
+      }
+    },
+    "bastion": {
+      "SG": "bastion",
+      "Subnet": "web-a",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-kafka"
+      }
+    },
+    "public": {
+      "SG": "web",
+      "Subnet": "web-a"
+    },
+    "amazon": {
+      "ImageId": "ami-7b4df41a",
+      "ImageDescription": "Amazon Linux"
+    },
+    "el6": {
+      "ImageId": "ami-fd03bc9c",
+      "ImageDescription": "Enterprize Linux 6"
+    },
+    "el7": {
+      "ImageId": "ami-cb942aaa",
+      "ImageDescription": "Enterprize Linux 7"
+    },
+    "RHEL7": {
+      "ImageId": "ami-299e2248",
+      "ImageDescription": "RHEL7"
+    },
+    "windows2012": {
+      "KeyName": "admin1",
+      "ImageId": "ami-e49d1885",
+      "UserDataTemplateFile": "templates/userdataWindows.erb"
+    },
+    "db": {
+      "SG": "db",
+      "Subnet": "db-a"
+    }
+  },
+  "InstanceRoles": {
+    "bastion": {
+      "Profile": "bastion"
+    },
+    "bastionwin": {
+      "Profiles": [
+        "windows2012",
+        "bastion"
+      ],
+      "ImageId": "ami-e49d1885",
+      "UserDataTemplateFile": "templates/userdataWindows.erb"
+    },
+    "web": {
+      "Profile": "public"
+    },
+    "app": {
+      "Profile": "app"
+    },
+    "app6": {
+      "Profiles": [
+        "app",
+        "el6"
+      ]
+    },
+    "logger": {
+      "Profile": "app"
+    }
+  },
+  "s3Store": "s3://cibootstrap",
+  "s3ProjectStore": "s3://fnmoc.kafka.data",
+  "s3SysStore": "s3://fnmoc.kafka.systems",
+  "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+  "s3Home": "s3://fnmoc.home",
+  "EIPs": {
+    "bastion": "true"
+  },
+  "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+  "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+  "Components": [],
+  "Description": "Data used by CI processes for build, test, and release.",
+  "DevMappingTemplateFile": "templates/devMapping.erb",
+  "MapVolumes": {},
+  "ReleaseGroup": "None",
+  "RuncmdFile": "runcmd.yaml",
+  "SCM_prefix": "https://svn.nps.edu/repos/metoc",
+  "ScmHeadURL": "$HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/kafka.json $",
+  "ScmId": "$Id: kafka.json 70761 2018-05-07 18:21:39Z argote_gustavo@bah.com $",
+  "Security": {
+    "SGoutBound": {
+      "nat": "80,443:anywhere",
+      "db": "",
+      "app": "",
+      "bastion": "",
+      "web": ""
+    },
+    "SGinBound": {
+      "bastion": "22,443:myIP,nps,fnmoc,nmci0",
+      "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+      "db": "5432:sg-app 22:sg-bastion",
+      "web": "80,443:nps,fnmoc 22:sg-bastion, 443:nmci0",
+      "app": "80,443,8080,8443:sg-web,sg-bastion 22:sg-bastion,sg-login"
+    },
+    "SrcCidr": {
+      "fnmoc": "152.80.48.0/24",
+      "nmci0": "138.163.0.0/24",
+      "nps": "205.155.65.226/32",
+      "anywhere": "0.0.0.0/0"
+    }
+  },
+  "UserDataTemplateFile": "templates/userdata.erb",
+  "UsersFile": "users.yaml",
+  "Version": "0.0.1-SNAPSHOT",
+  "Volumes": {},
+  "VpcName": "kafka",
+  "VpcId": "vpc-a2e791c7"
+}

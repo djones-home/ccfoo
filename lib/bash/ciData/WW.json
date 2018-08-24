@@ -1,0 +1,141 @@
+{
+  "VpcId": "",
+  "VpcName": "WW",
+  "Volumes": {},
+  "Version": "0.0.1-SNAPSHOT",
+  "UsersFile": "users.yaml",
+  "UserDataTemplateFile": "templates/userdata.erb",
+  "Security": {
+    "SrcCidr": {
+      "anywhere": "0.0.0.0/0",
+      "nps": "205.155.65.226/32",
+      "nmci0": "138.163.0.0/24",
+      "fnmoc": "152.80.48.0/24"
+    },
+    "SGinBound": {
+      "app": "80,443,8080,8443:sg-web,sg-bastion 22:sg-bastion,sg-login",
+      "web": "80,443:nps,fnmoc 22:sg-bastion, 443:nmci0",
+      "db": "5432:sg-app 22:sg-bastion",
+      "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+      "bastion": "22,443:myIP,nps,fnmoc,nmci0"
+    },
+    "SGoutBound": {
+      "web": "",
+      "bastion": "",
+      "app": "",
+      "db": "",
+      "nat": "80,443:anywhere"
+    }
+  },
+  "ScmId": "$Id: WW.json 67847 2018-01-31 16:29:07Z jboss $",
+  "ScmHeadURL": "$HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/WW.json $",
+  "SCM_prefix": "https://svn.nps.edu/repos/metoc",
+  "RuncmdFile": "runcmd.yaml",
+  "ReleaseGroup": "None",
+  "MapVolumes": {},
+  "DevMappingTemplateFile": "templates/devMapping.erb",
+  "s3ProjectStore": "s3://fnmoc.ww.data",
+  "s3Store": "s3://cibootstrap",
+  "InstanceRoles": {
+    "logger": {
+      "Profile": "app"
+    },
+    "app6": {
+      "Profiles": [
+        "app",
+        "el6"
+      ]
+    },
+    "app": {
+      "Profile": "app"
+    },
+    "web": {
+      "Profile": "public"
+    },
+    "bastionwin": {
+      "UserDataTemplateFile": "templates/userdataWindows.erb",
+      "ImageId": "ami-e49d1885",
+      "Profiles": [
+        "windows2012",
+        "bastion"
+      ]
+    },
+    "bastion": {
+      "Profile": "bastion"
+    }
+  },
+  "Profiles": {
+    "db": {
+      "Subnet": "db-a",
+      "SG": "db"
+    },
+    "windows2012": {
+      "UserDataTemplateFile": "templates/userdataWindows.erb",
+      "ImageId": "ami-e49d1885",
+      "KeyName": "admin1"
+    },
+    "app": {
+      "Subnet": "app-a",
+      "SG": "app"
+    },
+    "default": {
+      "priceListAttributes": {
+        "operatingSystem": "Linux",
+        "terms": "OnDemand",
+        "location": "AWS GovCloud (US)"
+      },
+      "ImageId": "ami-6fc9770e",
+      "note": "Default settings included.",
+      "SG": "app",
+      "Subnet": "app-a",
+      "Profile": "el7",
+      "Schedule": "6-18:1-5:PST8PDT",
+      "KeyName": "JONES.DANIEL.L.1265422345",
+      "InstanceType": "t2.micro",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-WW-ro"
+      }
+    },
+    "bastion": {
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-WW"
+      },
+      "Subnet": "web-a",
+      "SG": "bastion"
+    },
+    "public": {
+      "Subnet": "web-a",
+      "SG": "web"
+    },
+    "amazon": {
+      "ImageDescription": "Amazon Linux",
+      "ImageId": "ami-7b4df41a"
+    },
+    "el6": {
+      "ImageDescription": "Enterprize Linux 6",
+      "ImageId": "ami-fd03bc9c"
+    },
+    "el7": {
+      "ImageDescription": "Enterprize Linux 7",
+      "ImageId": "ami-cb942aaa"
+    },
+    "RHEL7": {
+      "ImageDescription": "RHEL7",
+      "ImageId": "ami-299e2248"
+    }
+  },
+  "Environment": "Evaluation",
+  "Cookbook": "WW_ci",
+  "Project": "WW",
+  "Schema": "20170226",
+  "s3SysStore": "s3://fnmoc.ww.systems",
+  "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+  "s3Home": "s3://fnmoc.home",
+  "EIPs": {
+    "bastion": "true"
+  },
+  "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+  "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+  "Components": [],
+  "Description": "Data used by CI processes for build, test, and release."
+}

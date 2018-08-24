@@ -1,0 +1,58 @@
+#!/bin/bash
+
+###
+# Unit tests for Bash scirpts.
+#
+# Dependencies: 
+# - sh2ju.sh or Shell2junit from https://github.com/manolo/shell2junit
+#
+# Document version:
+#
+#       $Id$
+#       $HeadURL$
+#
+# 
+cd $WORKSPACE/target || { echo ERROR No \$WORKSPACE/target; exit 1; }
+
+# Test shell function library.
+shellLib=${BASH_SOURCE[0]%/*}/ciStack.sh
+module=${shellLib##/}
+module=${shellLib%.*}
+#
+# Requires  sh2ju.sh, to test and create a junit report in surefire like fassion for CI.
+# see http://manolocarrasco.blogspot.com/2010/02/hudson-publish-bach.html
+#
+for n in sh2ju.sh ; do
+  n=$(dirname ${BASH_SOURCE[0]})/$n
+  [ ! -f "$n" ] && { echo $0 ERROR missing shell library dependency: $n; exit 1; }
+  . $n || { echo $0 ERROR in library: $n; exit 1; }
+done
+
+
+juLogClean
+
+# - syntax check
+juLog  -name=${module}ShellSyntax   bash --norc -n $shellLib
+
+ # load the functions
+. $shellLib || exit 1
+declare -i j=0
+let j++; juLog  -name=${module}-$j  -ierror=foo ciStack_schema_test $WORKSPACE/ciData/templates/${SCHEMA_CIDATA}.json
+ # Usage check 
+ # juLog  -name=${module}-$num  -ierror=Usage ciStack help
+
+# - unknown subcommand
+let j++; juLog  -name=${module}-$j  -ierror=Usage ciStack unknownSubCommand
+
+# - generate_ciData
+let j++; juLog  -name=${module}-$j  -ierror=Usage generate_ciData testTools
+
+# - generate_ciJob 
+# - create_vpc
+# - delete_vpc
+# - ciStack security
+# - ciStack launch
+# - ciStack stop
+# - ciStack start
+# - ciStack terminate
+# - vpc_peering

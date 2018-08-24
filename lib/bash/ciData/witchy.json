@@ -1,0 +1,241 @@
+{
+  "Cookbook" : "witchy_ci",
+  "InstanceRoles": {
+    "bastion": {
+      "Profile": "bastion"
+    },
+    "web": {
+      "Profile": "public"
+    },
+    "app": {
+      "Profile": "app"
+    },
+    "logger": {
+      "Profile": "app"
+    }
+  },
+  "Profiles": {
+    "default": {
+      "note": "Default settings included.",
+      "SG": "app",
+      "Subnet": "app-a",
+      "Profile": "el7",
+      "Schedule": "6-18:1-5:PST8PDT",
+      "KeyName": "JONES.DANIEL.L.1265422345",
+      "InstanceType": "t2.micro",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-witchy-ro"
+      },
+      "ImageId": "ami-6fc9770e",
+      "priceListAttributes": {
+        "location": "AWS GovCloud (US)",
+        "terms": "OnDemand",
+        "operatingSystem": "Linux"
+      }
+    },
+    "app": {
+      "SG": "app"
+    },
+    "bastion": {
+      "SG": "bastion",
+      "Subnet": "web-a",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-witchy"
+      }
+    },
+    "public": {
+      "SG": "web",
+      "Subnet": "web-a"
+    },
+    "amazon": {
+      "ImageId": "ami-7b4df41a",
+      "ImageDescription": "Amazon Linux"
+    },
+    "el6": {
+      "ImageId": "ami-fd03bc9c",
+      "ImageDescription": "Enterprize Linux 6"
+    },
+    "el7": {
+      "ImageId": "ami-cb942aaa",
+      "ImageDescription": "Enterprize Linux 7"
+    },
+    "RHEL7": {
+      "ImageId": "ami-299e2248",
+      "ImageDescription": "RHEL7"
+    },
+    "db": {
+      "SG": "db",
+      "Subnet": "db-a"
+    }
+  },
+  "Schema": "20170226",
+  "RuncmdFile": "runcmd.yaml",
+  "SCM_prefix": "https://svn.nps.edu/repos/metoc",
+  "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+  "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+  "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+  "Instances": [
+    {
+      "Name": "el7-rescue",
+      "ImageId": "ami-9a952bfb",
+      "cidata": {
+        "SG": "app",
+        "Subnet": "app-a"
+      }
+    },
+    {
+      "Name": "app-el7",
+      "ImageId": "ami-cb942aaa",
+      "cidata": {
+        "SG": "app",
+        "Subnet": "app-a"
+      }
+    },
+    {
+      "Name": "web-el7",
+      "ImageId": "ami-cb942aaa",
+      "cidata": {
+        "SG": "web",
+        "Subnet": "web-a"
+      }
+    },
+    {
+      "Name": "db-el7",
+      "ImageId": "ami-cb942aaa",
+      "cidata": {
+        "SG": "db",
+        "Subnet": "db-a"
+      }
+    },
+    {
+      "Name": "app-el6",
+      "ImageId": "ami-fd03bc9c",
+      "cidata": {
+        "SG": "app",
+        "Subnet": "app-a"
+      }
+    },
+    {
+      "Name": "web-el6",
+      "ImageId": "ami-fd03bc9c",
+      "cidata": {
+        "SG": "web",
+        "Subnet": "web-a"
+      }
+    },
+    {
+      "Name": "db-el6",
+      "ImageId": "ami-fd03bc9c",
+      "cidata": {
+        "SG": "db",
+        "Subnet": "db-a"
+      }
+    },
+    {
+      "Name": "Bastion",
+      "Schedule": "None",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-witchy"
+      },
+      "cidata": {
+        "ec2": {
+          "associateAddress": "eipalloc-e277d087"
+        },
+        "SG": "bastion",
+        "Subnet": "web-a"
+      }
+    },
+    {
+      "Name": "witchy",
+      "cidata": {
+        "SG": "app",
+        "Subnet": "app-a"
+      }
+    },
+    {
+      "Name": "Proxy",
+      "cidata": {
+        "ec2": {
+          "associateAddress": "eipalloc-true"
+        },
+        "SG": "web",
+        "Subnet": "web-a"
+      }
+    }
+  ],
+  "InstanceDefaults": {
+    "Schedule": "6-18:1-5:PST8PDT",
+    "KeyName": "ROYER.HANS.BERNARD.1200400689",
+    "InstanceType": "t2.micro",
+    "IamInstanceProfile": {
+      "Name": "CI-vpc-witchy-ro"
+    },
+    "ImageId": "ami-6fc9770e"
+  },
+  "Components": [],
+  "VpcName": "witchy",
+  "ScmHeadURL": "$HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/witchy.json $",
+  "s3Store": "s3://cibootstrap",
+  "s3ProjectStore": "s3://fnmoc.ci.dev",
+  "s3SysStore": "s3://fnmoc.ci.witchy.systems",
+  "UsersFile": "fnmoc_webshop_users.yaml",
+  "UserDataTemplateFile": "templates/userdata.erb",
+  "DevMappingTemplateFile": "templates/devMapping.erb",
+  "Security": {
+    "SrcCidr": {
+      "anywhere": "0.0.0.0/0",
+      "nps": "205.155.65.226/32",
+      "fnmoc": "152.80.48.0/24"
+    },
+    "SGinBound": {
+      "app": "80,8080,8180,8280,8380,8443,8543,8643:sg-web,sg-bastion 22:sg-bastion,sg-login",
+      "web": "80,443:nps,fnmoc 22:sg-bastion",
+      "db": "4444:sg-web,sg-bastion 22:sg-bastion",
+      "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+      "bastion": "22:myIP,nps,fnmoc"
+    },
+    "SGoutBound": {
+      "web": "",
+      "bastion": "",
+      "app": "",
+      "db": "",
+      "nat": "80,443:anywhere"
+    }
+  },
+  "ReleaseGroup": "None",
+  "VpcId": "vpc-30ce0755",
+  "ScmId": "$Id: witchy.json 67992 2018-02-04 15:39:19Z dljones@nps.edu $",
+  "Version": "0.0.2-SNAPSHOT",
+  "Description": "Data used by CI processes for build, test, and release.",
+  "ChangeLog": [
+    {
+      "date": "1494360415",
+      "msg": "Initial"
+    },
+    {
+      "date": "1494360415",
+      "msg": "djones migrateSchema: to version 20170226"
+    }
+  ],
+  "Project": "witchy",
+  "Volumes": {
+    "Volumes": {
+      "vol4": {
+        "size": "50",
+        "VolumeId": "vol-012345",
+        "mount": "/scratch",
+        "InstanceName": "test-0"
+      },
+      "vol3": {
+        "size": "50",
+        "VolumeId": "none",
+        "InstanceName": "test-1"
+      }
+    }
+  },
+  "EIPs": {
+    "Bastion": "eipalloc-e277d087",
+    "Proxy": "eipalloc-true"
+  },
+  "MapVolumes": {}
+}

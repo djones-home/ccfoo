@@ -1,0 +1,123 @@
+#!/bin/bash
+
+#md+
+###
+# rescueInstance is a helper function for rescue, as an admim, running this on a VM Instance, will stop the instance.
+#
+
+type get_instances >/dev/null 2>&1 || {
+# - Load the ciStack and aws.func shell libs
+   p=$HOME/aws/bin
+   [ -d $p ] && { 
+        . $p/aws.func;
+        . $p/ciStack.sh
+    };
+    cacRestart
+}
+
+rescueInstance() {
+    local usage="${FUNCNAME[0]} {InstanceName} [bastionName=bastion-0]" 
+    local rj bj volId dev rootdev  bId rId q name="$1" state answer  bn=${2:-"bastion-0"} ip bDesc rDesc
+    [ -z "$name" ] && { echo $usage; return 1; }
+# - Get describe-instances json of the instance to rescue, and bastion (default to bastion-0 if not given)
+    rj=$(get_instances $name) || { echo ERROR: could not find $name; return 1; }
+    bj=$(get_instances $bn ) || return 1
+    q=.Reservations[].Instances[]
+    bId=$(echo $bj | jq -r .Reservations[].Instances[].InstanceId)
+    bDesc=$(aws ec2 describe-images --image-ids $(echo $bj | jq -r "$q.ImageId")| jq -r .Images[].Description)
+    rId=$(echo $rj | jq -r .Reservations[].Instances[].InstanceId)
+# - The Description is not good for this. - Ask the user if which type of instruction to print YTBD
+    rDesc=$(aws ec2 describe-images --image-ids $(echo $rj | jq -r "$q.ImageId")| jq -r .Images[].Description)
+    echo "$rDesc" | grep LVM && echo "$bDesc" | grep LVM && {
+        echo ERROR: Both $name and $bn have  LVM in their Description. Use a bastion w/o Logical Volumes to avoid lv conflicts
+        return 1
+    }
+# - Find bastion ip address, use private IP if internal already
+    case $(hostname)  in
+         ip-*)
+            ip=$(echo $bj | jq -r .Reservations[].Instances[].PrivateIpAddress)
+        ;;
+        *)
+            ip=$(echo $bj | jq -r .Reservations[].Instances[].PublicIpAddress)
+        ;;
+    esac
+# - Get root device name to rescue
+# - If the LVM has was grown with additional volume, then we my also need to move these.
+    rootdev=$(echo $rj | jq -r .Reservations[].Instances[].RootDeviceName)
+    [ X ==  X$rootdev ] && { echo ERROR getting rootdev; return 1; }
+# - Get volume-id  of root device to rescue
+    q='.Reservations[].Instances[].BlockDeviceMappings[] | select(.DeviceName == $root) | .Ebs.VolumeId'
+    volId=$(echo $rj | jq -r --arg root $rootdev "$q") 
+    [ X ==  X$volId ] && { echo ERROR getting volId; return 1; }
+# - Stop instance 
+    q='.Reservations[].Instances[].State.Name'
+    msg="Waiting, InstanceId: $rId, to stop: "
+    state=$(echo $rj | jq -r $q)
+    [ X${state} != Xstopped ] && { echo stopping $rId; aws ec2 stop-instances --instance-ids $rId; }
+    while  [ X${state} != Xstopped ] ; do echo $msg $state; sleep 10; state=$(aws ec2 describe-instances --instance-ids  $rId| jq -r $q); done
+# - Detach the volume-id ( wait in a loop until the volume state changes to available )
+    aws ec2 detach-volume --volume-id $volId
+    msg="Waiting for $volId State of available"
+    while [ available != "$(aws ec2 describe-volumes --volume-id $volId | jq -r .Volumes[].State)" ]; do echo $msg; sleep 10; done
+    id=$(echo $bj | jq -r .Reservations[].Instances[].InstanceId)
+# - Find an unused device-name on bastion, where the admin can work the rescue
+    for dev in f g h i j k; do 
+       echo "$bj" | jq -r .Reservations[].Instances[].BlockDeviceMappings[].DeviceName | grep /dev/sd${dev} || break
+    done
+    dev=/dev/sd${dev}
+# - Attach  volume-id    ( No wait loop, beware  ) 
+    echo "aws ec2 attach-volume --volume-id $volId --device $dev --instance-id $id && ssh $ip"
+    aws ec2 attach-volume --volume-id $volId --device $dev --instance-id $id 
+    echo "$rDesc" | grep LVM && { echo -e "run:\nvgscan\nmount /dev/VolGroup00/rootVol /r\npost fix, run:\nunmount /r\nvgchange -an VolGroup00"; }
+# - Give  commands to re-home the volume, later. Beware of duplicate VolGroupNames, use a bastion w/o any logical volumes.
+    echo "ReHoming steps (for later):"
+    echo "Before  detach of an lvm, you must unmount fs, then deactivate the volume-group, i.e. vgchange -an VolGroup00"
+    echo 1. aws ec2 detach-volume --volume-id $volId --instance-id $bId  
+    echo 2. aws ec2 attach-volume --volume-id $volId --device $rootdev --instance-id $rId
+    echo 3. aws ec2 start-instances  --instance-id $rId 
+    PS3="ssh $bn ?"
+    answer=""; select answer in yes no; do [ no ==  "$answer" ] && break; [ yes = "$answer" ] && ssh $ip;  done
+    PS3="Rehome volume $volId ?"
+    answer=""; select answer in yes no; do [ -n "$answer" ] && break; done
+    [ "$answer" != yes ] && return 1
+    aws ec2 detach-volume --volume-id $volId --instance-id $bId   || return 1
+    while [ available != "$(aws ec2 describe-volumes --volume-id $volId | jq -r .Volumes[].State)" ]; do echo $msg; sleep 10; done
+    aws ec2 attach-volume --volume-id $volId --device $rootdev --instance-id $rId &&
+    aws ec2 start-instances  --instance-id $rId
+}
+
+###
+# Contains a (fragial) Here-is set of commands for the task.
+# 
+# For example only, not used in the rescueInstance function. 
+install_ldap_fetch() {
+  local uid gid ip=${1:-$(get_instances bastion-0 | jq -r .Reservations[].Instances[].PublicIpAddress)}
+  ssh $ip <<EOF
+  sudo vgscan
+  mount | grep VolGroup00 || {
+    sudo vgchange -ay VolGroup00
+    sudo mount /dev/VolGroup00/rootVol /r
+    sudo mount /dev/VolGroup00/varVol /r/var
+    sudo mount /dev/VolGroup00/homeVol /r/home
+    sudo mount -t proc /proc /r/proc
+    sudo install -D   /usr/local/sbin/fetchSSHKeysFromLDAP /r/usr/local/sbin/
+    sudo chcon --reference /r/usr/bin/nm /r/usr/local/sbin/fetchSSHKeysFromLDAP
+    sudo chroot /r yum install openldap-clients -y
+    sudo install -D   -m 0766 /etc/openldap/ldap.conf /r/etc/openldap/
+    #cat /home/djones/.ssh/authorized_keys >> /r/home/maintuser/.ssh/authorized_keys
+    sudo sed -i -e 's%AuthorizedKeysCommand none%AuthorizedKeysCommand /usr/local/sbin/fetchSSHKeysFromLDAP%' \
+             /r/etc/ssh/sshd_config
+    sudo sed -i -e 's%#AuthorizedKeysCommand %AuthorizedKeysCommand %' \
+           -e 's%#AuthorizedKeysCommandRunAs%AuthorizedKeysCommandRunAs%' \
+             /r/etc/ssh/sshd_config
+    sudo sync
+    sudo umount /r/home
+    sudo umount /r/var
+    sudo umount /r/proc
+    sudo umount /r
+    sudo vgchange -an VolGroup00
+  }
+EOF
+}
+
+[[ $- =~ i ]] || rescueInstance $@

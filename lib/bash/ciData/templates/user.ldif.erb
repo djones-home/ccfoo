@@ -1,0 +1,106 @@
+<%
+#md+
+# # User LDIF Template for templateJsonData function
+#
+# The output of this template is LDIF encoded text for use with the ldapadd client command.
+# To add a new user, for example:
+#
+#    $ echo '{ "cn" : [ "SMITH.JOE.MI.12345678", "joe", "smitty" ], "mail" : ["joe.smith.ctr@navy.mil"] }' | jq . > newUser.json
+#    $ export LDAPBASE='dc=example,dc=com'
+#    $ export LDAPURI='ldapi:///'
+#    $ export LDAPBINDDN="cn=manager,${LDAPBASE}"
+#    $ templateJsonData newUser.json ${CIDATA%/*}/templates/user.ldif.erb > newUser.ldif
+#    $ ldapadd -xW -f newUser.ldif
+#    Enter LDAP Password: 
+#    adding new entry "uid=jsmith,ou=people,dc=example,dc=com"
+#    
+#    $ cat newUser.ldif
+#    dn: uid=jsmith,ou=people,dc=example,dc=com
+#    cn: SMITH.JOE.MI.12345678
+#    cn: joe
+#    cn: smitty
+#    mail: joe.smith.ctr@navy.mil
+#    givenname: Joe
+#    sn: Smith
+#    displayname: Joe.Smith
+#    userprincipalname: 12345678@mil
+#    samaccountname: joe.smith
+#    uid: jsmith
+#    objectclass: top
+#    objectclass: person
+#    objectclass: organizationalPerson
+#    objectclass: user
+#    objectclass: inetOrgPerson
+#    objectclass: posixAccount
+#    objectclass: shadowAccount
+#    
+#
+# This template can be rendered using ERB, using the JSON data. The above example shows
+# the minimal JSON key/value pairs needed. A "cn" object is required, listing a CAC-like 
+# member that of a CAC certificate subject.
+# The typical CAC has CN=LAST.FIRTST.[optional-Initials.]DoD-ID in its subject, with few excetions.
+# For more detail on the JSON encoding of an ldap entry, from either net/ldap, or LDIF, see ldif2json.
+# For more detail on parsing and "data", see the templateJsonData function in ciStack.sh. 
+# In general, data is indexed by the LDAP attributeType.
+# Each data[member] should be a list, i.e.  data[attribute-type] = [ list of values ].
+#
+# A CN from the CAC is needed for constructing missing attributes. In the following manner:
+#
+# - Choose the cn member parses  _LAST.FIRST._, ending with a DoD-ID number.
+STDERR.puts("data['cn'] required.") unless data.has_key?("cn") 
+STDERR.puts("data['cn'] must be a list.") unless(data["cn"].class == Array)
+l = data.keys.select { |k| k.class == String  && /[[:upper:]]/ =~ k }
+l.each { |k| 
+   data[k.downcase] = data[k] 
+   data.delete(k)
+}
+cn = data["cn"].select { |n| l = n.split("."); l.size >= 3 && l[2..-1].join.gsub(/\D/,"") =~ /\d/ }[0]
+id = cn.split(".")[-1]
+id = cn.split(".")[-2] if ( id == "ID")
+# - Default givenName to the CAC-like CN _FIRST_ field
+name = [ cn.split(".")[1][0] + cn.split(".")[1][1..-1].downcase,
+         cn.split(".")[0][0] + cn.split(".")[0][1..-1].downcase ]
+n="givenname";   data[n] = [ name[0] ] unless data.has_key?(n)
+# - Default sn to CAC-like CN LAST field
+n="sn";          data[n] = [ name[1] ] unless data.has_key?(n)
+# - Default displayName is parsed from CAC-like CN, transform upper/lower as _First.Last_
+n="displayname"; data[n]=["#{data["givenname"][0]}.#{data["sn"][0]}"] unless data.has_key?(n)
+# - Default userPrincipleName is parsed from CAC-like CN DoDID, and suffixed with __@mil__
+n="userprincipalname"; data[n] = ["#{id}@mil"] unless data.has_key?(n)
+# - Default sAmAccount is set to displayName, lowercased, spaces replaced by dot
+n="samaccountname"; data[n] = [data["displayname"][0].downcase.gsub(/\s+/, ".")] unless data.has_key?( n )
+# - Default uid (linux login name) is set to first character of givenName, appended with sir name ("sn" attribute).
+n="uid";          data[n]=[(data["givenname"][0][0] + data["sn"][0][0..7]).downcase] unless data.has_key?(n)
+# - Default User base RDN is set to "ou=people"
+n=:userbase_rdn;  data[n] = "ou=people" unless data.has_key?(n)
+# - Default base DN is set to $LDAPBBASE or "dc=example,dc=com"
+n=:basedn;       
+unless data.has_key?(n)
+   data[n]=(ENV.has_key?("LDAPBASE") ? ENV["LDAPBASE"] : "dc=example,dc=com")  
+end
+domain= data[:basedn].split(",").map{|s| s.sub(/^.*=/, "")}.join(".")
+# - Default mail to uid@domain, where domain is derived from base DN. 
+n="mail"; data[n]= [data["uid"][0] + "@" + domain ] unless data.has_key?(n)
+n="dn";   data[:dn] = data[n] if data.has_key?(n)
+# - Default DN: is uid,userBase_RDN,baseDN, i.e. uid=jsmith,o=people,dc=example,dc=com
+n=:dn;    data[:dn] = "uid=#{data["uid"][0]},#{data[:userbase_rdn]},#{data[:basedn]}" unless data.has_key?(n)
+# - Default objectClass list top person .... posixAccount ... YTBD
+n="objectclass"; 
+data[n] = %w{ top person organizationalPerson inetOrgPerson user posixAccount shadowAccount ldapPublicKey }
+# - If posixAccount, default gidNumber and uidNumber to 998899.
+if data["objectclass"].grep(/posixAccount/i)
+  n="gidnumber";    data[n] = [ 100 ] unless data.has_key?(n)
+  n="uidnumber";    data[n] = [ 998899 ] unless data.has_key?(n)
+  n="homedirectory";    data[n] = [ "/home/#{data["uid"][0]}" ] unless data.has_key?(n)
+  n="loginshell";    data[n] = [ "/bin/bash" ] unless data.has_key?(n)
+  #n="memberUid";    data[n] = [ "/bin/bash" ] unless data.has_key?(n)
+  n="gecos";    data[n] = [ cn ] unless data.has_key?(n)
+end
+# - _blacklist_ is used to filter unwanted or incompatable attributes. For example the ad.schema allows OpenLDAP to import some AD-like attributes, others require blacklisting, if importing users from AD.
+## Note back list "dn" index, and use the reconstructed DN indexed by the :dn key.
+blacklist=%w{ dn }.map{|x| x.downcase }
+-%>
+dn: <%=data[:dn]%>
+<% data.each { |k, l| next if k.class == Symbol; next if blacklist.member?(k.downcase); k = k + ((k =~ /;binary/i) ? "::" : ":"); l.each {|v|  -%>
+<%= k -%> <%= v %>
+<% }}  %>

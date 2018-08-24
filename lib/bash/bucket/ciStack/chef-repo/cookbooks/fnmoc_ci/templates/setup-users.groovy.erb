@@ -1,0 +1,195 @@
+//md+
+// ## Groovy Script to Setup Users and Authorization Strategy
+//
+// 
+// This script should setup ssh public key for administration, and the matrix-based authorization stratagy.
+// The setup of ths Jenkins Matrix Strategy is derived from a [github gist by John Buhay](  https://gist.github.com/jnbnyc/c6213d3d12c8f848a385 ).
+// 
+// - Depends on LDAP service to configure admin keys.
+// - Gaurds this setup step, until after cieSecuity using a marker file (see jenkins.log).
+def guardfile = System.getenv("HOME") + "/.groovy_cieSecurity"
+def gfile = new File ( guardfile)
+assert gfile.exists() : ("Required marker file not found: " + guardfile)
+
+def filename = System.getenv("HOME") + "/.groovy_setup-users"
+def myFile = new File ( filename )
+
+// - Import the Java packages useful for credentials in Jenkins
+import jenkins.*
+import hudson.*
+import com.cloudbees.plugins.credentials.*
+import com.cloudbees.plugins.credentials.common.*
+import com.cloudbees.plugins.credentials.domains.*
+import com.cloudbees.jenkins.plugins.sshcredentials.impl.*
+import hudson.plugins.sshslaves.*;
+import hudson.model.*
+import jenkins.model.*
+import hudson.security.*
+// - Import the Java package that has the user property for SSH, authorizedkeys.
+import org.jenkinsci.main.modules.cli.auth.ssh.*
+import java.util.logging.Logger
+def logger = Logger.getLogger("")
+
+
+// - Add the Jenkins Administrator authorized key, if it is not already set.
+// - Decide upon the ID for Administrator in the template based ~/.ssh/authorized_keys
+//   - maintuser (typically on centos AMIs)
+//   - ec2-user  (typically on amzLinux AMIs)
+//   - root  (typically bare metal, or on premise)
+//   - BEWARE authorized_keys file is read at chef template-time, fresh keys are expected from LDAP (later in the script).
+
+<%
+pubSSHKeyFile = ""
+%w{ /home/maintuser /home/ec2-user /root }.each { |hm| 
+    pubSSHKeyFile = "#{hm}/.ssh/authorized_keys"
+    break if File.exists?(pubSSHKeyFile) 
+}
+adminName = pubSSHKeyFile.sub(/\/\.ssh.*./, "").sub(/.*\//,"")
+-%>
+def adminUsername = System.getenv('JENKINS_ADMIN_USERNAME') ?: "<%= adminName %>"
+
+logger.info("setup-users: adminUsername " + adminUsername )
+
+// - SSH Authorized keys are NOT stored in credentials,  but simply in a user property, stored in a user config.xml.
+// This script (first) will look for adminUser with "~/.ssh/authorized_keys" file.
+// BEWARE: The pubkey form LDAP should replace that from the authorized_keys file,
+// later in the script, provided all is well with LDAP.
+//  
+//      org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl.authorizedKeys
+//  
+u = User.get(adminUsername, true)
+UserPropertyImpl p = u.getProperty(UserPropertyImpl.class)
+if ( p == null ) {
+  logger.info("setup-users: adminUsername " + adminUsername + " User.getProperty is null" )
+   String pubKey = '''<%=File.read(pubSSHKeyFile).strip%>'''
+   u.addProperty(new UserPropertyImpl(pubKey))
+   u.save()
+}
+
+// - Get the global (domain) credential store, which is always available irrespective of the security domain.
+// In Jenkins termonology, security "domain" has little to do with the cerdential "scope".
+// The Jenkins term of "scope" in this case has to do with inheritance.
+// [Jenkins-22097]is a ticket on this confusing terminology with Global domain vs. global scope.
+// 
+// [Jenkins-22097]: https://issues.jenkins-ci.org/browse/JENKINS-22097
+global_domain = Domain.global()
+credentials_store = Jenkins.instance.getExtensionList( 'com.cloudbees.plugins.credentials.SystemCredentialsProvider')[0].getStore()
+
+def instance = Jenkins.getInstance()
+if ( myFile.exists() == true ) { 
+  logger.info("setup-users: skip credentials setup, due to my marker file: " + filename )
+}
+// - Public Authorized Keys: 
+// Lets make one for admin, "maintuser", then add an SSH-authorizedkeys property, so we can add plugins, 
+// jobs, or views via an ssh client.
+//  - Guard from running, unless the global Domain credential store is empty
+if ( credentials_store.getCredentials(global_domain) == []  && myFile.exists() == false ) {
+
+// 
+// - Private Keys: Add ~jenkins/.ssh/ private key on the master, scopes it to SYSTEM
+//    - The Jenkins master can use it to launching slaves.
+//    I am still not clear on if the slaves can get the SYSTEM scoped credential. See the ssh-agent plugin. )
+//    The gist author used a global scope, to add the root ssh key. 
+//    This could make the  /root/.ssh/id_rsa file more available, than wanted (IMHA). 
+//    Uncomment the original code,  if this is not the case  - and you really really want Jenkins to have root ssh keys.
+// 
+// > credentials = new BasicSSHUserPrivateKey(CredentialsScope.GLOBAL,null,"root",new BasicSSHUserPrivateKey.UsersPrivateKeySource(),"","")
+// > // vs.
+// > credentials = new BasicSSHUserPrivateKey(CredentialsScope.SYSTEM,null,"jenkins",new BasicSSHUserPrivateKey.UsersPrivateKeySource(),"","")
+//
+    credentials = new BasicSSHUserPrivateKey(CredentialsScope.SYSTEM,null,"jenkins",new BasicSSHUserPrivateKey.UsersPrivateKeySource(),"","")
+    credentials_store.addCredentials(global_domain, credentials)
+
+// 
+// - We can use just about any realm object to create a Jenkins-user. 
+// However Jenkins normally checks that the user is valid in the current realm.
+// This will setup the  security domain to use LDAP users. 
+// The Jenkins user may or maynot have an LDAP entry. 
+// However the ssh-cli login (-l) must user-filter must resovle to an entry in ldap and auth-matrix.
+
+
+    def strategy = new hudson.security.GlobalMatrixAuthorizationStrategy()
+
+// - Set Admin Permissions 
+    def admins = ( adminUsername + " " + "<%=node[:jenkins_admins].join(" ")%>").split()
+    admins.each {
+      strategy.add(Jenkins.ADMINISTER, it )
+      strategy.add(hudson.model.Hudson.ADMINISTER, it )
+      //  Slave Permissions
+      strategy.add(hudson.model.Computer.BUILD, it )
+      strategy.add(hudson.model.Computer.CONFIGURE, it )
+      strategy.add(hudson.model.Computer.CONNECT, it )
+      strategy.add(hudson.model.Computer.CREATE, it )
+      strategy.add(hudson.model.Computer.DELETE, it )
+      strategy.add(hudson.model.Computer.DISCONNECT, it)
+    
+      //  Credential Permissions
+      strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.CREATE, it)
+      strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.DELETE, it)
+      strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.MANAGE_DOMAINS, it)
+      strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.UPDATE, it)
+      strategy.add(com.cloudbees.plugins.credentials.CredentialsProvider.VIEW, it)
+      
+      //  Overall Permissions
+      strategy.add(hudson.model.Hudson.ADMINISTER, it)
+      strategy.add(hudson.PluginManager.CONFIGURE_UPDATECENTER, it)
+      strategy.add(hudson.model.Hudson.READ, it)
+      strategy.add(hudson.model.Hudson.RUN_SCRIPTS, it)
+      strategy.add(hudson.PluginManager.UPLOAD_PLUGINS, it)
+      
+      //  Job Permissions
+      strategy.add(hudson.model.Item.BUILD, it)
+      strategy.add(hudson.model.Item.CANCEL, it)
+      strategy.add(hudson.model.Item.CONFIGURE, it)
+      strategy.add(hudson.model.Item.CREATE, it)
+      strategy.add(hudson.model.Item.DELETE, it)
+      strategy.add(hudson.model.Item.DISCOVER, it)
+      strategy.add(hudson.model.Item.READ, it)
+      strategy.add(hudson.model.Item.WORKSPACE, it)
+        
+      //  Run Permissions
+      strategy.add(hudson.model.Run.DELETE, it)
+      strategy.add(hudson.model.Run.UPDATE, it)
+      
+      //  View Permissions
+      strategy.add(hudson.model.View.CONFIGURE, it)
+      strategy.add(hudson.model.View.CREATE, it)
+      strategy.add(hudson.model.View.DELETE, it)
+      strategy.add(hudson.model.View.READ, it)
+      
+    }
+    
+    //  Setting Anonymous Permissions
+    strategy.add(hudson.model.Hudson.READ, "anonymous")
+    strategy.add(hudson.model.Item.DISCOVER, "anonymous")
+    
+    //  Setting Authenticated Permissions
+    strategy.add(hudson.model.Hudson.READ, "authenticated")
+    strategy.add(hudson.model.Item.BUILD, "authenticated")
+    strategy.add(hudson.model.Item.CANCEL, "authenticated")
+    strategy.add(hudson.model.Item.DISCOVER, "authenticated")
+    strategy.add(hudson.model.Item.READ, "authenticated")
+    strategy.add(hudson.model.Item.WORKSPACE, "authenticated")
+    strategy.add(hudson.model.View.READ, "authenticated")
+    
+    
+    instance.setAuthorizationStrategy(strategy)
+    instance.save()
+    myFile.createNewFile()
+}
+
+// - On restart, this will update user authorized keys from LDAP.
+
+for (User y : User.getAll()) {
+  name = y.getId()
+  for ( String attribute : [ "uid=", "cn=" ] ) {
+     String filter = '''(&(objectClass=person)(''' + attribute + name + '''))'''
+     String result = ["ldapsearch", "-xLLL", filter, "sshPublicKey"].execute().in.text
+     if (result.length() == 0 ) continue 
+     String pubKey = "" +  ["ldapsearch", "-xLLL", filter, "sshPublicKey"].execute().in.text.replaceAll('\n ','').split('\n').grep(~/^sshPub.*/).join('\n').replaceAll('sshPublicKey: ', '') + " " + attribute + name
+     logger.info("setup-users: ldap sshPublicKey: " +  pubKey)
+     y.addProperty(new UserPropertyImpl(pubKey))
+     y.save
+  }
+}
+

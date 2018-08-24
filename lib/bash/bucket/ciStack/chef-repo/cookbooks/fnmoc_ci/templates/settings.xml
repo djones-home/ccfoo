@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  $HeadURL: file:///u/curr/svnCI/localrepo/maven/settings.xml $
+  $Id: settings.xml 8 2013-05-21 20:25:55Z jboss $
+-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <pluginGroups>
+    <!-- add the jboss community plug so we can use the jboss-as-mavin-plugin -->
+    <pluginGroup>org.jboss.as.plugins</pluginGroup>
+  </pluginGroups>
+
+  <servers>
+    <server>
+      <id>deployment</id>
+      <username>deployment</username>
+      <password>djones: set pw on 03/26/13 {QwbyVVS5HzsHTAf7DJekySzwc8tk7vEhSmgkC7PA7lo=}</password>
+    </server>
+    <!-- Configure GPG passphrase for signing  -->
+    <server>
+      <id>gpg.passphrase</id>
+      <username>FNMOC-CI</username>
+      <password>jboss: set pw on 10/28/15 {GXAAVuHSb0EH1GUHJC0nO7Jd7rn3lY0weujZLj7sxMU=}</password>
+    </server>
+    <server>
+      <id>keyPassphraseServerId</id>
+      <username>FNMOC-CI</username>
+      <password>jboss: set pw on 10/28/15 {GXAAVuHSb0EH1GUHJC0nO7Jd7rn3lY0weujZLj7sxMU=}</password>
+    </server>
+  </servers>
+
+  <mirrors>
+     <!-- Use the Nexus /public repository group
+     -->
+     <mirror>
+       <id>nexus</id>
+       <mirrorOf>*</mirrorOf>
+    <!--   <url>http://172.20.216.30:8080/nexus/content/groups/public</url> -->
+       <url>https://incubator.nps.edu/nexus/content/groups/public</url> 
+     </mirror>
+  </mirrors>
+  
+  <profiles>
+    <!-- Profile to deploy to the standalone (default) JBoss server -->
+    <profile>
+      <id>env-jboss-standalone</id>
+      <properties>
+        <jbossAsUsername>jenkins</jbossAsUsername>
+        <jbossAsPassword>D3pl0ym3</jbossAsPassword>
+        <jbossAsPort>9999</jbossAsPort>
+        <jbossAsHostname>dropc</jbossAsHostname>
+        <jbossAsPath>/${env.JBOSS_HOME}/standalone/deployments</jbossAsPath>
+      </properties>
+      <pluginRepositories>
+       <pluginRepository>
+          <id>jboss-public-repository</id>
+          <name>JBoss Repository</name>
+          <url>https://repository.jboss.org/nexus/content/groups/public
+          </url>
+          <releases>
+             <enabled>true</enabled>
+          </releases>
+          <snapshots>
+             <enabled>false</enabled>
+          </snapshots>
+       </pluginRepository>
+      </pluginRepositories>
+    </profile>
+    <!-- Profile to deploy to the geoserver JBoss server -->
+    <profile>
+      <id>env-jboss-geoserver</id>
+      <properties>
+        <jbossAsUsername>jenkins</jbossAsUsername>
+        <jbossAsPassword>D3pl0ym3</jbossAsPassword>
+        <jbossAsPort>10199</jbossAsPort>
+        <jbossAsHostname>dropf</jbossAsHostname>
+        <jbossAsPath>/opt/global/webservices/jboss7/geoserver/deployments</jbossAsPath>
+      </properties>
+      <pluginRepositories>
+       <pluginRepository>
+          <id>jboss-public-repository</id>
+          <name>JBoss Repository</name>
+          <url>https://repository.jboss.org/nexus/content/groups/public
+          </url>
+          <releases>
+             <enabled>true</enabled>
+          </releases>
+          <snapshots>
+             <enabled>false</enabled>
+          </snapshots>
+       </pluginRepository>
+      </pluginRepositories>
+    </profile>
+    <!-- Profile to deploy to the cagips_2 JBoss server -->
+    <profile>
+      <id>env-jboss-cagips_2</id>
+      <properties>
+        <jbossAsUsername>jenkins</jbossAsUsername>
+        <jbossAsPassword>D3pl0ym3</jbossAsPassword>
+        <jbossAsPort>10299</jbossAsPort>
+        <jbossAsHostname>dropf</jbossAsHostname>
+        <jbossAsPath>/opt/global/webservices/jboss7/cagips_2/cagips_2/deployments</jbossAsPath>
+      </properties>
+      <pluginRepositories>
+       <pluginRepository>
+          <id>jboss-public-repository</id>
+          <name>JBoss Repository</name>
+          <url>https://repository.jboss.org/nexus/content/groups/public
+          </url>
+          <releases>
+             <enabled>true</enabled>
+          </releases>
+          <snapshots>
+             <enabled>false</enabled>
+          </snapshots>
+       </pluginRepository>
+      </pluginRepositories>
+    </profile>
+    <!-- Profile to deploy to the metoc JBoss server -->
+    <profile>
+      <id>env-jboss-metoc</id>
+      <properties>
+        <jbossAsUsername>jenkins</jbossAsUsername>
+        <jbossAsPassword>D3pl0ym3</jbossAsPassword>
+        <jbossAsPort>10099</jbossAsPort>
+        <jbossAsHostname>dropf</jbossAsHostname>
+        <jbossAsPath>/opt/global/webservices/jboss7/metoc/deployments</jbossAsPath>
+        <sonar.jdbc.url>jdbc:postgresql://localhost/sonar</sonar.jdbc.url>
+        <sonar.jdbc.username>sonar</sonar.jdbc.username>                
+        <sonar.jdbc.password>sonar</sonar.jdbc.password>                 
+        <sonar.host.url>http://localhost:8280/sonar/</sonar.host.url>
+        <geotiff.uploader.path>/var/jboss/jboss-workspace/workspace/OGC_Bathymetry/target</geotiff.uploader.path>
+        <geotiff.shared.library.path>/var/jboss/jboss-workspace/workspace/OGC_Bathymetry/Bathy_Utils/Linux</geotiff.shared.library.path>
+        <geotiff.dbdbv.level0.file>/var/jboss/jboss-workspace/workspace/oaml_data/dbdbv/data/dbdbv6_level0c.h5</geotiff.dbdbv.level0.file>
+         <geotiff.dbdbv.level1.file>/var/jboss/jboss-workspace/workspace/oaml_data/dbdbv/data/dbdbv6_level1c.h5</geotiff.dbdbv.level1.file>
+      </properties>
+      <pluginRepositories>
+       <pluginRepository>
+          <id>jboss-public-repository</id>
+          <name>JBoss Repository</name>
+          <url>https://repository.jboss.org/nexus/content/groups/public
+          </url>
+          <releases>
+             <enabled>true</enabled>
+          </releases>
+          <snapshots>
+             <enabled>false</enabled>
+          </snapshots>
+       </pluginRepository>
+      </pluginRepositories>
+    </profile>
+    <profile>
+      <id>env-jboss-nrl</id>
+      <properties>
+        <jbossAsUsername>jenkins</jbossAsUsername>
+        <jbossAsPassword>D3pl0ym3</jbossAsPassword>
+        <jbossAsPort>10099</jbossAsPort>
+        <jbossAsHostname>core</jbossAsHostname>
+        <jbossAsPath>/opt/global/webservices/jboss7/metoc/deployments</jbossAsPath>
+        <sonar.jdbc.url>jdbc:postgresql://localhost/sonar</sonar.jdbc.url>
+        <sonar.jdbc.username>sonar</sonar.jdbc.username>
+        <sonar.jdbc.password>sonar</sonar.jdbc.password>
+        <sonar.host.url>http://localhost:8280/sonar/</sonar.host.url>
+      </properties>
+      <pluginRepositories>
+       <pluginRepository>
+          <id>jboss-public-repository</id>
+          <name>JBoss Repository</name>
+          <url>https://repository.jboss.org/nexus/content/groups/public
+          </url>
+          <releases>
+             <enabled>true</enabled>
+          </releases>
+          <snapshots>
+             <enabled>false</enabled>
+          </snapshots>
+       </pluginRepository>
+      </pluginRepositories>
+    </profile>
+    <profile>
+      <id>nexus</id>
+      <!--Enable snapshots for the built in central repo to direct -->
+      <!--all requests to nexus via the mirror -->
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+      </repositories>
+     <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+    <profile>
+       <!-- Override POM settings when doing nexus-depoly -->
+            <id>nexus-deploy</id>
+            <activation></activation>
+            <properties>
+                 <skipRepoDeploy>false</skipRepoDeploy>
+                 <clean.deploy.phase>none</clean.deploy.phase>
+                 <rpmbuild.phase>package</rpmbuild.phase>
+                 <deploy.project.phase>none</deploy.project.phase>
+                 <nexus.url>https://incubator.nps.edu/nexus/content/repositories</nexus.url>
+            </properties>
+    </profile>
+        <profile>
+            <id>env-ci-default</id>
+            <properties>
+                <geoserver.base.url>https://imetoc.nps.edu/geoserver</geoserver.base.url>
+               <!-- why do we need this  isisloader.reload.slave.nodes at build time? is not install or runtime configurable? -->
+               <isisloader.reload.slave.nodes>false</isisloader.reload.slave.nodes>
+               <geoserver.loader.user>gisloader</geoserver.loader.user>
+               <geoserver.loader.pwd>gisloader</geoserver.loader.pwd>
+               <emperf.apm.url>http://dropf:8380/apmsvc?wsdl</emperf.apm.url>
+               <gis.database.host>dropf</gis.database.host>
+               <db.host>dropf</db.host>
+               <db.port>5432</db.port>
+               <db.name>gis</db.name>
+               <db.postgis.template>template_postgis</db.postgis.template>
+               <db.username>gis</db.username>
+               <db.password>gis</db.password>
+               <db.admin.username>postgres</db.admin.username>
+               <db.admin.password></db.admin.password>
+               <services.offloader.url>https://imetoc.nps.edu/obsentryservices/offloader</services.offloader.url>
+               <services.shipsynop.url>https://imetoc.nps.edu/obsentryservices/shipsynop</services.shipsynop.url>
+               <rhel.version>6</rhel.version>
+            </properties>
+        </profile>
+     <!-- add or overide values here for ci envrionment build profiles in gis-parent -->
+        <profile>
+            <id>env-ci-cagips</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>ci-cagips</value>
+                </property>
+            </activation>
+            <properties>
+                <geoserver.base.url>https://imetoc.nps.edu/geoserver</geoserver.base.url>
+                <emperf.apm.url>http://dropf:8380/apmsvc?wsdl</emperf.apm.url>
+                <gis.database.host>dropf</gis.database.host>
+            </properties>
+        </profile>
+        <profile>
+            <id>env-ci-metoc</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>ci-metoc</value>
+                </property>
+            </activation>
+            <properties>
+                <geoserver.base.url>https://imetoc.nps.edu/geoserver</geoserver.base.url>
+                <baseMap.serverURL>https://imetoc.nps.edu/geoserver/wms</baseMap.serverURL>
+                <metcast.username>forwardslope</metcast.username>
+                <metcast.password>f0r#@rDS1P</metcast.password>
+                <ogpsvc.url>http://dropf:8180/ogpSvc</ogpsvc.url>
+            </properties>
+        </profile>
+        <profile>
+            <id>env-ci-geoserver</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>ci-geoserver</value>
+                </property>
+            </activation>
+            <properties>
+                <geoserver.base.url>https://imetoc.nps.edu/geoserver</geoserver.base.url>
+
+            </properties>
+        </profile>
+    <!-- Profile to deploy to the weaver JBoss server -->
+    <profile>
+      <id>env-jboss-weaver</id>
+      <properties>
+        <jbossAsUsername>jenkins</jbossAsUsername>
+        <jbossAsPassword>D3pl0ym3</jbossAsPassword>
+        <jbossAsPort>10199</jbossAsPort>
+        <jbossAsHostname>weaver</jbossAsHostname>
+        <jbossAsPath>/opt/global/webservices/jboss7/wwircop_weaver/deployments</jbossAsPath>
+      </properties>
+      <pluginRepositories>
+       <pluginRepository>
+          <id>jboss-public-repository</id>
+          <name>JBoss Repository</name>
+          <url>https://repository.jboss.org/nexus/content/groups/public
+          </url>
+          <releases>
+             <enabled>true</enabled>
+          </releases>
+          <snapshots>
+             <enabled>false</enabled>
+          </snapshots>
+       </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+
+  <activeProfiles>
+    <activeProfile>nexus</activeProfile>
+    <activeProfile>env-ci-default</activeProfile>
+  </activeProfiles>
+</settings>

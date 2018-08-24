@@ -1,0 +1,27 @@
+[snapshots]
+name=snapshots
+baseurl=https://incubator.nps.edu/nexus/content/repositories/snapshots
+enabled =1
+protect=0
+gpgcheck=0
+metadata_expire=30s
+autorefresh=1
+type=rpm-md
+sslcacert=/etc/pki/tls/certs/dod-root-certs.pem
+sslverify=1
+sslclientcert=/var/lib/yum/client.cert
+sslclientkey=/var/lib/yum/client.key
+
+[releases]
+name=releases
+baseurl=https://incubator.nps.edu/nexus/content/repositories/releases
+enabled = 0
+protect=0
+gpgcheck=0
+metadata_expire=30s
+autorefresh=1
+type=rpm-md
+sslcacert=/etc/pki/tls/certs/dod-root-certs.pem
+sslverify=1
+sslclientcert=/var/lib/yum/client.cert
+sslclientkey=/var/lib/yum/client.key

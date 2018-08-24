@@ -1,0 +1,201 @@
+{
+  "name": "cidata",
+  "description": "Import of the project ciData JSON",
+  "chef_type": "environment",
+  "json_class": "Chef::Environment",
+  "default_attributes": {
+    "cidata": {
+      "s3Home": "s3://fnmoc.home",
+      "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+      "UsersFile": "NNusers.yaml",
+      "Version": "0.0.1-SNAPSHOT",
+      "Volumes": {},
+      "VpcName": "NN",
+      "VpcId": "vpc-42fb6e27",
+      "ScmHeadURL": "$HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/NN.json $",
+      "s3Store": "s3://cibootstrap",
+      "Cookbook": "nn_ci",
+      "s3ProjectStore": "s3://fnmoc.nn.data",
+      "s3SysStore": "s3://fnmoc.nn.systems",
+      "MapVolumes": {},
+      "ReleaseGroup": "None",
+      "RuncmdFile": "runcmd.yaml",
+      "Project": "NN",
+      "Environment": "Evaluation",
+      "Profiles": {
+        "default": {
+          "SG": "app",
+          "note": "Default settings included.",
+          "Profile": "el7",
+          "Subnet": "app-a",
+          "KeyName": "JONES.DANIEL.L.1265422345",
+          "Schedule": "6-18:1-5:PST8PDT",
+          "IamInstanceProfile": {
+            "Name": "CI-vpc-NN-ro"
+          },
+          "InstanceType": "t2.micro",
+          "priceListAttributes": {
+            "operatingSystem": "Linux",
+            "terms": "OnDemand",
+            "location": "AWS GovCloud (US)"
+          },
+          "ImageId": "ami-82941ee3"
+        },
+        "app": {
+          "Subnet": "app-a",
+          "SG": "app"
+        },
+        "public": {
+          "Subnet": "web-a",
+          "SG": "web"
+        },
+        "bastion": {
+          "IamInstanceProfile": {
+            "Name": "CI-vpc-NN"
+          },
+          "Subnet": "web-a",
+          "SG": "bastion"
+        },
+        "el6": {
+          "ImageDescription": "Enterprize Linux 6",
+          "ImageId": "ami-92961cf3"
+        },
+        "amazon": {
+          "ImageDescription": "Amazon Linux",
+          "ImageId": "ami-5725ae36"
+        },
+        "RHEL7": {
+          "ImageDescription": "RHEL7",
+          "ImageId": "ami-d820aab9"
+        },
+        "el7": {
+          "ImageDescription": "Enterprize Linux 7",
+          "ImageId": "ami-82941ee3"
+        },
+        "db": {
+          "Subnet": "db-a",
+          "SG": "db"
+        },
+        "windows2012": {
+          "UserDataTemplateFile": "templates/userdataWindows.erb",
+          "ImageId": "ami-e49d1885",
+          "KeyName": "admin1"
+        }
+      },
+      "InstanceRoles": {
+        "bastionwin": {
+          "UserDataTemplateFile": "templates/userdataWindows.erb",
+          "ImageId": "ami-e49d1885",
+          "Profiles": [
+            "windows2012",
+            "bastion"
+          ]
+        },
+        "bastion": {
+          "Profile": "bastion"
+        },
+        "jenkins": {
+          "IamInstanceProfile": {
+            "Name": "CI-vpc-NN"
+          },
+          "Subnet": "app-a",
+          "SG": "app",
+          "InstanceType": "t2.small",
+          "Profile": "el7"
+        },
+        "logger": {
+          "Profile": "app"
+        },
+        "app6": {
+          "Profiles": [
+            "app",
+            "el6"
+          ]
+        },
+        "buildSvr": {
+          "Profiles": [
+            "app",
+            "el6"
+          ]
+        },
+        "app": {
+          "Profile": "app"
+        },
+        "ww3": {
+          "Profile": "app",
+          "InstanceType": "c4.2xlarge"
+        },
+        "web": {
+          "Profile": "public"
+        }
+      },
+      "ScmId": "$Id: NN.json 69969 2018-04-12 19:41:06Z dljones@nps.edu $",
+      "Security": {
+        "SrcCidr": {
+          "anywhere": "0.0.0.0/0",
+          "nps": "205.155.65.226/32",
+          "nmci0": "138.163.0.0/24",
+          "fnmoc": "152.80.48.0/24"
+        },
+        "SGinBound": {
+          "app": "80,443,8080,8443:sg-web,sg-bastion 22:sg-bastion,sg-login",
+          "web": "80,443:nps,fnmoc 22:sg-bastion, 443:nmci0",
+          "db": "5432:sg-app 22:sg-bastion",
+          "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+          "bastion": "22,443:myIP,nps,fnmoc,nmci0"
+        },
+        "SGoutBound": {
+          "web": "",
+          "bastion": "",
+          "app": "",
+          "db": "",
+          "nat": "80,443:anywhere"
+        }
+      },
+      "UserDataTemplateFile": "templates/userdata.erb",
+      "Global": {
+        "Description": "Global cidata shared by all projects",
+        "Endpoints": {
+          "LDAP": {
+            "us-gov-west-1a": {
+              "URL": "ldap://10.0.20.4",
+              "BASE": "dc=exern,dc=nps,dc=edu"
+            },
+            "us-gov-west-1b": {
+              "URL": "ldap://10.0.20.4",
+              "BASE": "dc=exern,dc=nps,dc=edu"
+            }
+          },
+          "Vhosts": {
+            "ciStack:build-2": "ci12.ccs.nps.edu",
+            "ciStack:jenkins-2": "ci12.ccs.nps.edu",
+            "nites:build-1": "ci11.ccs.nps.edu",
+            "ACAF:app-0": "ci11.ccs.nps.edu",
+            "ciStack:proxy-1": "incubator2.nps.edu",
+            "WW:jenkins-0": "ci14.ccs.nps.edu",
+            "ciStack:proxy-0": "incubator2.nps.edu",
+            "ACAF:acaf-dev-2": "ci13.ccs.nps.edu",
+            "first": "ci10.ccs.nps.edu",
+            "last": "ci29.ccs.nps.edu",
+            "NN:jenkins-0": "ci10.ccs.nps.edu",
+            "ciStack:jenkins-1": "ci11.ccs.nps.edu"
+          }
+        }
+      },
+      "Schema": "20170226",
+      "DevMappingTemplateFile": "templates/devMapping.erb",
+      "Description": "Data used by CI processes for build, test, and release.",
+      "Components": [],
+      "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+      "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+      "EIPs": {
+        "bastion": "true"
+      },
+      "SCM_prefix": "https://svn.nps.edu/repos/metoc"
+    }
+  },
+  "override_attributes": {},
+  "cookbook_versions": {
+    "nn_ci": ">= 0.1.0"
+  }
+}

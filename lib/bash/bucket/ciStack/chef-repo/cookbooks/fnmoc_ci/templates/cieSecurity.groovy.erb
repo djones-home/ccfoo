@@ -1,0 +1,127 @@
+//md+
+// ## Jenkins Security Setup Init Groovy Script. 
+//
+// This Groovy script is templated and installed (by chef/erb) as JENKINS_HOME/init.groovy.d/02_ciSecurity.groovy.
+// If Global Security is enabled, no changes are made to the Jenkins configuration.
+// Otherwise, it will enable Global Security in Jenkins,  as a baseline for Jenkins instances in the FNMOC CIE. 
+//
+// - Enable forwarded DoD-PKI user credentials 
+// - Enable SSH-client-based Jenkins-CLI on a fixed port
+// - Disable the deprecated remoting CLI
+// 
+
+// ## Dependencies
+//
+// This depends on a few prerequisite plugin, and other services:
+
+// - LDAP service, that associates user entries with (CAC/PIV) identities
+// - HTTPS-gateway (SSL-endpoint) to forward the Subject CN required from client, as in the [fnmoc_ci::proxy chef recipe]
+// - Jenkins Reverse-proxy-auth-plugin 
+// 
+// ##  Also see: 
+// - [fnmoc_ci::proxy chef recipe](https://svn.nps.edu/imetoc/infrastructure/trunk/bucket/ciStack/chef-repo/cookbooks/recipes/proxy.rb)
+
+//# jenkins.instance.metaClass.methods*.name
+// ## Setup as follow:
+// 
+import jenkins.model.*
+import java.util.logging.Logger
+// - Gaurd this setup step, until after ciePlugins
+def guardfile = System.getenv("HOME") + "/.groovy_ciePlugins"
+def gfile = new File ( guardfile)
+assert gfile.exists() : ("cieSecurity.groovy: required marker file NOT found: " + guardfile )
+// - Import packages provided by pre-requsit plugins
+import org.jenkinsci.plugins.reverse_proxy_auth.ReverseProxySecurityRealm
+import hudson.security.*
+// - Import the core package that has the user property for authorizedkeys.
+import org.jenkinsci.main.modules.cli.auth.ssh.*
+
+
+def logger = Logger.getLogger("")
+def instance = Jenkins.getInstance()
+
+def filename = System.getenv("HOME") + "/.groovy_cieSecurity"
+def  myFile = new File ( filename )
+
+logger.info("cieSecurity.groovy: required marker file found: " + guardfile )
+if ( myFile.exists() ) {
+  logger.info("cieSecurity.groovy: NOOP: marker file already exists: " + filename )
+}
+if ( Jenkins.instance.useSecurity == false && myFile.exists() == false && gfile.exists() == true) {
+  logger.info("Setup SecurityRealm: " + "ReverseProxySecurityRealm")
+// - Setup reverse proxy header names, which depend on forwarding in request headers injected at the https-gateway. 
+  // 
+  String forwardedUser = 'X-Forwarded-User'
+  String headerGroups = 'X-Forwarded-Groups'
+  String headerGroupsDelimiter = '|'
+  String customLogInUrl = ''
+  String customLogOutUrl = ''
+// - Setup LDAP URI (Server), LDAP base (rootDN), and LDAP search filters.
+  String server = "<%=node[:LDAP][:URI]%>" 
+  String rootDN = "<%=node[:LDAP][:BASE]%>" 
+  //String rootDN = 'dc=exern,dc=nps,dc=edu'
+  boolean inhibitInferRootDN = false
+  String userSearchBase = ''
+  String userSearch = '(& (|(uid={0})(cn={0}))(objectClass=inetOrgPerson))'
+  String groupSearchBase = ''
+  String groupSearchFilter = '(& (cn={0}) (objectclass=group) )'
+  String groupMembershipFilter = ''
+  String groupNameAttribute = ''
+  String managerDN = ''
+  String managerPassword = ''
+// - Setup LDAP cache TTL (updateInterval)
+  Integer updateInterval = 15 
+  boolean disableLdapEmailResolver = false
+  String displayNameLdapAttribute = 'displayName'
+  String emailAddressLdapAttribute ='mail'
+// 
+// - The security realm fields are defined in the constructor for [ReverseProxySecurityRealm](
+//   https://github.com/jenkinsci/reverse-proxy-auth-plugin/blob/master/src/main/java/org/jenkinsci/plugins/reverse_proxy_auth/ReverseProxySecurityRealm.java). 
+// [v1.5 constructor] has three fewer members - it does not have customLoginUrl, customLogoutUrl, or groupNameAttribute which are in master and perhaps a
+// [v1.6+ release constuctory]  now the latest release.
+// 
+// - [v1.5 constructor](https://github.com/jenkinsci/reverse-proxy-auth-plugin/blob/f76b4e32acbf48713a28048e5e981dede88f4d08/src/main/java/org/jenkinsci/plugins/reverse_proxy_auth/ReverseProxySecurityRealm.java#L261-L263)
+//   SecurityRealm realm = new ReverseProxySecurityRealm( forwardedUser,  headerGroups,  headerGroupsDelimiter,   server,  rootDN,  inhibitInferRootDN,
+//        userSearchBase,  userSearch,  groupSearchBase,  groupSearchFilter,  groupMembershipFilter,   managerDN,  managerPassword, 
+//        updateInterval,  disableLdapEmailResolver,  displayNameLdapAttribute,  emailAddressLdapAttribute) 
+
+// 
+// - [v1.6+ release constuctory](https://github.com/jenkinsci/reverse-proxy-auth-plugin/blob/cfa947cdc738e3ef992e99089bd207b12aaa4480/src/main/java/org/jenkinsci/plugins/reverse_proxy_auth/ReverseProxySecurityRealm.java#L272-L275)
+// - YTBD Add a try/catch or query version - so that both constructors are available in this scipt.
+  SecurityRealm realm = new ReverseProxySecurityRealm( forwardedUser,  headerGroups,  headerGroupsDelimiter,  customLogInUrl, customLogOutUrl,  server,  rootDN,  inhibitInferRootDN,
+			 userSearchBase,  userSearch,  groupSearchBase,  groupSearchFilter,  groupMembershipFilter, groupNameAttribute,   managerDN,  managerPassword, 
+			 updateInterval,  disableLdapEmailResolver,  displayNameLdapAttribute,  emailAddressLdapAttribute) 
+
+// - Set the security strategy, for the moment, to full-control of logged-in users. A later script (perhaps 03_setup_user.groovy), may immediately change this.
+   strategy = new hudson.security.FullControlOnceLoggedInAuthorizationStrategy()
+   instance.setAuthorizationStrategy(strategy)
+   // Moved the creation of Jenkins user to 03_setup_users.groovy
+   // realm.createAccount("root","password")
+   // def strategy = new GlobalMatrixAuthorizationStrategy()
+   // strategy.add(Jenkins.ADMINISTER, "myUSERNAME")
+// - Set the security realm in the current instance and save this instance
+   instance.setSecurityRealm(realm)
+   instance.save()
+// - Set the Jenkins SSHD to a fixed port
+   logger.info("cieSecurity: " + "SSHD Port " + "8022" )
+   def sshDesc = instance.getDescriptor("org.jenkinsci.main.modules.sshd.SSHD")
+   sshDesc.setPort(8022)
+   sshDesc.save()
+   location = jenkins.model.JenkinsLocationConfiguration.get()
+   // - YTBD define a chef attribute or a parameters for admin e-mail and url (for now it is my email).
+// - Set the Administrator E-mail address
+   location.setAdminAddress("dljones@nps.edu")
+// - Set the location URL to VHOSTNAME/jenkins
+   location.setUrl("https://<%=node[:vhostname]%>/jenkins")
+   location.save()
+// - Disable the legacy remoting-CLI. The CLI via sshd is now available, by setting the port.
+// At time of writing, the Chef community jenkins cookbook is dependent on the deprecated remoting-CLI, to run groovy or install plugins.
+// Use JENKINS_HOME/init.groovy.d/01_ciePlugins.groovy (to install from the update center) and/or the ssh-cli (via "ssh -p PORT maintuser@localhost install-plugin ...") instead. For a specific version of a plugin - the CLI command accepts a path, however simply copy all the *.jpi/*.hpi file to JENKINS_HOME/plugins works too.
+   jenkins.CLI.get().setEnabled(false)
+   // YTBD: check if a following instance.save() is needed to persist the disable of the remoting-cli.
+   instance.save()
+   myFile.createNewFile()
+}
+
+
+

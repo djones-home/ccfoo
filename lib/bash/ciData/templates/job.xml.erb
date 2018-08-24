@@ -1,0 +1,238 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>FNMOC-N62 Project VM management.</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <jenkins.advancedqueue.AdvancedQueueSorterJobProperty plugin="PrioritySorter@2.11">
+      <useJobPriority>false</useJobPriority>
+      <priority>-1</priority>
+    </jenkins.advancedqueue.AdvancedQueueSorterJobProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <org.biouno.unochoice.DynamicReferenceParameter plugin="uno-choice@1.5.2">
+          <name>showInst</name>
+          <description></description>
+          <randomName>choice-parameter-19102710455356869</randomName>
+          <visibleItemCount>1</visibleItemCount>
+          <script class="org.biouno.unochoice.model.GroovyScript">
+            <secureScript plugin="script-security@1.24">
+              <script>def cmd = &quot;/usr/bin/env JOB_NAME=&quot; + jenkinsProject.displayName +  &quot;  ${System.getenv(&apos;HOME&apos;)}/sws/tools/awsJobHelper.sh&quot;
+try { new File ( cmd.execute().text.trim() ).text } catch (e) { [ &quot;ERROR ${cmd}&quot; , e.message  ] }</script>
+              <sandbox>false</sandbox>
+            </secureScript>
+            <secureFallbackScript plugin="script-security@1.24">
+              <script>def cmd = &quot;/usr/bin/env JOB_NAME=&quot; + jenkinsProject.displayName +  &quot;  ${System.getenv(&apos;HOME&apos;)}/sws/tools/awsJobHelper.sh&quot;
+[&quot;ERROR: &quot;, cmd ]</script>
+              <sandbox>false</sandbox>
+            </secureFallbackScript>
+          </script>
+          <projectName>AWS_N62</projectName>
+          <parameters class="linked-hash-map"/>
+          <referencedParameters></referencedParameters>
+          <choiceType>ET_FORMATTED_HTML</choiceType>
+          <omitValueField>false</omitValueField>
+        </org.biouno.unochoice.DynamicReferenceParameter>
+        <org.biouno.unochoice.ChoiceParameter plugin="uno-choice@1.5.2">
+          <name>COMMAND</name>
+          <description></description>
+          <randomName>choice-parameter-19102710460404374</randomName>
+          <visibleItemCount>1</visibleItemCount>
+          <script class="org.biouno.unochoice.model.GroovyScript">
+            <secureScript plugin="script-security@1.24">
+              <script>def cmd = &quot;/usr/bin/env JOB_NAME=&quot; + jenkinsProject.displayName  +  &quot;  ${System.getenv(&apos;HOME&apos;)}/sws/tools/awsJobHelper.sh COMMAND&quot;
+rl=[]; try {  cmd.execute().text.eachLine{ rl &lt;&lt; it } } catch (e) { [ &quot;ERROR ${cmd}&quot; , e.message  ] }</script>
+              <sandbox>false</sandbox>
+            </secureScript>
+            <secureFallbackScript plugin="script-security@1.24">
+              <script>[&quot;ERROR: Project is not ready. &quot;]</script>
+              <sandbox>false</sandbox>
+            </secureFallbackScript>
+          </script>
+          <projectName>AWS_N62</projectName>
+          <choiceType>PT_SINGLE_SELECT</choiceType>
+          <filterable>false</filterable>
+        </org.biouno.unochoice.ChoiceParameter>
+        <org.biouno.unochoice.CascadeChoiceParameter plugin="uno-choice@1.5.2">
+          <name>SUBJECT</name>
+          <description></description>
+          <randomName>choice-parameter-19102710466359948</randomName>
+          <visibleItemCount>1</visibleItemCount>
+          <script class="org.biouno.unochoice.model.GroovyScript">
+            <secureScript plugin="script-security@1.24">
+              <script>def cmd = &quot;/usr/bin/env JOB_NAME=&quot; + jenkinsProject.displayName  +  &quot;  ${System.getenv(&apos;HOME&apos;)}/sws/tools/awsJobHelper.sh ${COMMAND}&quot;
+rl=[]; try {  cmd.execute().text.eachLine{ rl &lt;&lt; it } } catch (e) { [ &quot;ERROR ${cmd}&quot; , e.message  ] }</script>
+              <sandbox>false</sandbox>
+            </secureScript>
+            <secureFallbackScript plugin="script-security@1.24">
+              <script>[&quot;ERROR: Jenkins is not configured for this Project.&quot;]</script>
+              <sandbox>false</sandbox>
+            </secureFallbackScript>
+          </script>
+          <projectName>AWS_N62</projectName>
+          <parameters class="linked-hash-map"/>
+          <referencedParameters>COMMAND</referencedParameters>
+          <choiceType>PT_RADIO</choiceType>
+          <filterable>true</filterable>
+        </org.biouno.unochoice.CascadeChoiceParameter>
+        <hudson.model.TextParameterDefinition>
+          <name>SESSION_CREDENTIALS</name>
+          <description>An optional  short duration session token (STS),  used to grant additional privileges, typically obtained using MFA.</description>
+          <defaultValue></defaultValue>
+        </hudson.model.TextParameterDefinition>
+        <org.biouno.unochoice.DynamicReferenceParameter plugin="uno-choice@1.5.2">
+          <name>REQUIRED</name>
+          <description></description>
+          <randomName>choice-parameter-20229013729402157</randomName>
+          <visibleItemCount>1</visibleItemCount>
+          <script class="org.biouno.unochoice.model.GroovyScript">
+            <secureScript plugin="script-security@1.24">
+              <script>try { cmd=  [&quot;/usr/bin/env  JOB_NAME=&quot; + jenkinsProject.displayName,
+ &quot;${System.getenv(&apos;HOME&apos;)}/sws/tools/awsJobHelper.sh&quot;.toString(),
+[ &quot;required&quot;,  COMMAND.split()[0], SUBJECT.replaceAll(~&apos; .*&apos;, &quot;&quot;),  SESSION_CREDENTIALS].join(&quot;:&quot;)
+].join(&quot; &quot;) 
+[ cmd.execute().text ]} catch(e) {[&quot;ERROR&quot;, e.message]}
+</script>
+              <sandbox>false</sandbox>
+            </secureScript>
+            <secureFallbackScript plugin="script-security@1.24">
+              <script>[ &quot;error&quot; ]</script>
+              <sandbox>false</sandbox>
+            </secureFallbackScript>
+          </script>
+          <projectName>AWS_N62</projectName>
+          <parameters class="linked-hash-map"/>
+          <referencedParameters>COMMAND,SESSION_CREDENTIALS,SUBJECT</referencedParameters>
+          <choiceType>ET_UNORDERED_LIST</choiceType>
+          <omitValueField>false</omitValueField>
+        </org.biouno.unochoice.DynamicReferenceParameter>
+        <org.biouno.unochoice.ChoiceParameter plugin="uno-choice@1.5.2">
+          <name>CIDATA_SCM</name>
+          <description>SCM of project settings.</description>
+          <randomName>choice-parameter-20308219081659251</randomName>
+          <visibleItemCount>1</visibleItemCount>
+          <script class="org.biouno.unochoice.model.GroovyScript">
+            <secureScript plugin="script-security@1.24">
+              <script>def cmd = &quot;/usr/bin/env JOB_NAME=&quot; + jenkinsProject.displayName  +  &quot;  ${System.getenv(&apos;HOME&apos;)}/sws/tools/awsJobHelper.sh CIDATA_SCM&quot;
+rl=[]; try {  cmd.execute().text.eachLine{ rl &lt;&lt; it } } catch (e) { [ &quot;ERROR ${cmd}&quot; , e.message  ] }</script>
+              <sandbox>false</sandbox>
+            </secureScript>
+            <secureFallbackScript plugin="script-security@1.24">
+              <script></script>
+              <sandbox>false</sandbox>
+            </secureFallbackScript>
+          </script>
+          <projectName>AWS_N62</projectName>
+          <choiceType>PT_SINGLE_SELECT</choiceType>
+          <filterable>false</filterable>
+        </org.biouno.unochoice.ChoiceParameter>
+        <org.biouno.unochoice.ChoiceParameter plugin="uno-choice@1.5.2">
+          <name>CITOOLS_SCM</name>
+          <description>Information  from project settings.</description>
+          <randomName>choice-parameter-20308219087386997</randomName>
+          <visibleItemCount>1</visibleItemCount>
+          <script class="org.biouno.unochoice.model.GroovyScript">
+            <secureScript plugin="script-security@1.24">
+              <script>def cmd = &quot;/usr/bin/env JOB_NAME=&quot; + jenkinsProject.displayName  +  &quot;  ${System.getenv(&apos;HOME&apos;)}/sws/tools/awsJobHelper.sh CITOOLS_SCM&quot;
+rl=[]; try {  cmd.execute().text.eachLine{ rl &lt;&lt; it } } catch (e) { [ &quot;ERROR ${cmd}&quot; , e.message  ] }</script>
+              <sandbox>false</sandbox>
+            </secureScript>
+            <secureFallbackScript plugin="script-security@1.24">
+              <script></script>
+              <sandbox>false</sandbox>
+            </secureFallbackScript>
+          </script>
+          <projectName>AWS_N62</projectName>
+          <choiceType>PT_SINGLE_SELECT</choiceType>
+          <filterable>false</filterable>
+        </org.biouno.unochoice.ChoiceParameter>
+        <org.biouno.unochoice.ChoiceParameter plugin="uno-choice@1.5.2">
+          <name>BUCKET_SCM</name>
+          <description>Code source for the system bucket.</description>
+          <randomName>choice-parameter-20312685393362377</randomName>
+          <visibleItemCount>1</visibleItemCount>
+          <script class="org.biouno.unochoice.model.GroovyScript">
+            <secureScript plugin="script-security@1.24">
+              <script>def cmd = &quot;/usr/bin/env JOB_NAME=&quot; + jenkinsProject.displayName  +  &quot;  ${System.getenv(&apos;HOME&apos;)}/sws/tools/awsJobHelper.sh BUCKET_SCM&quot;
+rl=[]; try {  cmd.execute().text.eachLine{ rl &lt;&lt; it } } catch (e) { [ &quot;ERROR ${cmd}&quot; , e.message  ] }</script>
+              <sandbox>false</sandbox>
+            </secureScript>
+            <secureFallbackScript plugin="script-security@1.24">
+              <script></script>
+              <sandbox>false</sandbox>
+            </secureFallbackScript>
+          </script>
+          <projectName>AWS_N62</projectName>
+          <choiceType>PT_SINGLE_SELECT</choiceType>
+          <filterable>false</filterable>
+        </org.biouno.unochoice.ChoiceParameter>
+        <org.biouno.unochoice.ChoiceParameter plugin="uno-choice@1.5.2">
+          <name>PROJECT_DATA_FILE</name>
+          <description></description>
+          <randomName>choice-parameter-20312906952560164</randomName>
+          <visibleItemCount>1</visibleItemCount>
+          <script class="org.biouno.unochoice.model.GroovyScript">
+            <secureScript plugin="script-security@1.24">
+              <script>def cmd = &quot;/usr/bin/env JOB_NAME=&quot; + jenkinsProject.displayName  +  &quot;  ${System.getenv(&apos;HOME&apos;)}/sws/tools/awsJobHelper.sh CIDATA&quot;
+rl=[]; try {  cmd.execute().text.eachLine{ rl &lt;&lt; it.replaceAll(~&apos;^.*/&apos;, &quot;&quot;) } } catch (e) { [ &quot;ERROR ${cmd}&quot; , e.message  ] }</script>
+              <sandbox>false</sandbox>
+            </secureScript>
+            <secureFallbackScript plugin="script-security@1.24">
+              <script></script>
+              <sandbox>false</sandbox>
+            </secureFallbackScript>
+          </script>
+          <projectName>AWS_N62</projectName>
+          <choiceType>PT_SINGLE_SELECT</choiceType>
+          <filterable>false</filterable>
+        </org.biouno.unochoice.ChoiceParameter>
+        <hudson.model.BooleanParameterDefinition>
+          <name>OK_TO_TERMINATE</name>
+          <description>Terminate instances named in CIDATA of this project. This may require additional privileges than the normal run.	</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>AWS_REGION</name>
+          <description></description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>us-gov-west-1</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <assignedNode>dropi</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>#!/bin/bash
+[ ! -d tools ] &amp;&amp; { svn co $CITOOLS_SCM;  } || (cd tools &amp;&amp; svn update )
+PATH+=$WORKSPACE/tools
+[ ! -d ciData ] &amp;&amp; { svn co $CIDATA_SCM; } || (cd ciData &amp;&amp;  svn update )
+[ ! -d bucket ] &amp;&amp; mkdir bucket
+[ ! -d bucket/${PROVISIONING_BUCKET_SCM##*/} ] &amp;&amp; ( cd bucket; svn co $PROVISIONING_BUCKET_SCM ) || 
+   ( cd bucket/${PROVISIONING_BUCKET_SCk##*/} &amp;&amp; svn update )
+# get the cookbook which has the common recipe
+commonCB=https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket/ciStack/chef-repo/cookbooks/fnmoc_ci
+commonCO=${commonCB/*bucket/bucket}
+[ ! -d $commonCO ] &amp;&amp; {
+   mkdir -p $(dirname $commonCO)
+   (cd $(dirname $commonCO) &amp;&amp; svn co $commonCB )
+} || ( cd $commonCO &amp;&amp; svn update )
+export INSTANCE_NAMES=&quot;${SUBJECT}&quot; CIDATA_SOURCE=&quot;$CITOOLS_SCM&quot; SESSION_TOKEN=&quot;$SESSION_CREDENTIALS&quot;
+. tools/ciStack.sh
+ciStack ${COMMAND%% *} ${PROJECT_DATA_FILE}
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

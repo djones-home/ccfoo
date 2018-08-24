@@ -1,0 +1,83 @@
+{
+  "_md": [ "# Packer template for VMware deployment of Nites-Next ISO",
+  "This packer template is used for building VMs from  Nites-Next ISO - only the DB node today",
+  "The NN installs are not headless; this is dealt with using a builder that supports the boot_command.",
+  "The NN boot-menu has three selections: master, db, and gis. Therefore the boot_command verys slightly.",
+  "The boot_command can template variables. In the future this could solve node differences.",
+  "YTBD: the boot_command template/variables for node differences.",
+  "    exmaple usage: ",
+  "    packer.io  build -debug ~/nn200-db-vmware.json",
+  "The boot_command does not tollerate variations to the boot menu or build environment." ],
+      "_boot_command": [ "<tab> text ks=hd:fd0:/centos-kickstart.cfg<enter><wait>" ],
+      "_disk_size": 16384,
+      "_floppy_files": [ "{{ pwd }}/files/centos-kickstart.cfg" ],
+      "_ssh_password": "packer",
+  "variables": {
+       "vmware_host": "e104",
+       "vmware_user": "root",
+       "vmware_pass": "packer1234",
+       "vmware_store": "nas2_v4",
+       "vmware_conn": "ernDesktop-370"
+   },
+  "builders": [ {
+      "type": "vmware-iso",
+      "vm_name": "nn200-packer",
+      "guest_os_type": "rhel6-64",
+      "headless": false,
+      "remote_type": "esx5",
+      "remote_host": "{{ user `vmware_host` }}",
+      "remote_username": "{{ user `vmware_user` }}",
+      "remote_password": "{{ user `vmware_pass` }}",
+      "remote_datastore": "{{ user `vmware_store` }}",
+      "vmx_data": {
+        "memsize":  "2048",
+        "ethernet0.networkName": "ernDesktop-370",
+        "ethernet0.present": "TRUE",
+        "ethernet0.startConnected": "TRUE",
+        "ethernet0.virtualDev": "e1000",
+        "ethernet0.addressType": "generated",
+        "ethernet0.wakeOnPcktRcv": "FALSE",
+        "ethernet0.uptCompatibility": "TRUE"
+      },
+      "vmx_data_post": {
+        "ethernet0.virtualDev": "vmxnet3"
+      },
+      "disk_size": 128000,
+      "iso_url": "file:///{{ pwd }}/NITES-TAG-Drop71.0-r50025.iso",
+      "iso_checksum": "44da11c1eade513f03beb91ed05f5212",
+      "iso_checksum_type": "md5",
+      "ssh_wait_timeout": "10m",
+      "ssh_username": "root",
+      "ssh_host": "e104",
+      "shutdown_command": "sudo -hP now",
+      "shutdown_timeout": "3m",
+      "boot_wait": "5s",
+      "boot_command": [
+        "<wait5><down><wait5><enter>",
+        "<wait5><enter>",
+        "<wait5><enter>",
+        "<wait5><right><right><right><right><enter>",
+        "<wait5m>nn200-db<enter>10.10.10.2<enter><wait5s><enter>",
+        "<wait5s>nn200-master<enter>10.10.10.1<enter><wait5><enter>",
+        "<wait5>example.mil<enter>",
+        "255.255.255<enter>",
+        "10.10.10.222<enter>",
+        "10.10.10.11<enter>",
+        "10.10.10.12<enter><wait5><enter>",
+        "<wait5><tab><wait5><enter>",
+        "<wait5><enter>"
+      ]
+      } ],
+      "provisioners": [
+      {
+        "type": "file",
+        "source": "setup_NN_for_CIE.sh",
+        "destination": "setup_things.sh"
+      },
+     {
+       "type": "shell",
+       "inline": [ "echo setup_things.sh" ]
+     }
+  ]
+}
+

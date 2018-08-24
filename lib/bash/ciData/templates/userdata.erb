@@ -1,0 +1,181 @@
+#cloud-config
+#  $HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/templates/userdata.erb $
+#  $Id: userdata.erb 71546 2018-06-06 21:28:48Z dljones@nps.edu $
+
+ssh_authorized_keys:
+ - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCUh26yU+dVZvLwVc3SWb8IhsD2+rGFPHwrBeTeLnAKBUxgSpE12pbwkY+nvHJdD5W2YYIu6aZ4O+U5jwEkxPbFKmI1ak9A+O1F4Q4shoxHBPn2gONAB2dsjoyFx4nw/a+OfHRfniD2xEV0SGd/w0imm9RYNqp2HRo3Wg/eRXc7+3bfNXBzxS5CH/ss1p8DOmt52A/ZY5KWym/sXhXDxfMS8tn7RA/iltmaItUzpPTPAOtMkoLeb+xyOLQREdwm6CLjT4by6UpZ1qj5e8SPVDWQZiieZElZJCewjMRaXHNHP7TTpU2Mn6LMnA98nIFz+qvCPTvQ0xcT1PezpDzp43Zx JONES.DANIEL.L.1265422345
+ - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCGMIuOw8QCEDo6iIf4YOsvDJayK0xJNVOExojHIrT4vDD06aqPYXF2Sb2iNl5doi5sqdF50dMJZtdDeejruYSnbM3GtvhDn2Fw4iXBvgtl1wOyGWvGuMMtYovQcXILVHpuRLgcHD2ZK0UqRwWEZeRdkJ5yzQBK4m4crofYQ/Qv2cbrw70BpU4S2TxgSh+Pd5zHIlQrgVKtphBK7tHh6KB1m+MKAE6nxVsd8I2QGbQL+ycO2WbvzxdpjxTrtiejcmX5JWoZXpbUXgkXx1GHYVBFzW+oIUfWtYvtD29szfSz55FVputRlml+OejzpBzpAA9IX1eYLzhmkWBGnQJyFdYD
+
+package_upgrade: false
+
+groups:
+ - wheel
+ - developers
+
+<%# ##
+    # Add users given ciData/users.yaml which is passed by a binding from userData.rb.
+    # userData.rb will load "data" from CIDATA, merges the UsersFile to data["users"].
+    # Render the users yaml here under the cloud-init tag "users:".
+%>
+<%=data["users"].to_yaml.sub(/^---/,"")%>     
+
+<%# ##
+    # Build a custom JSON file for first_run setup scripts.
+    # This could be  chef-solo -j json, or just data that any runcmd scripts draw from.
+    # The content depends entirely on the user, and the runcmd that apply it.
+    # For a chef-solo example content: 
+    #   http://stackoverflow.com/questions/24010272/using-attributes-in-chef-solo-json
+    # Quoting from:  http://stackoverflow.com/questions/24724449/how-to-properly-use-roles-with-chef-solo
+    #  chef-solo -c conf.rb -j conf.json
+    #  Where conf.rb sets the cookbook path, file cache path, and any other global settings you want to twiddle, and conf.json looks something like this:
+    #  {
+    #    "some_attr": true,
+    #    "run_list": [
+    #         "role[solo_provisioned_node]",
+    #         "recipe[mycookbook::myrecipe]"
+    #     ]
+    #  }
+
+%>
+<%
+myRegion  = `aws configure get region`.strip
+$stderr.puts "#{$0} DEBUG: Propagate myRegion #{myRegion}" unless  ENV["DEBUG"].nil?
+custom = {
+   "myEnvironment" => ENV["ENVIRONMENT"] || "default",
+   "BUILD" => ENV["BUILD_TAG"] || "None",
+   "BUILD_TAG" => ENV["BUILD_TAG"] || "None",
+   "mykeyPW" => ENV["keyPW"] || "None",
+   "myOneTimePW" => ENV["myOneTimePW"] || "None",
+   "mySTSPW" => ENV["mySTSPW"] || "None",
+   "s3Store" => data["s3Store"] || "s3://cibootstrap",
+   "s3store" => data["s3Store"] || "s3://cibootstrap",
+   "vpcName" => data["VpcName"] || "",
+   "ciDataName" => data["RoleName"] || "",
+   "instanceName" => data["Name"] || "",
+   "run_list" => data["run_list"] || []
+}
+$stderr.puts "#{$0} DEBUG: Construct custom write-file content" unless  ENV["DEBUG"].nil?
+#custom = ENV.to_h
+# make  /etc/chef/client.rb text
+chef_config = "\n"
+chef_config += "`aws s3 sync #{data['s3Store']}/#{data['Project']}/chef-repo /var/chef/ `\n"
+chef_config += "local_mode true\n"
+chef_config += "chef_zero.enabled true\n"
+chef_config += "cookbook_path [ '/var/chef/cookbooks', '/var/chef/berks-cookbooks', '/root/setup/chef-repo' ]\n"
+chef_config += "environment \"#{ENV['ENVIRONMENT'] || 'default'}\" \n" 
+
+$stderr.puts "#{$0} DEBUG: Construct chef/client.rb write-file content" unless  ENV["DEBUG"].nil?
+chef_run = "#!/bin/bash\ncd /root\n"
+if (data["Name"] =~ /ubuntu/i || data['OsPlatform'] =~ /ubunt/i)
+    chef_run += "! dpkg -l chef && ! dpkg -l chefdk && {\n"
+    chef_run += "    pkg=chefdk_3.0.36-1_amd64.deb\n"
+    chef_run += "    aws s3 cp #{data['s3Store']}/sw/chef/$pkg  /tmp/\n"
+    chef_run += "    dpkg -i /tmp/$pkg && rm /tmp/$pkg\n"
+else
+    chef_run += "! rpm -q chef && ! rpm -q chefdk && {\n"
+    chef_run += "    chef_el6=chef-12.14.89-1.el6.x86_64.rpm\n"
+    chef_run += "    chef_el7=chef-12.12.15-1.el7.x86_64.rpm\n"
+    chef_run += "    chef_el7=chefdk-2.4.17-1.el7.x86_64.rpm\n"
+    chef_run += "    chef_el6=chefdk-2.4.17-1.el6.x86_64.rpm\n"
+    chef_run += "    case $(uname -r) in   *el6* ) rpm=${chef_el6} ;;  *) rpm=${chef_el7} ;; esac\n"
+    chef_run += "    aws s3 cp #{data['s3Store']}/common/$rpm /tmp/\n"
+    chef_run += "    rpm -i -p /tmp/$rpm\n"
+    chef_run += "    rm /tmp/$rpm\n"
+end
+chef_run += "}\n"
+
+chef_run += "[ ! -d /var/chef/nodes ] && mkdir -p /var/chef/nodes\n"
+chef_run += "aws s3 sync #{data['s3Store']}/#{data['Project']}/chef-repo /var/chef/\n"
+chef_run += "chef-client -j /root/custom.json\n"
+$stderr.puts "#{$0} DEBUG: Construct chef_run write-file content" unless  ENV["DEBUG"].nil?
+# make the content of an /etc/profile.d/fnmoc_ci.sh, to setup shell environments
+shellEnv = ""
+#shellEnv += "# JOB_URL #{ENV['JOB_URL']}\n" if ENV.has_key?('JOB_URL')
+#shellEnv += "# BUILD_URL #{ENV['BUILD_URL']}\n" if ENV.has_key?('BUILD_URL')
+#shellEnv += "# Set AWS_REGION to that of this node.\nexport AWS_REGION=#{myRegion}\n"
+shellEnv += "\nexport AWS_REGION=#{myRegion}\n"
+#shellEnv += "# Developer environment stuff for CI:\n"
+shellEnv +=  "export WORKSPACE=$HOME/ws\n"
+shellEnv +=  "export CIDATA=$WORKSPACE/ciData/#{ENV['CIDATA'].sub(/.*\//, '')}\n"
+%w{ s3Store_SCM CIDATA_SCM CITOOLS_SCM s3Home s3Store s3Data s3SystemStore s3ProjectStore }.each { |varName|
+   shellEnv +=  "export #{varName.upcase}=\""
+   shellEnv +=  "#{data[varName]}"  if data.has_key?(varName)
+   shellEnv +=  "None"             unless data.has_key?(varName)
+   shellEnv +=  "\" ; # From ciData: #{varName}\n" 
+}
+
+$stderr.puts "#{$0} DEBUG: shellEnv for profile.d/fnmoc_ci.sh write-file content" unless  ENV["DEBUG"].nil?
+# YTBD move the install of profile.d/fnomc_ci.sh  to citools.rpm
+if  data['RoleName'].downcase == "bastion"
+  $stderr.puts "#{$0} DEBUG: use bastion shellEnv in profile.d/fnmoc_ci.sh write-file content" unless  ENV["DEBUG"].nil?
+  shellEnv += "# function to load tools for CI in AWS land, for project administrators.\n"
+  shellEnv += "awsLoad() {\n"
+  shellEnv +=  "   [ ! -d $HOME/.aws ] && { aws configure set region #{myRegion}; aws configure set output json; }\n"
+  shellEnv +=  "   [ ! -d $WORKSPACE ] && { mkdir -p $WORKSPACE/bucket; aws s3 sync #{data['s3Store']}/common/ciData $WORKSPACE/ciData\n"
+  shellEnv +=  "      aws s3 sync #{data['s3Store']}/common/tools $WORKSPACE/tools\n"
+  shellEnv +=  "      aws s3 sync #{data['s3Store']}/common/tools $WORKSPACE/tools\n"
+  shellEnv +=  "      aws s3 sync #{data['s3Store']}/#{data['Project']} $WORKSPACE/bucket/#{data['Project']}\n"
+  shellEnv +=  "      aws s3 sync #{data['s3Store']}/ciStack/chef-repo/cookbooks/fnmoc_ci $WORKSPACE/bucket/ciStack/chef-repo/cookbooks/fnmoc_ci\n"
+  shellEnv +=  "   }\n    . $WORKSPACE/tools/aws.func;  type jq && . $WORKSPACE/tools/ciStack.sh;\n "
+  shellEnv +=  "     chmod +x $WORKSPACE/tools/* \n}\n"
+  shellEnv +=  "     export PSPR=#{data['Project'][0..3]}\n"
+  shellEnv +=  "     export PSRO=#{data['RoleName'][0..3]}\n"
+  shellEnv +=  "     PS1='[\\u@$PSPR-$PSRO]\$ '\n"
+end
+%>
+
+<%#data["write_file"].to_yaml.sub(/^---/,"") %>
+<%=
+{ "write_files" => [ 
+  { "encoding" =>  "b64",
+    "owner" =>  "root:root",
+    "path" => "/root/custom.json",
+    "permissions" => "0600",
+    "content" =>  Base64.encode64( JSON.pretty_generate(custom)) 
+   }, 
+  { "encoding" =>  "b64",
+    "owner" =>  "root:root",
+    "path" => "/root/chef_run.sh",
+    "permissions" => "0750",
+    "content" =>  Base64.encode64(chef_run) 
+   }, 
+  { "encoding" =>  "b64",
+    "owner" =>  "root:root",
+    "path" => "/etc/profile.d/fnomc_ci.sh",
+    "permissions" => "0644",
+    "content" =>  Base64.encode64(shellEnv) 
+   }, 
+  { "encoding" =>  "b64",
+    "owner" =>  "root:root",
+    "path" => "/etc/chef/client.rb",
+    "permissions" => "0600",
+    "content" =>  Base64.encode64(chef_config) 
+   } 
+  ] }.to_yaml.sub(/^---/,"") 
+%>
+
+<% myRegion  = `aws configure get region`.strip %>
+
+<%
+    # Setup hostname, fqdn, and manage_etc_hosts, only if given a "Domain" in ciData
+hostnameSetup = ""
+if data.has_key?('Domain') && data['Domain'].length 
+    hostnameSetup +="hostname: #{data['Name']}\n"
+    hostnameSetup +="fqdn: #{data['Name']}.#{data['Domain'].downcase}\n"
+    hostnameSetup +="manage_etc_host: true\n"
+end
+%>
+<%=hostnameSetup %>
+
+runcmd:
+<% unless (data["Name"] =~ /ubuntu/i || data['OsPlatform'] =~ /ubunt/i) -%>
+ - yum install -y  unzip wget subversion python
+<% else -%>
+ - apt install -y  unzip wget subversion python
+<% end -%>
+ - type aws || { curl https://s3.amazonaws.com/aws-cli/awscli-bundle.zip -o awscli-bundle.zip; unzip awscli-bundle.zip; ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws; PATH=$PATH:/usr/local/aws/bin;  ln -s /usr/local/bin/aws /usr/bin/; ln -s /usr/local/aws/bin/aws_completer /usr/bin/ ; }
+ - aws configure set region <%=myRegion%>
+ - /root/chef_run.sh
+
+# vim:syntax=yaml expandtab
+

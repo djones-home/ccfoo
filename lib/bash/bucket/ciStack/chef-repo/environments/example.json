@@ -1,0 +1,14 @@
+{
+    "name": "cidata",
+    "description": "This is an import of the project ciData.JSON",
+    "chef_type": "environment",
+    "json_class": "Chef::Environment",
+    "default_attributes": {
+         "cidata" : {}
+    },
+    "override_attributes": {
+    },
+    "cookbook_versions": {
+        "fnmoc_ci": "= 1.0.0"
+    }
+}

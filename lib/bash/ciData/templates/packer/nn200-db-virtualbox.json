@@ -1,0 +1,60 @@
+{
+  "_md" : [ "# Packer template for Nites-Next ISO",
+ "This packer template is used for building VMs from  Nites-Next ISO - only the DB node today",
+ "The NN installs are not headless; this is dealt with using a builder that supports the boot_command.",
+ "master, db, and gis. Therefore the boot_command verys slightly.",
+ "The boot_command can template variables. In the future this could solve node differences.",
+ "the boot_command template/variables for node differences.",
+ "    packer   ",
+ "    YTBD  options ",
+ "    YTBD options ",
+ "    path_to_this_template", 
+  " ",
+ "The boot_command does not tollerate variations to the boot menu or build environment." ],
+  "builders": [ {
+  "type": "virtualbox-iso",
+  "guest_os_type": "RedHat_64",
+  "iso_url": "file:///media/djones/NITES Drop71.0/NITES-TAG-Drop71.0-r50025.iso",
+  "iso_checksum": "44da11c1eade513f03beb91ed05f5212",
+  "iso_checksum_type": "md5",
+  "ssh_username": "packer",
+  "ssh_password": "packer",
+  "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+  "disk_size": "128000",
+  "boot_wait": "10s",
+  "export_opts": [
+    "--manifest",
+    "--vsys", "0",
+    "--description", "{{user `vm_description`}}",
+    "--version", "{{user `vm_version`}}"
+  ],
+  "boot_command": [
+    "<wait5><down><wait5><enter>",
+    "<wait5><enter>",
+    "<wait5><enter>",
+    "<wait5><right><right><right><right><enter>",
+    "<wait5>nn200-db<enter>10.10.10.2<enter><wait5s><enter>",
+    "<wait5>nn200-master<enter>10.10.10.1<enter><wait5><enter>",
+    "<wait5>example.mil<enter>",
+    "255.255.255<enter>",
+    "10.10.10.222<enter>",
+    "10.10.10.11<enter>",
+    "10.10.10.12<enter><wait5><enter>",
+    "<wait5><tab><wait5><enter>",
+    "<wait5><enter>"
+  ]
+  } ],
+  "provisioners": [
+      {
+        "type": "file",
+        "source": "setup_NN_for_CIE.sh",
+        "destination": "setup_things.sh"
+      },
+     {
+       "type": "shell",
+       "inline": [ "echo setup_things.sh" ]
+     }
+  ]
+
+}
+

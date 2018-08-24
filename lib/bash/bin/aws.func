@@ -1,0 +1,816 @@
+#!/bin/bash
+#md+
+# # AWS cli helper shell functions.
+
+# Version: 
+# 
+#     $HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools/aws.func $
+#     $Id: aws.func 72369 2018-07-14 21:19:16Z dljones@nps.edu $
+
+# Requires:
+# 
+# - aws cli (for any AWS work)
+# - OpenSSH, OpenSSH-Agent
+# - coolkey PKCS11 module
+# - pkcs11-tool
+# 
+# # Background 
+#
+#  Worthy functions: 
+#
+# - [CacRestart] (run on your Linux desktop, no aws cli required)
+# - getToken (requires aws cli)
+# - sshI (require aws cli)
+# - Aws cli installer
+# 
+# 
+# [cacRestart]: cacRestart.html
+# [cacRestart function]: cacRestart.html
+#md-
+
+
+
+type aws >/dev/null 2>&1 && {
+    [ -z "$(aws configure get region)" ] && { echo "aws.func: You should set your region, i.e. for GovCloud run: aws configure set region us-gov-west-1 >&2"; }
+    ! complete -p aws >/dev/null 2>&1  && type aws_completer >/dev/null && complete -C aws_completer aws
+    ! complete -p aws >/dev/null 2>&1  && { for p in  /opt/aws/bin /usr/local/aws/bin /usr/local/bin; do
+       [ -e $p/aws_completer ] && { complete -C $p/aws_completer aws ; break; }
+      done
+    }
+}
+
+#md+
+# # CAC helper Functions
+#
+# From a Linux desk, a user can (if not must) use SSH with your CAC (or PIV) smartcard.
+# At least one of the certificates on the smartcard is bound to SSH authorized keys.
+#
+# - [cacRestart function] code should be placed in your ~/.bashrc
+# - Typical use pattern: 
+#
+# ````bash
+#     desktop$ cacRestart
+#     desktop$ ssh -A {bastion-Public-IP}
+#     Bastion$ awsLoad; # loads local aws  module
+#     Bastion$ showInst; # list status of project-VPC Virtual Machines (EC2 Instances)
+#     Bastion$ ssh {private-IP} ; # ssh to privately networked EC2 Instance
+#     Bastion$ sshI {Tag-Name} ; # ssh by Instance Tag-Name 
+# ````
+# 
+#
+## Reference: http://dtek.net/2012/09/19/how-stop-gnome-keyring-clobbering-opensshs-ssh-agent-ubuntu-1204.html
+pk11libs="/usr/lib/pkcs11/libcoolkeypk11.so /usr/lib64/pkcs11/libcoolkeypk11.so /usr/local/opt/opensc/lib/opensc-pkcs11.so"
+export PKCS11; for PKCS11 in $pk11libs;  do [ -r ${PKCS11} ] && break; done
+# 
+
+###
+# Start (or restart) using CAC key operations via SSH Agent.
+# 
+cacRestart() { 
+# - Caches an rc to help setup ssh-agent environment variables, i.e. SSH_AGENT_PID, SSH
+    local file=$HOME/.cache/cacRestart/rc.$(hostname) 
+    local dir=${file%/*} now=$(date +%s) id=X$SSH_AGENT_PID
+    [ -d $dir ]  || { mkdir -p  $dir && chmod 700 $dir; }
+    [ -e $file ]  || ssh-agent -s > $file 
+# - Uses the cache-rc to find the last OpenSSH-agent
+    [ X$SSH_AGENT_PID != X$(. $file>/dev/null; echo $SSH_AGENT_PID) ] && . $file; 
+# - start a new agent if the last agent proc is missing
+    [ -e /proc/$SSH_AGENT_PID -a -n "$SSH_AGENT_PID" ] || { ssh-agent -s > $file && . $file; }
+# - start a new agent if the proc/comm is not ssh-agent
+    [ "$(strings /proc/$SSH_AGENT_PID/comm)" == ssh-agent ] || { ssh-agent -s > $file && . $file; }
+    [ $(stat -c %Y $file) -lt $now ] && {
+# - or switch to the last-started existing agent, just return -not touching the agent or reloading keys
+        [ $id != X$SSH_AGENT_PID ] && return 1
+# - if not-switched, purge (if any) PKCS11 provided keys from the existing agent
+        ssh-add -e $PKCS11
+        # for switching between coolkey and opensc-pkcs11, look for more pkcs11 modules 
+        for n in $(ssh-add -l | awk '/pkcs11.*\.so /{print $3}'); do ssh-add -e $n; done
+    }
+# - connecting (new or pruged) ssh-agent to the CAC smartcard a (PIN will be required)
+    ssh-add -s $PKCS11
+}
+
+# 
+# For example on tty 2, I run cacRestart, list the agent keys,  connect to bastion.
+# Use "ssh -A" to allow forwarding CAC operations.
+# 
+# ````bash
+# Linux-Desktop$ cacRestart
+# Could not remove card "/usr/lib/pkcs11/libcoolkeypk11.so": agent refused operation
+# Enter passphrase for PKCS#11: {*PIN not shown*}
+# Card added: /usr/lib/pkcs11/libcoolkeypk11.so
+# Linux-Desktop$ 
+# Linux-Desktop$ ssh-add -l
+# 2048 SHA256:IChxXmwg1Z5TxUhTReWFCHGZQlAjWR9xv1nJS9Cj0qM /usr/lib/pkcs11/libcoolkeypk11.so (RSA)
+# 2048 SHA256:PtBtyONltaGMoLfXVvfLGQzl6XMfrok9YoDpbwQZrDQ /usr/lib/pkcs11/libcoolkeypk11.so (RSA)
+# 2048 SHA256:AXzXMPe6ZphvODWg5BNSd8w/3mJm0AkiBwsQnzGi38c /usr/lib/pkcs11/libcoolkeypk11.so (RSA)
+# Linux-Desktop$ 
+# Linux-Desktop$ env | grep SSH
+# SSH_AGENT_PID=4311
+# Linux-Desktop$ ssh -A bastion.ci
+# Last login: Thu Mar  1 01:47:23 2018 from 98.234.19.24
+# 
+#        __|  __|_  )
+#        _|  (     /   Amazon Linux AMI
+#       ___|\___|___|
+# 
+# $ 
+# $ awsLoad
+# $ showInst | head
+# #Name       InstanceId           State    Instance   Placement-AZ VpcId        IAM-Profile    PrivateIP    PublicIP
+# builda-1    i-06be1e2627660c201  running  t2.micro us-gov-west-1a vpc-cd1ad7a8 CI-vpc-ciBootS 10.0.20.72   null
+# ....edited output for brief example of first VM ....
+# $ 
+# ````
+#  
+# Continuing from a second terminal on the same desktop, connect the terminal to the same agent:  
+#  
+# ````bash
+# Linux-Desktop-term2$ cacRestart
+# Agent pid 4311
+# Linux-Desktop-term2$
+# ````
+# 
+#  
+# Continuing, after removal of my CAC: 
+#
+#  - On earler bastion login, the agent refuses operations
+#
+# ````bash
+# $ ssh localhost
+# sign_and_send_pubkey: signing failed: agent refused operation
+# Permission denied (publickey).
+# ````
+#  - On earler term2 desktop, ssh silently fails , until subseqent cacRestart and PIN given:
+# 
+# ````bash
+#  
+# Linux-Desktop-term2$ ssh -A bastion.ci
+# Linux-Desktop-term2$ echo $?
+# 255
+# Linux-Desktop-term2$ cacRestart
+# Card removed: /usr/lib/pkcs11/libcoolkeypk11.so
+# Enter passphrase for PKCS#11: {*PIN not shown*}
+# Card added: /usr/lib/pkcs11/libcoolkeypk11.so
+# 
+# ````
+
+#md-
+###
+# This function formats a public key from given x509 certificate, into the format used for SSH authorized_keys.
+# 
+cert2SshPubkey() {
+   local key cn file="$1" form=${2:-DER}
+   [ ! -r "$file" ] && return 1
+   openssl x509 -pubkey -in $file -inform $form -noout > $file.key
+   cn=$(openssl x509 -subject -in $file -inform $form -noout) || return 2
+   enddate=$(openssl x509 -enddate -in $file -inform $form -noout) || return 2
+   key=$(ssh-keygen -i -m PKCS8 -f $file.key) || return 1
+   #echo "$key ${cn##*CN=}"
+   echo "$key ${cn##*CN=} $enddate"; # add cn and enddata as a comment
+}
+###
+# Publish CAC public key to AWS EC2 key server.
+#
+## Usage ${FUNCNAME[0]} path/to/cert/file
+cacPubKey2aws() {
+   local json n file=$1
+   local fingerPrint answer
+   [ -z "$file" ] && { file=$(cacCert2file) || return 1 ; }
+   local blob=$(cert2SshPubkey $file) || return 1
+   local keyName=$(echo ${blob} | awk '{print $3}');
+   [ -z "$keyName" ] && { echo ERROR getting ssh-like key blob from $file >&2; return 1; }
+   # if key-name exists it needs deleted first. 
+   json=$(aws ec2 describe-key-pairs --o json) 
+   echo Found $(echo $json | jq '.KeyPairs | length') keys in aws.
+   echo $json | jq -r '.KeyPairs[] | "\(.KeyFingerprint)\t\(.KeyName)"'
+   echo "$blob" > /tmp/pubkey.$$
+   newFp=$(ssh-keygen -l -f /tmp/pubkey.$$); newFp=${n#* }; newFp=${n/ */}; rm /tmp/pubkey.$$
+   gotFingerprint=$(echo $json | jq --arg fp "$newFp"  '.KeyPairs[] | select(.KeyFingerprint==$fp)')
+   gotName=$(echo $json | jq --arg name "$keyName"  '.KeyPairs[] | select(.KeyName==$name)')
+   [ -n "${gotName}" ] && [ "${gotName}" == "${gotFingerprint}" ] && { echo No Change. >&2; return 0; }
+   [ -z "${gotName}${gotFingerprint}" ] && {
+       aws ec2 import-key-pair  --key-name "$keyName" --public-key-material "$blob" 
+       return $?
+   }
+   [ -n "${gotName}"  ] && { 
+         PS3="Do you want to delete the AWS key, with conflicting KeyName \"$keyName\" ? "  
+         select answer in yes no; do [ -n "$answer" ] && break; done
+        [ "$answer" != yes ] &&  { echo No change. >&2;  return 1 ; }
+        echo aws ec2 delete-key-pair  --key-name $keyName >&2
+        aws ec2 delete-key-pair  --key-name $keyName || return 1;
+        json=$(aws ec2 describe-key-pairs --o json) 
+        gotFingerprint=$(echo $json | jq --arg fp "$newFp"  '.KeyPairs[] | select(.KeyFingerprint==$fp)')
+   }
+   [ -n "${gotFingerPrint}"  ] && { 
+         n=$(echo "${gotFingerPrint}" | jq -r .KeyName)
+         PS3="Rename key from \"$n\" to \"$keyName\"? "
+         select answer in yes no; do [ -n "$answer" ] && break; done
+        [ "$answer" != yes ] &&  { echo No change. >&2;  return 1 ; }
+        echo aws ec2 delete-key-pair  --key-name $n >&2
+        aws ec2 delete-key-pair  --key-name $n >&2 || return 1
+   }
+   # add to aws account keyName
+   aws ec2 import-key-pair  --key-name $keyName --public-key-material "$blob" || return 1
+}
+
+###
+# Allows user to select and export a certificate from the CAC to a file.
+#
+cacCert2file() {
+   local n labels card cert file="$1" module=$2
+   for module in $module /usr/lib/pkcs11/libcoolkeypk11.so /usr/lib64/pkcs11/libcoolkeypk11.so;  do [ -r "$module" ] && break; done
+   [ ! -r "$module" ] && { echo ERROR: ${FUNCNAME[0]} could not find PKCS11 module; return 1; }
+   #select the slot (card) to read
+   labels=$(pkcs11-tool --module $module  --list-slots | grep "token label" | cut -d: -f2) || { echo ERROR >&2 ; return 1; }
+   IFS=$'\n'; set -- $labels; unset IFS
+   PS3="Select Card:"; select card; do [ -n "$card" ] && break; done; card=$(echo $card)
+   labels=$(pkcs11-tool --module $module  --token-label $card --list-objects --type cert) || { echo ERROR >&2 ; return 1; }
+   echo "$labels" >&2; set -- $( echo "$labels" | grep "ID:" | cut -d: -f2) 
+   PS3="Select Cert ID:"; select n ; do [ -n "$n" ] && break; done; cert=$(echo $cert)
+   file=${file:-$card.der}
+   ## nope, use id
+   ## pkcs11-tool --module $module  --token-label $card --read-object  --label $cert --type cert --output-file $file ||
+   pkcs11-tool --module $module  --token-label $card --read-object  --id $n --type cert --output-file $file ||
+      { echo ERROR reading $card, certificate $cert >&2;  return 2; }
+   echo $file
+}
+
+#md-
+# look for the coolkey module, as RHEL and Ubuntu paths very.
+find_coolkey() {
+  local lib m=libcoolkeypk11.so
+  for lib in /usr/lib64/$m /usr/lib/pkcs11/$m /usr/lib64/pkcs11/$m ;  do 
+      [ -r "$lib" ] && { echo $lib; return 0; } ;  
+  done
+ return 1
+}
+
+#md+
+###
+# Export CAC certificates.
+# 
+cacDownloadCerts() {
+   local n labels card cert file module archive=$HOME/certs/users
+   module=$(find_coolkey) || { echo ERROR: ${FUNCNAME[0]} could not find PKCS11 module; return 1; }
+   #select the slot (card) to read
+   labels=$(pkcs11-tool --module $module  --list-slots | grep "token label" | cut -d: -f2) || { echo ERROR >&2 ; return 1; }
+   [ $(echo "$labels" | wc -l) -gt 1 ] && {
+      IFS=$'\n'; set -- $labels; unset IFS
+      PS3="Select Card:"; select card; do [ -n "$card" ] && break; done; card=$(echo $card)
+   } || card="${labels// /}"
+   file=$archive/$card
+   labels=$(pkcs11-tool --module $module  --token-label $card --list-objects --type cert) || { echo ERROR >&2 ; return 1; }
+   echo "$labels" > $file
+   #echo "$labels" >&2; set -- $( echo "$labels" | grep "ID:" | cut -d: -f2) 
+   #PS3="Select Cert ID:"; select n ; do [ -n "$n" ] && break; done; cert=$(echo $cert)
+   ## nope, use id
+   ## pkcs11-tool --module $module  --token-label $card --read-object  --label $cert --type cert --output-file $file ||
+   for n in $(echo "$labels" | grep ID: | awk '{print $NF}'); do
+     pkcs11-tool --module $module  --token-label $card --read-object  --id $n --type cert --output-file $file.tmp ||
+      { echo ERROR reading $card, certificate $cert >&2;  return 2; }
+      openssl x509 -inform DER -in $file.tmp >>$file
+   done
+   [ -f $file.pem ] && { mv $file.pem $file.pem.$(date +%s) ; }
+   mv $file $file.pem
+   echo $file.pem
+}
+
+#md-
+user_info_file() { echo $HOME/certs/users/fnmoc_user_info; }
+
+useradd_aws() {
+   local login="$1" credentials="$2" usage="Usage: ${FUNCNAME[0]} loginName credentials"
+   local cert file user_info=$(user_info_file)  mail gecos
+   [ $# != 2 ] && { echo $usage >&2; return 1; }
+   [ ! -r "$CIDATA" ] && { echo No CIDATA; return 1; }
+   [ ! -f $user_info ] && { echo No user info ; return 1; }
+   grep -e " ${login}\$" $user_info || {
+      echo No match found in $user_info, partials of:
+      grep $login $user_info
+      return 1
+   }
+   echo Found $login in $user_info
+   cert=$(get_cert_file $credentials) || return 1
+   file=${CIDATA%/*}/$(jq -r .UsersFile $CIDATA)
+   mail=$(openssl x509 -inform DER -noout -in $cert -text | grep email:); 
+   mail=${mail/*mail:/}; mail=${mail%%,*}; mail=${mail%% *};
+   gecos=$(openssl x509 -subject -inform DER -noout -in $cert); gecos=${gecos/*=/}
+   gecos+=" $(openssl x509 -dates -inform DER -noout -in $cert | awk '/notAfter=/{print $1, $2, $4}')";
+   userfile.rb "$file" "$login" "$(cert2SshPubkey $cert)" "${gecos} ${mail}"
+}
+## command completer for useradd_aws
+_useradd_aws() {
+  local cur prev files
+  cur=${COMP_WORDS[COMP_CWORD]}
+  prev=${COMP_WORDS[COMP_CWORD-1]}
+  [ -z "$WORKSPACE" ] && echo ERROR WORKSPACE must be set, for example: export WORKSPACE=\$HOME/ws
+  case ${COMP_CWORD} in
+    1) COMPREPLY=( $(compgen -W "$(awk '{print $NF}' $(user_info_file) | sort -u)" -- $cur) ) ;;
+    2) COMPREPLY=( $(compgen -W "$(cd ~/certs/users; ls *.der)" -- $cur) ) ;;
+  esac
+  return 0
+}
+complete -F _useradd_aws useradd_aws
+
+
+get_cert_file() {
+   local file info user_info=${2:-$HOME/certs/users/fnmoc_user_info}
+   case $1 in
+     *.der ) 
+         file=${user_info%/*}/$1
+         [ ! -f ${file} ] && return 1
+         #cert2SshPubkey  $file && return 0
+        ;; 
+       * ) 
+           echo running dod411 $1 ...
+         info=$(dod411 $1) || return 1 
+         file=${user_info%/*}/${info/:*/.der}
+         [ ! -f ${file} ] && return 1
+         #cert2SshPubkey  $file && return 0
+       ;;
+   esac
+   echo $file
+   return 0
+}
+tagName2key() {
+  [ -z "$2" ] && echo Usage: ${FUNCNAME[0]} instance-TagName  key && return 1
+  local filter="Name=tag:Name,Values=$1"
+  local ip q="Reservations[*].Instances[*].${2}"
+  aws ec2 describe-instances --o text --q $q --f $filter
+}
+tagName2PublicIpAddress() { tagName2key $1 ${FUNCNAME[0]/tagName2/}; }
+tagName2SecurityGroups() { tagName2key $1 ${FUNCNAME[0]/tagName2/}; }
+
+
+##
+# aws and jq combinations 
+#
+
+# reference: https://blogs.aws.amazon.com/application-management/post/Tx32RHFZHXY6ME1/Set-up-a-build-pipeline-with-Jenkins-and-Amazon-ECS
+install_jenkins() {
+ set -ex
+ local n plugins=${JENKINS_PLUGINS:-github-api multiple-scms git-client github git}
+ wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo &&
+ rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key &&
+ #yum install jenkins nginx docker git subversion
+ yum install jenkins httpd git subversion
+ #  add Jenkins user to cigroup
+ service jenkins start
+ chkconfig jenkins on
+ sleep 30
+ cd /var/lib/jenkins/plugins
+ for n in $JENKINS_PLUGINS; do
+    curl -o -L https://updates.jenkins-ci.org/latest/$n.hpi
+ done
+ chown jenkins:jenkins *.hpi
+ service jenkins restart
+}
+
+
+###
+# shopping for RHEL :   awsImages rhel
+# shopping for CentOS :   awsImages centos 
+# shopping for window :   awsImages window
+# shopping for amazon-linux :   awsImages amazon
+# awsImages ami-fddf639c
+awsImages() {
+  local q jf=$WORKSPACE/images.json
+  q=".Images[] "
+# - Only show hvm virtualization type
+  q+="| select(.VirtualizationType == \"hvm\") "
+# - Only show EBS root devices
+  q+="| select(.RootDeviceType == \"ebs\") "
+# - Only show x86_64 arch
+  q+="| select(.Architecture == \"x86_64\") "
+  [ ! -f $jf ] && aws ec2 describe-images | jq "$q"' | {Images:[.]}' > $jf
+  q='.Images[] | (.CreationDate) + " " + (.ImageId) + " "  + (.Name) + " " + (.OwnerId)'
+  case "${1^^}" in
+    AMI-* )
+        q='.Images[] | select(.ImageId == $id) '
+        jq --arg id $1 "$q" $jf
+      ;;
+    #WINDO* ) jq -r "$q" $jf | grep -i $1 ;;
+    * )
+       jq -r "$q" $jf |  sort | grep -i -e "$1"
+# -  Grep given pattern from field: CreationData ImageId and Name
+    ;;
+  esac
+}
+
+
+install_jq() {
+ local file
+ type jq >/dev/null && return 0
+ [ -e   /etc/redhat-release ]  && {
+   case "$(cat /etc/redhat-release)" in 
+     *release\ 7* ) file=epel-release-latest-7.noarch.rpm ;;
+     *release\ 6* ) file=epel-release-latest-6.noarch.rpm ;;
+     * ) echo ${fUFNCNAME[0]} ERROR: matching release; return 1 ;;
+    esac
+    aws s3 cp s3://cibootstrap/common/$file /root/setup/ && 
+    rpm -i -p /root/setup/$file
+  } 
+  yum install -y jq
+}
+#md+
+
+###
+# Update the  s3//{bucket}/common, where bucket is the s3Store in CIDATA
+# 
+# - CITOOLS_SCM/ciData is exported, then sync'd to s3commons/ciDAta
+# - CITOOLS_SCM/tools is exported, then sync'd to s3commons/tools
+update_s3common() {
+  s3common=$(jq -r .s3Store $CIDATA)/common
+  [ -e  $WORKSPACE/${FUNCNAME[0]} ] &&  mv $WORKSPACE/${FUNCNAME[0]} $WORKSPACE/${FUNCNAME[0]}.$(date +%s)
+  mkdir $WORKSPACE/${FUNCNAME[0]} || return 1
+  pushd  $WORKSPACE/${FUNCNAME[0]} 
+  svn export $(jq -r .CIDATA_SCM $CIDATA) ciData
+  aws s3 sync ciData ${s3common}/ciData
+  svn export $(jq -r .CITOOLS_SCM $CIDATA) tools
+  aws s3 sync tools ${s3common}/tools
+  popd
+} 
+
+###
+# Function to estimate cost using price list api
+aws_priceList () 
+{ 
+    local  region host dir now code q url json f
+    local -i rv=0
+    host=https://pricing.us-east-1.amazonaws.com;
+    region=$(aws configure get region)
+    [ -z "$region" ] && { echo ERROR ${FUNCNAME[0]}: Could not get AWS region.; return 1; }
+    now=$(date +%s)
+    dir=~/.cache/aws/pricing/$region
+    for code in ${@:-AmazonRoute53 AmazonVPC AmazonS3 AmazonEC2}
+    do
+        [ -f $dir/$code/latest ] && [ -z "$(find -L $dir/$code/latest -mtime +1 2>/dev/null)" ] && { echo $dir/$code/latest; continue; }
+        [ 0 == ${#json} ] && json=$(curl $host/offers/v1.0/aws/index.json 2>/dev/null) || return 1
+        #Otherwise it is missing or older than one day. Get the product currentRegionVersionUrl
+        [ ! -d $dir/$code ] && { mkdir -p  $dir/$code || return 1; }
+        q=.regions.\"$region\".currentVersionUrl
+        url=${host}$(curl ${host}$(echo $json |jq -r ".offers.${code}.currentRegionIndexUrl") 2>/dev/null | jq -r $q )
+        curl $url > $dir/$code/$now 2>/dev/null  ||  echo WARNING: ${FUNCNAME[0]} No $region $code pricing found >&2 &&
+            ln -f -s $dir/$code/$now $dir/$code/latest >&2 || { let rv++; continue; }
+        # cleanup older copies
+        find $dir/$code -type f -mtime +10 -delete
+        echo $dir/$code/latest
+    done;
+    return $rv
+}
+###
+# show OnDemand pricing terms for a Linux instance-type
+#
+priceInstance() {
+   local t f qI q sku
+   [ $# != 1 ] && { echo ${FUNCNAME[0]} {InstnceType}; return 1; }
+   t=${1} ; f=$(aws_priceList AmazonEC2)
+   qI='.products |.[] | select(.productFamily == "Compute Instance")'; 
+   q="${qI}"'|select(.attributes.instanceType == $t)|select(.attributes.preInstalledSw == $sw)'
+   q+='|select(.attributes.operatingSystem == $os)'
+   q+='|select(.attributes.tenancy == "Shared").sku'
+   sku=$(cat $f | jq --arg t $t --arg sw NA --arg os "Linux" "$q")
+   cat $f | jq ".terms.OnDemand.$sku"
+}
+###
+# f=$(priceVol gp2)
+# f=$(priceVol standard)
+priceVol() {
+   local t f qI q sku prod terms
+   [ $# != 1 ] && { echo ${FUNCNAME[0]} {VolumeType}; return 1; }
+   t=${1} ; f=$(aws_priceList AmazonEC2)
+   case $t in 
+      standard ) t=VolumeUsage;;
+      io1 ) t=VolumeUsage.piops;;
+      gp2|sc1|st1 ) t=VolumeUsage.$t;;
+       * ) echo ERROR: unknown volume-type; return 1;;
+   esac
+   q='.products |.[] | select(.productFamily == "Storage")|select(.attributes.usagetype | endswith( $t)) '; 
+   prod=$(cat $f | jq --arg t $t "$q")
+   sku=$(echo  $prod | jq .sku)
+   terms=$(cat $f | jq ".terms.OnDemand.$sku | .[]")
+   echo "$prod $terms" | jq -s add
+}
+###
+# priceSnap | jq -r '.priceDimensions[]| [ .pricePerUnit.USD, "/", .unit ]| add'
+# 0.0500000000/GB-Mo
+#
+priceSnap() {
+   local f q sku prod terms
+   f=$(aws_priceList AmazonEC2)
+   q='.products |.[] | select(.productFamily == "Storage Snapshot")'
+   prod=$(cat $f | jq --arg t $t "$q")
+   sku=$(echo  $prod | jq .sku)
+   terms=$(cat $f | jq ".terms.OnDemand.$sku | .[]")
+   echo "$prod $terms" | jq -s add
+}
+
+###
+#  S3 prices for given StorageClass, using range 0-50TB.
+#  Usage prices3 [storage-class] [size-bytes]
+priceS3() {
+   # S3 prices are tiered by the account usage, with the price-dimensions having begin/end-ranges.
+   # today, in this function, only use the first range, beginRange==0.
+   # today, only tested with Storage classes of: standard, glacier,
+   local vt json
+   case "${1^^}" in 
+       TAGS) vt="Tags";;
+       RRS )  vt="Reduced Redundancy";;
+       GLACIER ) vt="Amazon Glacier";;
+       SIA) vt="Standard - Infrequent Access";;
+       STANDARD|"" ) vt="Standard";;
+       * ) echo ${FUNCNAME[0]} Unknown stroage-class: $1 >&2; return 1 ;;
+   esac
+   local f=$(aws_priceList AmazonS3)
+   sku=$(jq --arg sc "${vt}" '.products|.[]| select(.productFamily == "Storage")| select(.attributes.volumeType == $sc).sku' $f) 
+   json=$(jq ".terms.OnDemand.${sku}|.[].priceDimensions|.[]|select(.beginRange == \"0\")"  $f)
+   # if given size, a second argument, calculate cost
+   echo $json | jq --arg s ${2:-0} '[{"cost":(($s | tonumber / 1024 /1024 /1024) * (.pricePerUnit.USD|tonumber))},.]| add'
+}
+
+###
+# Usage of S3 Storage (not transfer).
+#
+usage_s3() {
+   local n b qG qC qLT128k qLT1K qT qSC qC qName qCost q qq json token tmpfile price dot qTotals
+   local -i rv=0
+   # Cache the priceList, terms for Standard and GLACIER storage
+   price=$(for n in STandard GLACIER; do priceS3 $n | jq --arg n ${n^^} '{ ($n) : .pricePerUnit.USD|tonumber }'; done | jq -c -s add)
+   # Constucting the jq filters, that transform s3api list-object output:
+   qG='[.Contents[]| {StorageClass, Size} ] | group_by(.StorageClass) | .[]'
+   qLT1K='"LT1K": ( [.[]|select(.Size < 1024) ] |length)'
+   qLT128K='"LT128K": ( [.[]|select(.Size < 1024 * 128)] |length)'
+   qC='"Count": ( [.[] ] |length)'
+   qSC='"StorageClass": (.[0].StorageClass)'
+   qT='"Size": ( [.[].Size ] |add)'
+   qName='"bucket" : $b'
+   qCost='{"Cost":([ ., '"$price"' ]|add|(.Size/1024/1024/1024) * (.[(.StorageClass)]))}'
+   q="${qG} | { ${qSC}, ${qT}, ${qC},  ${qLT1K},  ${qLT128K}, $qName} | [., ${qCost}]|add"
+   qTotals=""; for n in LT1K LT128K Count Size Cost; do qTotals+=' "'$n'": ( [.[].'$n' ] |add),'; done
+   qq='group_by(.StorageClass) | .[] | { '"${qSC}, ${qTotals} $qName}"
+   tmpfile=/tmp/tmp.$$; 
+   cat /dev/null > $tmpfile.sum
+   [ $# == 0 ] && set $(aws s3 ls | awk '{print $NF}')
+   for b in $* ; do 
+     cat /dev/null > $tmpfile; 
+     lastToken=None; token="" ; dot=$b
+     while : ; do
+       # Make multiple requests for large buckets using --max-items and --starting-token.
+       cmd="aws s3api list-objects --bucket $b --max-items 10000" 
+       [ -n "$token" ] &&  cmd+="0 --starting-token $token"
+       $cmd > $tmpfile || { echo "${FUNCNAME[0]}: ERROR returned from: $cmd"; let rv++; break; }
+       jq -c --arg b "$b" "$q" $tmpfile  >> $tmpfile.sum
+       token=$(jq -r '.NextToken // ""' $tmpfile)
+       [ -z  "$token" ] && break
+       echo "$b@$token" >&2
+       [ "$token" == "$lastToken" ] && { 
+              echo; echo "Internal ERROR in ${FUNCNAME[0]}: Same token again, b=$b, token=$token, lastToken=$lastToken" >&2;
+              echo cmd="$cmd" >&2
+              echo "tmpfile=$tmpfile; tail \$tmpfile.sum" >&2;
+              tail $tmpfile.sum
+              echo "jq . $tmpfile | head"; jq . $tmpfile | head; return 1; }
+       lastToken=$token
+       #echo -n $dot >&2
+       dot=.
+     done
+     cat $tmpfile.sum | jq -c --arg b $b -s '[.|.[]| select(.bucket == $b)] |'"${qq}"
+   done
+   #cat $tmpfile.sum | jq --arg b AllTotal -s '[.|.[]] |'"${qq}"
+   cat $tmpfile.sum | jq --arg b AllTotal -s '.|'"${qq}"
+   # rm $tmpfile.sum $tmpfile
+   #jp=$(jq ".terms.OnDemand.${sku}|.[].priceDimensions|.[]|select(.beginRange == \"0\")"  $f)
+}
+
+#md+
+###
+# Optionally given a number of second, or the function will prompt the caller
+# to give a number with an optional suffix of s, m, h, or d (for seconds, minutes, hours, or days).
+# The getToken uses Security Token Service (STS) to establish a short duration credentail for programatic use.
+# In order to use an STS session token, we MUST have Multi-Factor Authentication (MFA).
+# This utility prompts the user for Time-based One Time Password (TOTP) code,
+# then makes the STS get-session-token call.
+# This assume the user has already registered the MFA device, and setup IAM credential keys.
+#  - Save the returned json output to a file, 
+#  - Create a file of shell commands that will install the credential, and t
+#  Return the file paths. For example:
+#
+# ````bash
+# # Use a profile that has the desire API key:
+# $ getToken
+# Enter time duration, (i.e. 600s, 1h, 10m): 4h 
+# writing to: /home/djones/.aws/tmp/default_sts.json /home/djones/.aws/tmp/default_sts.sh
+# Enter :148916920302:mfa/fnmoc-djones code ? 276535
+# aws sts get-session-token --cli-input-json {
+#   "DurationSeconds": 14400,
+#   "TokenCode": "276535",
+#   "SerialNumber": "arn:aws-us-gov:iam::148916920302:mfa/fnmoc-djones"
+# }
+# /home/djones/.aws/tmp/default_sts.json
+# /home/djones/.aws/tmp/default_sts.sh
+# ````
+# 
+# Content of  /home/djones/.aws/tmp/default_sts.json:
+#  
+# ````
+# {
+#     "Credentials": {
+#         "SecretAccessKey": "REDACTED_KEY_BLOB", 
+#         "SessionToken": "REDACTED_KEY_BLOB", 
+#         "Expiration": "2018-04-04T21:04:42Z", 
+#         "AccessKeyId": "REDACTED_KEY_BLOB"
+#     }
+# }
+# ````
+# Content of /home/djones/.aws/tmp/default_sts.sh:
+# aws --profile default_sts configure set aws_session_token REDACTED_KEY_BLOB
+# aws --profile default_sts configure set aws_secret_access_key REDACTED_KEY_BLOB
+# aws --profile default_sts configure set aws_access_key_id REDACTED_KEY_BLOB
+# aws --profile default_sts configure set region us-gov-west-1
+# aws --profile default_sts configure set output json
+# export AWS_PROFILE=default_sts
+# $ cat 
+# ````
+getToken() {
+     local life="${1}" rcfile
+     local -i s
+     [ -z "$life" ] && { echo -n "Enter time duration, (i.e. 600s, 1h, 10m): "; read life; }
+     case "$life" in
+        *s) seconds=${life/s/} ;;
+        *m) seconds=$(( ${life/m/} * 60 )) ;;
+        *h) seconds=$(( ${life/h/} * 3600 )) ;;
+        *d) seconds=$(( ${life/d/} * 3600 * 24)) ;;
+         *) seconds=$life ;;
+     esac
+     [ -n "$AWS_PROFILE" ] && { 
+         [ -z "${AWS_PROFILE/default*/}" ] && { unset AWS_PROFILE; } ||
+             AWS_PROFILE=${AWS_PROFILE%_sts}
+         
+     }
+     rcfile=$(getTokenHelper $seconds) || { echo ERROR: getTokenHelper failded ; return 1; }
+     [ -f "$rcfile" ] && . $rcfile
+}
+#md-
+### 
+# Helper function does the STS call for getToken.
+#
+getTokenHelper() {
+   local mfa sn json u tmp=$HOME/.aws/tmp; [ ! -d $tmp ] && { mkdir -p $tmp ; chmod 700 $tmp; }
+   [ -z "${AWS_PROFILE/default_sts/}" ] && unset AWS_PROFILE
+   local profile=${AWS_PROFILE:-default}_sts
+   local file=$tmp/${profile}.json
+   local seconds=${1:-3600}
+   touch $file ${file%.json}.sh 
+   chmod 600 $file ${file%.json}.sh 
+   echo  writing to: $file ${file%.json}.sh  >&2
+   u=$(aws iam get-user) 
+   mfa=$(aws iam list-mfa-devices) 
+   sn=$(echo $mfa | jq -r '.[][0].SerialNumber') 
+   json=$(echo -n Enter ${sn##*iam:} code ?\ >&2 ; read code; jq -n --arg c $code  "{ DurationSeconds: ${seconds}, TokenCode: \$c}")
+   json=$(echo "$json $(echo $mfa | jq '.[][0]| {SerialNumber}')" | jq -s add)
+   echo aws sts get-session-token --cli-input-json "$json" >&2
+   json=$(aws sts get-session-token --cli-input-json "$json") || { echo ${FUNCNAME[0]} ERROR could not get STS >&2; return 1; }
+   [ -n "$json" ] || { echo ${FUNCNAME[0]} ERROR getting STS >&2 ; return 1; }
+   echo "$json" > $file
+   sts2profile  $file $profile  >${file%.json}.sh 
+   echo export AWS_PROFILE=$profile  >> ${file%.json}.sh
+   echo $file >&2; echo ${file%.json}.sh
+}
+sts2profile() {
+   local file="$1" profile="${2:-mysts}" region=$3  echo=""
+   [ X${FUNCNAME[1]} == XgetTokenHelper ] && echo=echo
+   [ X = X$3 ] && region=$(aws configure get region)
+   [ $# -lt  1 ] && { echo Usage: ${FUNCNAME[0]} {sts.json} {aws_profile} {region} >&2; return 1 ; }
+   [ -r $file ] ||  { echo ${FUNCNAME[0]} ERROR reading: $file >&2; return 1; }
+   jq . $file >/dev/null || { echo ${FUNCNAME[0]} ERROR parsing: $file >&2; return 1; }
+   $echo aws --profile $profile configure set aws_session_token $(jq -r .[].SessionToken $file)
+   $echo aws --profile $profile configure set aws_secret_access_key $(jq -r .[].SecretAccessKey $file)
+   $echo aws --profile $profile configure set  aws_access_key_id $(jq -r .[].AccessKeyId $file)
+   $echo aws --profile $profile configure set  region $region
+   $echo aws --profile $profile configure set  output json
+}
+
+###
+# Update the yaml files in CiData, typically used in instance launch user-data.
+# Read the publick key from CAC (or a given certificate file ).
+# search and replace ciData/*.yaml files with an ssh-rsa line matching the CN in user cert.
+## Initial version: Thu Jul 20 00:43:35 PDT 2017
+cac2UpdateUsersSshKey() {
+   local usage="Usage: ${FUNCNAME[0]} [path-to-certificate]"
+   #[ $# != 1  ] && { echo "$usage">&2; return 1; }
+   local file cert="${1}"; [ -z "$cert" ] && cert=$(cacCert2file)
+   local blob=$(cert2SshPubkey $cert) || return 1;
+    echo "$blob" | fgrep -q % && blob=$( echo "$blob" | sed s/%/\\%/g)
+    local keyName=$(echo ${blob} | awk '{print $3}');
+    [ -z "$keyName" ] && { 
+        echo ERROR getting ssh-like key blob from $cert >&2;
+        return 1
+    };
+    echo checking user YAML files in $WORKSPACE/ciData
+    for file in $WORKSPACE/ciData/*.yaml; do
+      grep "ssh-rsa.*$keyName" $file || continue
+      PS3="Do you want to replace above lines, found in ${file##*/} ?"
+      select answer in yes no; do [ -n "$answer" ] && break; done;
+      [ "$answer" != yes ] && { echo No Change; continue; }
+      sed -i -e "s%ssh-rsa.*$keyName.*%$blob%" $file
+    done
+}
+
+
+###
+# Simple shell menu for updating AWS AMI-IDs specificed in CIDATA.
+#
+update_cidata_ami_entries() {
+  [ ! -r "$CIDATA" ] && return 1
+  local amiList q iq iqpp answer json ij iq owner showIt re 
+  local regex_ami='^ami-[[:xdigit:]]+$'
+  amiList=$(jq -r '{Profiles,InstanceRoles}|.[]|.[].ImageId' $CIDATA | sed -n '/ami-/p'| sort -u)
+  json=$(aws ec2 describe-images --image-ids $amiList)
+  echo $CIDATA has reference to: $amiList >&2
+  q='.Images[] | (.CreationDate) + " " + (.ImageId) + " "  + (.Name) + " " + (.OwnerId)'
+  echo "AMIs found in $(aws configure get region):" >&2; echo $json| jq "$q" >&2
+  iq='.Images[] | select(.ImageId == $id)'
+  iqpp="$iq"' | (.CreationDate) + " " + (.ImageId) + " "  + (.Name) + " " + (.OwnerId)'
+  for id in $amiList; do
+         [[ "$id" =~ $regex_ami ]] || continue
+         ij=$(echo $json | jq --arg id $id -c "$iq")
+         [ -z "$ij" ] && { echo $id not found in AWS, skipping it. >&2; continue; }
+         owner=$(echo $ij | jq -r .OwnerId )
+         for re in amzn-ami-hvm centos rhel ubuntu NoFilter ; do
+              echo "$ij" | grep -e "$re" -q  && break
+         done
+         [ "$re" == NoFilter ] && { re="" ; }
+         #PS3="Enter number of candidate to replace $id, matching owner-Id $re > "
+         PS3="$(echo $json | jq --arg id $id "$iqpp") Select Replacement > "
+         select answer in NoChange $(awsImages "$re.* $owner"  | tail | sed 's/ /../g')  ; do [ -n "$answer" ] && break ; done
+         ami=$(echo $answer| sed 's/\.\./ /g' | awk '{print $2}')
+         [[ "$ami" =~ $regex_ami ]] || continue
+         echo sed -i -e \"s/$id/$ami/\" $CIDATA
+         sed -i -e "s/$id/$ami/" $CIDATA
+  done
+}
+
+
+
+###
+# Generare s3 APL for a bucket, granting anonymous read-only access from a given list of Source-IPs
+#
+## whitelist_bucket_APL fnmoc.home $(jq -r '.Security.SrcCidr.fnmoc' $CIDATA) $(jq -r '.Security.SrcCidr.nps' $CIDATA)
+whitelist_bucket_APL() {
+  [ $# -lt 2 ] && { echo "Usage: ${FUNCNAME[0]} bucket CIDR {CIDR ...}"; return 1; }
+  local bucket rlist l cidr n partition json 
+  local policyFile=$WORKSPACE/tmp.${FUNCNAME[0]}.$$.json
+  region=$(aws configure get region)
+  partition=aws
+  [ -z "${region/us-gov*/}" ] && partition+="-us-gov"
+  # set fnmoc.ww.data 152.80.48.0/24 205.155.65.226/32
+  bucket=$1; shift
+  l="$@"
+  n="arn:${partition}:s3:::${bucket}"
+  ipList='[]'; for cidr in $l; do ipList=$(echo $ipList | jq --arg c $cidr '[ (.), [$c]]|add') ; done
+  resource=$(jq -n --arg b $n --arg o "${n}/*" '[ $b , $o ]')
+  #json='{"Bucket": ($b), "Policy" : {"Statement":[{"Sid":"RO-IPlist","Effect":"Allow","Principal":"*","Action":["s3:Get*","s3:List*"],"Resource": (.[0]),"Condition":{"IpAddress":{"aws:SourceIp": (.[1]) }}}]}}'
+  json='{"Statement":[{"Sid":"RO-IPlist","Effect":"Allow","Principal":"*","Action":["s3:Get*","s3:List*"],"Resource": (.[0]),"Condition":{"IpAddress":{"aws:SourceIp": (.[1]) }}}]}'
+  echo "[ $resource , $ipList ]" | jq --arg b $bucket "$json" > $policyFile
+  echo   aws s3api put-bucket-policy --bucket $bucket --policy file://$policyFile
+  aws s3api put-bucket-policy --bucket $bucket --policy file://$policyFile && rm $policyFile
+}
+
+###
+# For AWS, get ipAddresses for VMs in a Project VPC
+#  
+getProjectVMs() {
+   local id q vpcId="$1"
+   [ -z "$1" ] && {
+      id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+      q=".Reservations[].Instances[].VpcId"
+      vpcId=$(aws ec2 describe-instances --instance-ids $id | jq -r "$q")
+   }
+   [ Xx != "${vpcId/vpc-+([[:xdigit:]])/Xx}" ] && {
+         echo Usage: ${FUNCNAME[0]} {optional-vpcId} >&2; return 1;
+   }
+   aws ec2 describe-instances --f Name=vpc-id,Values=$vpcId
+}
+
+ipAddresses() {
+   [ $# != 1 ] && { echo Usage: ${FUNCNAME[0]} suffix-ID {opitonal-vpcId} >&2; return 1; }
+   local q json suffix="$1"
+   json=$(getProjectVMs "$2")
+   for t in Private Public; do
+       q='.Reservations[].Instances[]| [ '
+       #q+=' (.PrivateIpAddress),'
+       q+=' (.'${t}'IpAddress),'
+       q+=' (.'${t}'DnsName),'
+       q+=' .InstanceId,'
+       q+=' ([('"$qTagName"'), $s]|join(".")),'
+       q+=' ('"$qTagName"'),' 
+       q+=' (('"$qTagName"') / "-" |.[0]) + "." + $s' 
+       q+='] | join(" ")'
+   #q+=', ([ ('"$qTagName"'), (.IamInstanceProfile.Arn / "/" | / "-"[2])]| join("."))'
+       echo $json | jq -r "$q" --arg s "$suffix" | while read line; do echo $line; done | grep -v ^i-
+   done
+}
+
+publicIpAddresses() { ipAddresses $@ | grep -v ^10\.; }
+privateIpAddresses() { ipAddresses $@ | grep  ^10\.; }
+

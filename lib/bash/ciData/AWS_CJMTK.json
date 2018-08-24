@@ -1,0 +1,160 @@
+{
+  "Cookbook" : "cjmtk_ci",
+  "InstanceRoles": {
+    "bastion": {
+      "Profile": "bastion"
+    },
+    "web6": {
+      "Profile": "el6",
+      "SG": "web-a"
+    },
+    "web6b": {
+      "Profile": "el6",
+      "SG": "web-b"
+    },
+    "web": {
+      "Profile": "el7"
+    },
+    "app": {
+      "Profile": "default"
+    },
+    "app6": {
+      "Profile": "el6"
+    },
+    "cjmtk": {
+      "Profile": "el6"
+    },
+    "logger": {
+      "Profile": "el7"
+    }
+  },
+  "Profiles": {
+    "app": {
+      "SG": "app",
+      "Subnet": "app-a"
+    },
+    "default": {
+      "note": "Default settings included.",
+      "SG": "app",
+      "Subnet": "app-a",
+      "Profile": "el7",
+      "Schedule": "6-18:1-5:PST8PDT",
+      "KeyName": "JONES.DANIEL.L.1265422345",
+      "InstanceType": "t2.micro",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-CJMTK-ro"
+      },
+      "ImageId": "ami-6fc9770e",
+      "priceListAttributes": {
+        "location": "AWS GovCloud (US)",
+        "terms": "OnDemand",
+        "operatingSystem": "Linux"
+      }
+    },
+    "bastion": {
+      "SG": "bastion",
+      "Subnet": "web-a",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-CJMTK"
+      }
+    },
+    "public": {
+      "SG": "web",
+      "Subnet": "web-a"
+    },
+    "amazon": {
+      "ImageId": "ami-7b4df41a",
+      "ImageDescription": "Amazon Linux"
+    },
+    "el6": {
+      "ImageId": "ami-fd03bc9c",
+      "ImageDescription": "Enterprize Linux 6"
+    },
+    "el7": {
+      "ImageId": "ami-cb942aaa",
+      "ImageDescription": "Enterprize Linux 7"
+    },
+    "RHEL7": {
+      "ImageId": "ami-299e2248",
+      "ImageDescription": "RHEL7"
+    },
+    "db": {
+      "SG": "db",
+      "Subnet": "db-a"
+    }
+  },
+  "Schema": "20170226",
+  "UserDataTemplateFile": "templates/userdata.erb",
+  "DevMappingTemplateFile": "templates/devMapping.erb",
+  "UsersFile": "fnmoc_webshop_users.yaml",
+  "RuncmdFile": "runcmd.yaml",
+  "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+  "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+  "Description": "Data used by CI processes for build, test, and release.",
+  "Version": "0.0.2-SNAPSHOT",
+  "VpcId": "vpc-4ea26c2b",
+  "VpcName": "CJMTK",
+  "Components": [],
+  "SCM_prefix": "https://svn.nps.edu/repos/metoc",
+  "ReleaseGroup": "None",
+  "s3Store": "s3://cibootstrap",
+  "s3ProjectStore": "s3://fnmoc.ci.webshop.data",
+  "s3SysStore": "s3://fnmoc.ci.cjmtk.systems",
+  "Security": {
+    "SGoutBound": {
+      "nat": "80,443:anywhere",
+      "db": "",
+      "app": "",
+      "bastion": "",
+      "web": ""
+    },
+    "SGinBound": {
+      "bastion": "22:myIP,nps,fnmoc",
+      "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+      "db": "4444:sg-web,sg-bastion 22:sg-bastion",
+      "web": "80,443:nps,fnmoc 22:sg-bastion",
+      "app": "80,8080,8180,8280,8380,8443,8543,8643:sg-web,sg-bastion 22:sg-bastion,sg-login"
+    },
+    "SrcCidr": {
+      "fnmoc": "152.80.48.0/24",
+      "nps": "205.155.65.226/32",
+      "anywhere": "0.0.0.0/0"
+    }
+  },
+  "KeyName": "JONES.DANIEL.L.1265422345",
+  "ScmId": "$Id: AWS_CJMTK.json 67992 2018-02-04 15:39:19Z dljones@nps.edu $",
+  "ScmHeadURL": "$HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/AWS_CJMTK.json $",
+  "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+  "ChangeLog": [
+    {
+      "date": "1493228238",
+      "msg": "Initial"
+    },
+    {
+      "date": "1493228238",
+      "msg": "djones migrateSchema: to version 20170226"
+    }
+  ],
+  "Project": "CJMTK",
+  "Environment": "Evaluation",
+  "Volumes": {
+    "Volumes": {
+      "vol4": {
+        "size": "50",
+        "VolumeId": "vol-012345",
+        "mount": "/scratch",
+        "InstanceName": "test-0"
+      },
+      "vol3": {
+        "size": "50",
+        "VolumeId": "none",
+        "InstanceName": "test-1"
+      }
+    }
+  },
+  "EIPs": {
+    "Bastion": "eipalloc-true",
+    "Proxy": "eipalloc-true"
+  },
+  "MapVolumes": {}
+}

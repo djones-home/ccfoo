@@ -1,0 +1,14 @@
+dn: <%=@basedn%>
+dc: <%=@basedn.split(',')[0].gsub(/dc=/,'')%>
+objectClass: top
+objectClass: domain
+
+dn: ou=People,<%=@basedn%>
+ou: People
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Group,<%=@basedn%>
+ou: Group
+objectClass: top
+objectClass: organizationalUnit

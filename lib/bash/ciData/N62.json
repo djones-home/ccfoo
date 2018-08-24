@@ -1,0 +1,142 @@
+{
+  "s3Store": "s3://cibootstrap",
+  "s3ProjectStore": "s3://fnmoc.n62.data s3://fnmoc.dart",
+  "DevMappingTemplateFile": "templates/devMapping.erb",
+  "MapVolumes": {},
+  "ReleaseGroup": "None",
+  "RuncmdFile": "runcmd.yaml",
+  "SCM_prefix": "https://svn.nps.edu/repos/metoc",
+  "ScmHeadURL": "$HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/N62.json $",
+  "VpcId": "vpc-11006274",
+  "VpcName": "N62",
+  "Volumes": {},
+  "Version": "0.0.1-SNAPSHOT",
+  "UsersFile": "N62users.yaml",
+  "UserDataTemplateFile": "templates/userdata.erb",
+  "s3SysStore": "s3://fnmoc.n62.systems",
+  "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+  "s3Home": "s3://fnmoc.home",
+  "EIPs": {
+    "bastion": "true"
+  },
+  "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+  "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+  "Components": [],
+  "Description": "Data used by CI processes for build, test, and release.",
+  "Schema": "20170226",
+  "Project": "N62",
+  "Cookbook": "N62_ci",
+  "Environment": "Evaluation",
+  "Profiles": {
+    "el6": {
+      "ImageDescription": "Enterprize Linux 6",
+      "ImageId": "ami-fd03bc9c"
+    },
+    "amazon": {
+      "ImageDescription": "Amazon Linux",
+      "ImageId": "ami-7b4df41a"
+    },
+    "RHEL7": {
+      "ImageDescription": "RHEL7",
+      "ImageId": "ami-299e2248"
+    },
+    "el7": {
+      "ImageDescription": "Enterprize Linux 7",
+      "ImageId": "ami-cb942aaa"
+    },
+    "db": {
+      "Subnet": "db-a",
+      "SG": "db"
+    },
+    "windows2012": {
+      "UserDataTemplateFile": "templates/userdataWindows.erb",
+      "ImageId": "ami-e49d1885",
+      "KeyName": "admin1"
+    },
+    "app": {
+      "Subnet": "app-a",
+      "SG": "app"
+    },
+    "default": {
+      "KeyName": "JONES.DANIEL.L.1265422345",
+      "Schedule": "6-18:1-5:PST8PDT",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-N62-ro"
+      },
+      "InstanceType": "t2.micro",
+      "priceListAttributes": {
+        "operatingSystem": "Linux",
+        "terms": "OnDemand",
+        "location": "AWS GovCloud (US)"
+      },
+      "ImageId": "ami-6fc9770e",
+      "note": "Default settings included.",
+      "SG": "app",
+      "Subnet": "app-a",
+      "Profile": "el7"
+    },
+    "bastion": {
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-N62"
+      },
+      "Subnet": "web-a",
+      "SG": "bastion"
+    },
+    "public": {
+      "Subnet": "web-a",
+      "SG": "web"
+    }
+  },
+  "InstanceRoles": {
+    "logger": {
+      "Profile": "app"
+    },
+    "app6": {
+      "Profiles": [
+        "app",
+        "el6"
+      ]
+    },
+    "app": {
+      "Profile": "app"
+    },
+    "web": {
+      "Profile": "public"
+    },
+    "bastionwin": {
+      "UserDataTemplateFile": "templates/userdataWindows.erb",
+      "ImageId": "ami-e49d1885",
+      "Profiles": [
+        "windows2012",
+        "bastion"
+      ]
+    },
+    "bastion": {
+      "Profile": "bastion"
+    }
+  },
+  "ScmId": "$Id: N62.json 69056 2018-03-21 22:02:40Z dljones@nps.edu $",
+  "Security": {
+    "SrcCidr": {
+      "anywhere": "0.0.0.0/0",
+      "nps": "205.155.65.226/32",
+      "nmci0": "138.163.0.0/24",
+      "fnmoc": "152.80.48.0/24",
+      "steffenr": "71.84.12.33/32"
+    },
+    "SGinBound": {
+      "app": "80,443,8080,8443:sg-web,sg-bastion 22:sg-bastion,sg-login",
+      "web": "80,443:nps,fnmoc,steffenr 22:sg-bastion, 443:nmci0 ",
+      "db": "5432:sg-app 22:sg-bastion",
+      "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+      "bastion": "22,443:myIP,nps,fnmoc,nmci0,steffenr"
+    },
+    "SGoutBound": {
+      "web": "",
+      "bastion": "",
+      "app": "",
+      "db": "",
+      "nat": "80,443:anywhere"
+    }
+  }
+}

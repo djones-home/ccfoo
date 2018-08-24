@@ -1,0 +1,42 @@
+---
+driver:
+  name: ec2
+  aws_ssh_key_id: test_kitchen_project
+  security_group_ids: ["sg-47171722"]
+  region: us-gov-west-1
+  availability_zone: a
+  require_chef_omnibus: true
+  subnet_id: subnet-22a6ad47
+  iam_profile_name: CI-vpc-NN-ro
+  instance_type: t2.small
+  associate_public_ip: false 
+  interface: private 
+
+transport:
+  ssh_key: /var/lib/jenkins/.ssh/id_rsa
+  connection_timeout: 10
+  connection_retries: 5
+  username: maintuser
+
+provisioner:
+  name: chef_zero
+  # You may wish to disable always updating cookbooks in CI or other testing environments.
+  # For example:
+  #   always_update_cookbooks: <%= !ENV['CI'] %>
+  always_update_cookbooks: true
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: ubuntu-16.04
+  - name: centos-7
+
+suites:
+  - name: default
+    run_list:
+      - recipe[nn_ci::default]
+    verifier:
+      inspec_tests:
+        - test/smoke/default
+    attributes:

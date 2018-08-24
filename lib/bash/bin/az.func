@@ -1,0 +1,264 @@
+#!/bin/bash
+#md+
+# # Azure cli helper shell functions.
+
+# Version: 
+# 
+#     $HeadURL$
+#     $Id$
+
+# Requires:
+# 
+# - azure cli (for any Azure work)
+# - jq
+# 
+#md-
+
+
+
+####
+# az cloud list | jq -r .[].name
+# az cloud set AzureUSGovernment
+type az >/dev/null 2>&1 && {
+    [ -d ~/.azure ] || { echo "Please configure the azure-cli: az cloud set AzureUSGovernment, az login, az account set --subcription ... >&2"; }
+    #[ -z "$(aws configure get region)" ] && { echo "aws.func: You should set your region, i.e. for GovCloud run: aws configure set region us-gov-west-1 >&2"; }
+    #! complete -p aws >/dev/null 2>&1  && type aws_completer >/dev/null && complete -C aws_completer aws
+    #! complete -p aws >/dev/null 2>&1  && { for p in  /opt/aws/bin /usr/local/aws/bin /usr/local/bin; do
+    #   [ -e $p/aws_completer ] && { complete -C $p/aws_completer aws ; break; }
+    #  done
+    #}
+}
+
+###
+# An example setup for azure cli (that I first used for the FNMOC 05-2018 trials)
+#
+AzConfig() {
+   az cloud set -n AzureUSGovernment
+   # az login
+   az account set --subscription b156ff74-abbe-49c8-bc92-b80e8a7bad23
+}
+
+
+
+###
+# Add azure user, and create a short message to send the user.
+#
+# if config has a defaults, that hoses you, when adding role assignments.
+AzAddUser() {
+   [ -z "$1" ] && { echo Usage: ${FUNCNAME[0]} userName {optional-role}; return 1; }
+   local pw role user info upn="$1"  
+   local acc=$(az account show)
+   local -i rv
+   user=${upn/@*/}
+# - Add directory-domain (if not given) 
+   [ -n "${upn/*@*/}" ] && {
+     local domain=$(echo $acc | jq .user.name)k
+   }
+   role=${2:-Contributor}
+   pw=$(pwgen 8 1)  
+# - Return error when the UPN already exist
+   info=$(az ad user list | jq -r  --arg n "$upn" '.[]| select(.userPrincipalName == $n )') 
+   [ -n "$info" ] && { echo ERROR User exists: $upn >&2 ; return 1; }
+   cmd="az ad user create --display-name $1 --user-principal-name  $user@fnmoc.onmicrosoft.com --password $pw  --force-change-password-next-login --mail-nickname ${3:-$user}"
+   echo $cmd
+   json=$( $cmd )
+# - Assing role on all enabled subscriptions
+ # - really odd, but I seem to need to clear config defaults for this???
+  local savGroup=$(az group show  2>/dev/null)
+  az configure --defaults group=""
+  for s in $(az account list | jq -r '.[].id'); do 
+    cmd="az role assignment create --assignee $upn --role $role  --scope /subscriptions/$s"
+    echo $cmd; $cmd || let rv+
+  done
+  [ -n "$savGroup" ] && az configure --default group="$(echo $savGroup | jq -r .name)"
+  local file=$WORKSPACE/users/$user.readme
+  [ ! -d $(dirname $file) ] && mkdir -p $(dirname $file)
+  AzUserMsg $upn "will be in another form"  $role >>$file
+  echo See message in: $file
+  echo "$pw" > $file.pw
+  echo See password in: $file.pw
+  return $rv
+}
+
+lsAzRoles() {
+   local roles rq
+   local defaultGroup=$(az group show 2>/dev/null | jq -r .name 2>/dev/null)
+   az configure --default group=""; roles=$(az role assignment list); [ -n "$defaultGroup" ] && az configure --default group=$defaultGroup
+   echo $roles | jq -c '.[]| [.principalName, .scope, .roleDefinitionName]'
+
+   #rq='upn as .principalName | { ($upn) : [.[] | select( ($upn) == .principalName)]}'
+#   rq='{ ($upn) : [.[] | select( ($upn) == .principalName)]}'
+#   for upn in $(echo $roles | jq -r '.[].principalName'| sort -u); do
+#     echo $roles | jq --arg upn "$upn" "$rq"
+#   done | jq -s add
+}
+
+###
+# List Azure Active Directory users
+#
+lsAzUsers() {
+   local json hdr ql format defaultGroup roles
+   json=$(az ad user list)
+   ql='.[] |  [ (.displayName / " "|join("."))'; hdr="#displayName"; format="%-12.12s "
+   ql+=', .userType'; hdr+=" Type"; format+=" %-8.8s "
+   #ql+=',  ((..|.forceChangePasswordNextLogin?)| tostring) '; hdr+=" InActive"
+   ql+=',  ((.additionalProperties.passwordProfile.forceChangePasswordNextLogin? // "No")| tostring) '; hdr+=" pwYTBD?"; format+=" %-8.8s "
+   ql+=', .userPrincipalName'; hdr+=" UPN"; format+=" %-30.30s "
+   ql+=',  (.additionalProperties|.refreshTokensValidFromDateTime?)'; hdr+=" ValidFrom"; format+=" %-30.30s "
+   ql+=']';  
+   #echo $json | jq -cr "$ql"
+   ql+=' | join(" ")'
+   format+=" %-11.11s\n" 
+   printf "$format"  $hdr
+   echo $json | jq -r "$ql" | while read line; do printf "$format" $line;   done
+   lsAzRoles
+}
+
+AzUserMsg() {
+ [ $# != 3 ] && { echo Usage: ${FUNCNAME[0]} userName password role; return 1; }
+
+ local user=${1}@fnmoc.onmicrosoft.com pw=${2} role=$3;
+  cat <<EOF
+Your azure login (user-account) is: $user
+Your temporary password will be sent seperately
+
+The portal URL for US govenment (ends with ".us" versus ".com" for commercial azure):
+
+https://portal.azure.us
+
+Your azure login has and access role of: $role 
+
+Also See: 
+
+   https://docs.microsoft.com/en-us/azure/role-based-access-control/overview#Built-in%20roles
+
+
+The initial setup for the azure CLI, will need to be setup to use 
+resources from Azure US government. 
+
+1. Login with the CLI
+
+    $ az login
+
+2. Change the "cloud" to USgovernment, then set the "subscription" as follows:
+
+   $ az cloud set -n AzureUSGovernment
+   $ az account set --subscription b156ff74-abbe-49c8-bc92-b80e8a7bad23
+
+To see what subscriptions are available:
+
+    $ az account list
+    [
+      {
+        "cloudName": "AzureUSGovernment",
+        "id": "b156ff74-abbe-49c8-bc92-b80e8a7bad23",
+    ...edit...
+
+$ az vm list | grep -i navgem
+
+EOF
+}
+
+
+lsvmaz() {
+   local format hdr g gl now  tick_vm json q
+   format="%-11.11s %-15.15s %-12.12s %-11.11s %8.8s %-12.12s %-14.14s %-12.16s %s %s";
+   hdr="#Name vmSize Admin State os-Gb  Location Group PrivateIP PublicIP"
+   printf "$format" $hdr; echo
+   # Only use the default subscription
+   # Background processes to list each group, in parallel. 
+   # vmss YTBD, getting the nic IPs for vmss with az resouce list --ids, is slow.
+   gl=$(az group list | jq -r '.[].name')
+   [ ! -d /tmp/$$ ] && mkdir /tmp/$$
+   now=$(date +%s)
+   (for g in $gl; do  
+       f=/tmp/$$/az.rg-vm-$g
+       cat /dev/null > $f 
+       az vm list -d -g $g > $f &
+       f=/tmp/$$/az.rg-vmss-$g
+       az vmss list -g $g > $f  &
+   done
+   wait ) 2>/dev/null
+   cat /dev/null > /tmp/$$/az.vm-$$ 
+   cat /dev/null > /tmp/$$/az.vmss-$$ 
+   for g in $gl; do  
+      cat /tmp/$$/az.rg-vm-$g >> /tmp/$$/az.vm-$$; 
+      cat /tmp/$$/az.rg-vmss-$g >> /tmp/$$/az.vmss-$$; 
+   done
+   tick_vm=$(date +%s)
+   json=$(cat /tmp/$$/az.vm-$$ | jq -s '.|add')
+   #.stroageProfile.imageReference.offer
+   #.osDisk.managedDisk,strorageAccountType
+   #.osProfile.adminUsername
+   # adding the dataDisk YTBD - 
+   #q='.[]|[.name, .hardwareProfile.vmSize, .osProfile.adminUsername , (.powerState / " "|.[-1]), (.storageProfile.osDisk.diskSizeGb | tostring), ([.storageProfile.dataDisk[].diskSize]|add | tostring), .location,  .privateIps, .publicIps // "None", .resourceGroup]|join(" ")'
+   q='.[]|[.name, .hardwareProfile.vmSize, .osProfile.adminUsername , (.powerState / " "|.[-1]), (.storageProfile.osDisk.diskSizeGb | tostring),  .location, .resourceGroup,  .privateIps, .publicIps // "None"]|join(" ")'
+
+   cat /tmp/$$/az.vm-$$ | jq -s '.|add' | jq -r "$q" | while read line; do 
+        printf "$format" $line; echo
+   done     
+   #q=.....
+   #cat /tmp/$$/az.vmss-$$ | jq -s '.|add' | jq -r "$q" | while read line; do 
+   #     printf "$format" $line; echo
+   #done     
+   echo vmss not shown above, subscription shown: $(az account show | jq -r ".id")
+   lsVnet 
+   
+ 
+}
+
+
+###
+# list vnet RG, name, CIDR, IPcount:subnet:CIDR, ...
+#
+lsVnet() {
+  local format hdr q g gl
+  format="%-12.12s %-8.8s %-12.12s %12.50s %12.50s %12.50s %12.50s %s "
+  hdr="#resGroup netName netCIDR IpCount:Subnet:CIDR"
+  printf "${format}\n" $hdr;
+  q='.[]| [.resourceGroup, .name, .addressSpace.addressPrefixes'
+  q+=', (.subnets[]| [([.ipConfigurations[]?.id] |length|tostring), .name, .addressPrefix]|join(":")) '
+  q+=' ]|flatten|join(" ")'
+  gl=$(az group list | jq -r '.[].name')
+  for g in $gl; do
+     az network vnet list -g $g | jq -r "$q" |\
+       while read line; do printf "$format" $line; echo ; done
+  done
+}
+
+
+
+###
+# List all IP addresses in my Azure account
+#  - Only partially working, Not showing VMSS instances.
+#
+# ````bash
+# $ lsAzip
+# navgemmaster 10.0.8.4 52.244.71.84
+# ````
+lsAzip() {
+  # on independent VMs
+  json=$(az vm list-ip-addresses )
+  #json=$(az network list )
+  q='.[].virtualMachine|[.name, (.network| .privateIpAddresses, .publicIpAddresses[].ipAddress)]|flatten|join(" ")'
+  echo $json | jq -r "$q"
+  # on VM scale sets  (how?)
+  # not $(az vmss list-ip-addresses )
+ # for n in $(az vmss list | jq '.[].name' ); do
+ #    
+ # done
+}
+
+### 
+#  List disk, who they are "managedBy" (i.e to which VM they are attached)
+#
+xzdisk() {
+   local format json q line
+   format="%-12.12s %-10.10s %-10.10s %5.5s %-12.12s %s "
+   json=$(az disk list)
+#   q='.[]| [.location, .sku.tier, .resourceGroup, (.diskSizeGb|tostring), (.name / ""|join(" ")) ]| join(" ")'
+   q='.[]| [.location, .sku.tier, .resourceGroup, (.diskSizeGb|tostring), .name]|join(" ")'
+   echo $json |jq -r "$q" | while read line; do printf "$format" $line; echo ; done
+   q='[.[]| .diskSizeGb] | "Total GB: \(add)"'
+   echo $json |jq -r "$q" 
+}

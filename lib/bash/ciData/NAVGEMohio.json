@@ -1,0 +1,154 @@
+{
+  "Cookbook" : "navgemohio_ci",
+  "Schema": "20170226",
+  "Project": "NAVGEMohio",
+  "Environment": "Evaluation",
+  "Profiles": {
+    "app": {
+      "SG": "app",
+      "Subnet": "app-c"
+    },
+    "default": {
+      "note": "Default settings included.",
+      "SG": "app",
+      "Subnet": "app-c",
+      "Profile": "el7",
+      "Schedule": "6-18:1-5:PST8PDT",
+      "KeyName": "JONES.DANIEL.L.1265422345",
+      "InstanceType": "t2.micro",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-NAVGEMohio-ro"
+      },
+      "ImageId": "ami-8a7859ef",
+      "priceListAttributes": {
+        "location": "AWS GovCloud (US)",
+        "terms": "OnDemand",
+        "operatingSystem": "Linux"
+      }
+    },
+    "bastion": {
+      "SG": "bastion",
+      "Subnet": "web-c",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-NAVGEMohio"
+      }
+    },
+    "public": {
+      "SG": "web",
+      "Subnet": "web-a"
+    },
+    "amazon": {
+      "ImageId": "ami-8a7859ef",
+      "ImageDescription": "Amazon Linux"
+    },
+    "el6": {
+      "ImageId": "ami-fd03bc9c",
+      "ImageDescription": "Enterprize Linux 6"
+    },
+    "el7": {
+      "ImageId": "ami-cb942aaa",
+      "ImageDescription": "Enterprize Linux 7"
+    },
+    "RHEL7": {
+      "ImageId": "ami-299e2248",
+      "ImageDescription": "RHEL7"
+    },
+    "windows2012": {
+      "KeyName": "admin1",
+      "ImageId": "ami-e49d1885",
+      "UserDataTemplateFile": "templates/userdataWindows.erb"
+    },
+    "db": {
+      "SG": "db",
+      "Subnet": "db-a"
+    }
+  },
+  "InstanceRoles": {
+    "bastion": {
+      "Profile": "bastion"
+    },
+    "comp": {
+      "Profile": "app",
+      "Subnet": "app-c",
+      "ImageId": "ami-a6d3f5c3"
+    },
+    "comptest": {
+      "Profile": "app",
+      "Subnet": "app-c",
+      "ImageId": "ami-a6d3f5c3",
+      "SG": "cfncluster-ngemtest3-ComputeSecurityGroup-MO37GLYHSOL1"
+    },
+    "bastionwin": {
+      "Profiles": [
+        "windows2012",
+        "bastion"
+      ],
+      "ImageId": "ami-e49d1885",
+      "UserDataTemplateFile": "templates/userdataWindows.erb"
+    },
+    "web": {
+      "Profile": "public"
+    },
+    "app": {
+      "Profile": "app"
+    },
+    "app6": {
+      "Profiles": [
+        "app",
+        "el6"
+      ]
+    },
+    "logger": {
+      "Profile": "app"
+    }
+  },
+  "s3Store": "s3://cibootstrap",
+  "s3ProjectStore": "s3://fnmoc.navgem.data",
+  "s3SysStore": "s3://fnmoc.navgem.systems",
+  "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+  "s3Home": "s3://fnmoc.home",
+  "EIPs": {
+    "bastion": "true",
+    "bastion-0": "eipalloc-b6365998",
+    "bastion-1": "eipalloc-dbb7dcf5"
+  },
+  "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+  "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+  "Components": [],
+  "Description": "Data used by CI processes for build, test, and release.",
+  "DevMappingTemplateFile": "templates/devMapping.erb",
+  "MapVolumes": {},
+  "ReleaseGroup": "None",
+  "RuncmdFile": "runcmd.yaml",
+  "SCM_prefix": "https://svn.nps.edu/repos/metoc",
+  "ScmHeadURL": "$HeadURL$",
+  "ScmId": "$Id$",
+  "Security": {
+    "SGoutBound": {
+      "nat": "80,443:anywhere",
+      "db": "",
+      "app": "",
+      "bastion": "",
+      "web": ""
+    },
+    "SGinBound": {
+      "bastion": "22,443:myIP,nps,fnmoc,nmci0",
+      "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+      "db": "5432:sg-app 22:sg-bastion",
+      "web": "80,443:nps,fnmoc 22:sg-bastion, 443:nmci0",
+      "app": "80,443,8080,8443:sg-web,sg-bastion 22:sg-bastion,sg-login"
+    },
+    "SrcCidr": {
+      "fnmoc": "152.80.48.0/24",
+      "nmci0": "138.163.0.0/24",
+      "nps": "205.155.65.226/32",
+      "anywhere": "0.0.0.0/0"
+    }
+  },
+  "UserDataTemplateFile": "templates/userdata.erb",
+  "UsersFile": "usersNAVGEM.yaml",
+  "Version": "0.0.1-SNAPSHOT",
+  "Volumes": {},
+  "VpcName": "NAVGEMohio",
+  "VpcId": "vpc-61dd9f08"
+}

@@ -1,0 +1,19 @@
+<% 
+# Block Device Mapping
+# 
+[ 
+    {
+              "VirtualName": "string",
+              "DeviceName": "string",
+              "Ebs": {
+                "SnapshotId": "string",
+                "VolumeSize": integer,
+                "DeleteOnTermination": true|false,
+                "VolumeType": "standard"|"io1"|"gp2"|"sc1"|"st1",
+                "Iops": integer,
+                "Encrypted": true|false
+              },
+              "NoDevice": "string"
+     }
+] 
+%> 

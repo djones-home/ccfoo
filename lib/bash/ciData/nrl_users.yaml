@@ -1,0 +1,61 @@
+#  $HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/nrl_users.yaml $
+#  $Id: nrl_users.yaml 66701 2017-12-12 17:26:58Z dljones@nps.edu $
+
+users:
+ - default
+ - name: djones
+   gecos: Dan Jones
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCYdoDhJhGhKBIGNwjxbOnQEELzbLt/mgw6Mld+pHKXeD5VRngRWjA8U36FilWRBzAXe5QN+WIOhOAd0pVNvShinswPa7MnwVqZNGDjo8UNXYvkzkEkG8EYXiW4KtPJSRtHEAXWc800MS+/W7wqHS5/eSFCiU8Rp4I8khvgsYrZgxCp4C2UAeAB0qJ9qSCCsEYjGovug0Sa3zih6Y99lj/PwDJ4QFTgXdqx4g1hrVg8yB14hmKboTIzccJJQg+3PJk5hlwu0O6mf+CybQu75IwzWF9/DrK1R1QK7kzioNM/JorkY1sT01d6L7pzPYF3kHWFeAthC6+ffrUSqdCvRJL5 JONES.DANIEL.L.1265422345 notAfter=Aug 31 23:59:59 2020 GMT
+ - name: ksezen
+   gecos: Kevin Sezen
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel 
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCP+Nmd48hkSlrBvi5xCqFpZ5PpamDrElMkShy9O91f6/9VqbrTBU8dVzPtrM+o9jYOT5sZyP9drEO7cp5qhmvp63mP1AT8Lhd62dqENYZrQyhGyGHGeAaVsEx4NCp4epK2X225w3G/N7hwlM0OCXcMvXdYZIJFwkgLNixdxcjVzn0UVBQBSGm+3DefpVD6Tm4RPT+XLHfi3uUbwZq80TCrZusdWxbj0kM6W49S3PAVLyjsw9QUWN9rGshp5xdLFinp9pmYIV3LESbz24ZN5Wbg/mFzQdwRdcO7pQBorBmgMKIFmQRHPccalior2cRKB3gN/gONNNvMaxt1qwDBgDzB SEZEN.KEVIN.SERMET.1412295257 notAfter=Aug 31 23:59:59 2020 GMT
+ - name: houghtonb
+   gecos: Brent Houghton
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel 
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCcOzXwLHvSn075e4fepdkuC6ikW/L1YzToa1QvZXFeqVftWY4qfDYlLRAeUS501EldxlYlR6RMk0WDAyGT1Kpce2HYu0IIQTaGffBCH4HOuW8Z+YF4kiaJ3Mfe5DtVy+Jmi5Yidk16bV6pGR09bA+5Iw2gcD0U9kyjgOJMFlQDc3LAmQ0C6EWbNTEtG5lIpbLGCqUjxvfUIPoiBmcmpMXFjhhNv+5TLvFreXd9FLDzw6ed+dep/qNgksPWL3nm+VQLuaWwtZaw4ucoDqCwXdWZgRxi+29RQ/b+L1aK7Tg5X/Q1iZVfuBoGP5wVZp+zVt00P70JrDQfubt7pM9/AXxx HOUGHTON.BRENT.1486246320
+ - name: roetmanj
+   gecos: Jonathan Roetman
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel 
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa -rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxD4J4brKacDOpwnSKOY6geUR0xiP3T09FWDL6L+OXKkJ5vs+F/hIUaVdQsf11UoVMrawteMIU33cyG+Sy8WDVsUTtrZ5G0uvyk2RlNN2wdzkKyQh1Tk5hRco/cp5T/e10DIp71NsEO2bbxpm9JSp2+/D1ikXK1Hxtq0fsYoElU+ke1sOcr/X6qKM3gfea9wOmOVO4bB7H+HZ6TYGsGnwnjTXvv0YouGe1bEMjDZs1GdCDltLzUfp8bV728NMtueBLZHr8Z3aumrm0um8QBQp/9qklZd+Hs/lr7jXff1u7tKEtPeenHhT1rgoemre/RbDVJk3Zr3PAmlFamM9ngS2z ROETMAN.JONATHAN.HUGH.1374526878 notAfter=Dec 17 23:59:59 2017 GMT
+ - name: frewb
+   gecos: Brian Frew
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel 
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa sh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCQqqax3pm1yjC8UBiXlaDeCrEgFLVMAStu+om+VgkVz0ChWUxfCI2hkDSlWEI9MKPzHkx0sdgnkm1Ezf9ex0QokNC/QTdWKeZrAPKpcKmqqch1nDK9OEPGRBpGtUgmCwSZ0uPr1q2e4tieMg9pe2HmhdC1lGB6KRwHek2fwjtLp1OF/JegjRcalIOT9Ov74BGTp/t2jh2uuKfMrgCA8FpNCbID6HDuXayoywCf5eHeIaG94Ul2cOsBwuPNVQy7qCN+xrbgzxjIENtwGWCBTQag+H3/9ylGy/lhuU4zTC35IoVpI2gXhv/qb0V08F0xFw0CLS6HB4IJM5wrygovRciV FREW.BRIAN
+    - ssh-rsa ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCN9XX7sDifeOLETxuKUs8VGbI4/6DFomwWPDSjIe+lJhY+QBneJ0GMVQYxTXa6gtczNCUbNnZGXweAeuvbvjpDUlcU9ge2H9cmLnu/mK2Z/9F4/XFL3oOiRwneUd5wTJ2T/PLScmdP00xxR7aezqFLuiRKNt/Uad5B/+71lkoLv1u4/odclowIiZBuTHIgg+/PUorEs+e2Fd5wO/id5jD7a8KszmbBBgQSlIWutp6FLffSHRbXRmrXlVkI5KJFOiFakBvKpfh6WXT7S6KakWRnOtHeuaYP4Q+xhbWbwX5FlGeUMKtHeVVmuJF1FV3vz+YMfHxLscladv041x/56tON FREW.BRIAN
+    - ssh-rsa ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCJmbjWpV0MIpmnQSOTPz4HcwY56SfCh8qgUE3PCrrL+P6Sni9zS1/8W+eVzelmNg0OryzbzybjUBqyaCcj1eXID4mYyuhD+JgNyvmts9OYOsEb8ffm2Kw3yW1i16T3qwfJW3Cet5/O7Rix2axvytyBl4CBv6OY9CieTCSF2Z8aPBTNFnbdiNqSCFTIj805nAVXpqV4I7ICVnd74vHee1cs/6eI5xIfWUuhFp4oq2LIhkzpHz+H/c5TPB5KqyZsUendETKIRAchk6h+e3rdY9eK/0d9QYhZqWZO09daDrF6tuDnXhLZz155RqxNH0IVUPr3veukYb8zWFBtC6iRnNU3 FREW.BRIAN
+
+
+# vim:syntax=yaml expandtab
+

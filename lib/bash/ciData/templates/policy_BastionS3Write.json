@@ -1,0 +1,19 @@
+{
+    "Statement": [
+        {
+            "Resource": [
+                "arn:aws-us-gov:s3:::cibootstrap/*/chef-repo/*",
+                "arn:aws-us-gov:s3:::fnmoc.ci.webshop.data/*",
+                "arn:aws-us-gov:s3:::fnmoc.ci.nrl.data/*",
+                "arn:aws-us-gov:s3:::fnmoc.ci.nites.data/*",
+                "arn:aws-us-gov:s3:::fnmoc.ci.common.data/*",
+                "arn:aws-us-gov:s3:::fnmoc.acaf.data/*"
+            ],
+            "Action": [
+                "s3:*"
+            ],
+            "Effect": "Allow"
+        }
+    ],
+    "Version": "2012-10-17"
+}

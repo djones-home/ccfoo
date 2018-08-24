@@ -1,0 +1,99 @@
+{
+  "Cookbook" : "nites_ci",
+  "Environment": "Evaluation",
+  "Schema": "20170226",
+  "Profiles": {
+    "app": {
+      "SG": "app",
+      "Subnet": "app-a"
+    },
+    "default": {
+      "note": "Default settings included.",
+      "SG": "app",
+      "Subnet": "app-a",
+      "Profile": "el7",
+      "Schedule": "6-18:1-5:PST8PDT",
+      "KeyName": "JONES.DANIEL.L.1265422345",
+      "InstanceType": "t2.micro",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-nites-ro"
+      },
+      "ImageId": "ami-6fc9770e",
+      "priceListAttributes": {
+        "location": "AWS GovCloud (US)",
+        "terms": "OnDemand",
+        "operatingSystem": "Linux"
+      }
+    },
+    "bastion": {
+      "SG": "bastion",
+      "Subnet": "web-a",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-nites"
+      }
+    },
+    "public": {
+      "SG": "web",
+      "Subnet": "web-a"
+    },
+    "amazon": {
+      "ImageId": "ami-cb942aaa",
+      "ImageDescription": "Amazon Linux"
+    },
+    "el6": {
+      "ImageId": "ami-cb942aaa",
+      "ImageDescription": "Enterprize Linux 6"
+    },
+    "el7": {
+      "ImageId": "ami-cb942aaa",
+      "ImageDescription": "Enterprize Linux 7"
+    },
+    "RHEL7": {
+      "ImageId": "ami-299e2248",
+      "ImageDescription": "RHEL7"
+    },
+    "db": {
+      "SG": "db",
+      "Subnet": "db-a"
+    }
+  },
+  "InstanceRoles": {
+    "bastion": {
+      "Profile": "bastion"
+    },
+    "web": {
+      "Profile": "public"
+    },
+    "app": {
+      "Profile": "app"
+    },
+    "logger": {
+      "Profile": "app"
+    }
+  },
+  "s3Store": "s3://cibootstrap",
+  "s3ProjectStore": "s3://fnmoc.nites.data",
+  "s3SysStore": "s3://fnmoc.nites.systems",
+  "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+  "s3Home": "s3://fnmoc.home",
+  "VpcName": "nites",
+  "Project": "nites",
+  "VpcId": "",
+  "Volumes": {
+    "Volumes": {
+      "vol4": {
+        "size": "50",
+        "VolumeId": "vol-012345",
+        "mount": "/scratch",
+        "InstanceName": "test-0"
+      },
+      "vol3": {
+        "size": "50",
+        "VolumeId": "none",
+        "InstanceName": "test-1"
+      }
+    }
+  },
+  "EIPs": {},
+  "MapVolumes": {}
+}

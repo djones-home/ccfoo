@@ -1,0 +1,37 @@
+driver:
+  name: ec2
+  aws_ssh_key_id: test_kitchen_project
+  security_group_ids: ["sg-28b1194d"]
+  region: us-gov-west-1
+  availability_zone: a
+  require_chef_omnibus: true
+  subnet_id: subnet-f42db191
+  iam_profile_name: CI-vpc-ciBootStrap-ro
+  instance_type: t2.large
+  associate_public_ip: false 
+  interface: private 
+
+transport:
+  ssh_key: /home/ksezen/.ssh/id_rsa
+  connection_timeout: 10
+  connection_retries: 5
+  username: maintuser 
+
+platforms:
+  - name: centos-6
+    driver:
+      image_id: ami-fd03bc9c 
+    transport:
+      username: maintuser
+
+verifier:
+  name: inspec
+
+suites:
+  - name: default 
+    run_list:
+      - role[jenkins]
+    verifier:
+      inspec_tests:
+        - test/smoke/default
+    attributes:

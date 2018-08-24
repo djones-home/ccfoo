@@ -1,0 +1,14 @@
+{
+  "name": "logger",
+  "description": "Role created by djones-XPS-13-9360:ciStack.sh:write_chef_role",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "run_list": [
+    "recipe[fnmoc_ci::logger]"
+  ],
+  "default_attributes": {},
+  "cookbook_versions": {
+    "fnmoc_ci": ">= 0.1.0"
+  },
+  "override_attributes": {}
+}

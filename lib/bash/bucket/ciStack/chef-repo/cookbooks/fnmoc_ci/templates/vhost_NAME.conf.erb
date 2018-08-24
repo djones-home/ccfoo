@@ -1,0 +1,50 @@
+<VirtualHost *:443>
+    ServerName <%=@serverName%>
+    ErrorLog "logs/<%=@shortName%>.error_log"
+    CustomLog "logs/<%=@shortName%>.access_log" gislogform
+    SSLEngine on
+    SSLVerifyClient require
+   # SSLVerifyClient optional
+    SSLVerifyDepth 6
+    SSLProtocol all -SSLv2
+    #SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
+    SSLCipherSuite <%=node[:SSL]['CipherSuite']%>
+    SSLCertificateFile <%=node[:SSL]['CertificateFile']%>
+    SSLCertificateKeyFile <%=node[:SSL]['CertificateKeyFile']%>
+    SSLCACertificateFile <%=node[:SSL]['CACertificateFile']%>
+    # SSLOptions +FakeBasicAuth +ExportCertData +StrictRequire
+    SSLOptions +FakeBasicAuth +ExportCertData +StrictRequire +StdEnvVars
+    # SSLOptions +ExportCertData +StrictRequire +StdEnvVars
+
+    RequestHeader unset X-Forwarded-User
+    RewriteEngine On
+    RequestHeader set X-Forwarded-User-DN "%{SSL_CLIENT_S_DN}s"
+    RequestHeader set X-Forwarded-User "%{SSL_CLIENT_S_DN_CN}s"
+    RequestHeader set X-Forwarded-Cert "%{SSL_CLIENT_CERT}s"
+    RequestHeader set X-Forwarded-Proto "HTTPS"
+    RequestHeader set X-Forwarded-Port "443"
+    proxyRequests Off
+    proxyPreserveHost On
+    AllowEncodedSlashes NoDecode
+
+#ProxyPass               /jenkins  http://ip-10-0-20-118.us-gov-west-1.compute.internal:8080/jenkins nocanon
+#ProxyPassReverse        /jenkins  http://ip-10-0-20-118.us-gov-west-1.compute.internal:8080/jenkins
+#ProxyPassReverse        /jenkins  http://ci10.ccs.nps.edu/jenkins
+# To get Jenkins to not report a broken proxy setup, added an additional ProxyPassReverse
+# This should  not be needed if vhost_all.conf is doing the redirect to https
+    Redirect /nexus  https://imetoc.nps.edu/nexus/
+#
+# START of proxy marker
+#
+
+<% @proxyPassLines.each { |l| %>
+<%=l%>
+<% }  %> 
+
+
+###
+# END of proxy entries Made by: 
+# END of proxy marker
+###
+
+</VirtualHost>

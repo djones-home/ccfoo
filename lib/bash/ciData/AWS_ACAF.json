@@ -1,0 +1,163 @@
+{
+  "Cookbook" : "acaf_ci",
+  "DevMappingTemplateFile": "templates/devMapping.erb",
+  "Volumes": {
+    "vol4": {
+      "size": "50",
+      "VolumeId": "None",
+      "mount": "/scratch",
+      "InstanceName": "djones-0"
+    },
+    "vol3": {
+      "size": "50",
+      "VolumeId": "None"
+    }
+  },
+  "MapVolumes": {},
+  "InstanceRoles": {
+    "bastion": {
+      "Profile": "bastion"
+    },
+    "web": {
+      "Profile": "public"
+    },
+    "app": {
+      "Profile": "app"
+    },
+    "app-el7": {
+      "Profile": "app"
+    },
+    "app-el6": {
+      "ImageId": "ami-fd03bc9c",
+      "Profile": "app"
+    },
+    "test": {
+      "ImageId": "ami-fd03bc9c",
+      "Profile": "app"
+    },
+    "acaf1": {
+      "Profile": "app"
+    },
+    "logger": {
+      "Profile": "app"
+    }
+  },
+  "EIPs": {
+    "proxy": "eipalloc-7159f814",
+    "bastion": "eipalloc-29e0474c"
+  },
+  "Profiles": {
+    "default": {
+      "note": "Default settings included.",
+      "SG": "app",
+      "Subnet": "app-a",
+      "Profile": "el7",
+      "Schedule": "6-18:1-5:PST8PDT",
+      "KeyName": "JONES.DANIEL.L.1265422345",
+      "InstanceType": "t2.micro",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-ACAF-ro"
+      },
+      "ImageId": "ami-6fc9770e",
+      "priceListAttributes": {
+        "location": "AWS GovCloud (US)",
+        "terms": "OnDemand",
+        "operatingSystem": "Linux"
+      }
+    },
+    "bastion": {
+      "SG": "bastion",
+      "Subnet": "web-a",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-ACAF"
+      }
+    },
+    "public": {
+      "SG": "web",
+      "Subnet": "web-a"
+    },
+    "app": {},
+    "amazon": {
+      "ImageId": "ami-7b4df41a",
+      "ImageDescription": "Amazon Linux"
+    },
+    "el6": {
+      "ImageId": "ami-fd03bc9c",
+      "ImageDescription": "Enterprize Linux 6"
+    },
+    "el7": {
+      "ImageId": "ami-cb942aaa",
+      "ImageDescription": "Enterprize Linux 7"
+    },
+    "RHEL7": {
+      "ImageId": "ami-299e2248",
+      "ImageDescription": "RHEL7"
+    },
+    "db": {
+      "SG": "db",
+      "Subnet": "db-a"
+    }
+  },
+  "Schema": "20170226",
+  "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+  "ScmHeadURL": "$HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/AWS_ACAF.json $",
+  "ScmId": "$Id: AWS_ACAF.json 67992 2018-02-04 15:39:19Z dljones@nps.edu $",
+  "KeyName": "JONES.DANIEL.L.1265422345",
+  "Security": {
+    "SrcCidr": {
+      "anywhere": "0.0.0.0/0",
+      "clearScienceInc": [
+        "96.94.62.177/32",
+        "96.94.62.178/32",
+        "96.94.62.179/32",
+        "96.94.62.180/32",
+        "96.94.62.181/32",
+        "96.94.62.182/32"
+      ],
+      "nps": "205.155.65.226/32",
+      "fnmoc": "152.80.48.0/24"
+    },
+    "SGinBound": {
+      "app": "80,8080,8180,8280,8380,8443,8543,8643:sg-web,sg-bastion 22:sg-bastion,sg-login",
+      "web": "80,443:nps,fnmoc,clearScienceInc 22:sg-bastion",
+      "db": "4444:sg-web,sg-bastion 22:sg-bastion",
+      "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+      "bastion": "22,80,443:myIP,nps,fnmoc,clearScienceInc",
+      "nfs security": "111:sg-app 2049:sg-app"
+    },
+    "SGoutBound": {
+      "web": "",
+      "bastion": "",
+      "app": "",
+      "db": "",
+      "nat": "80,443:anywhere"
+    }
+  },
+  "Version": "0.0.2-SNAPSHOT",
+  "Description": "Data used by CI processes for build, test, and release.",
+  "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+  "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+  "RuncmdFile": "runcmd.yaml",
+  "UsersFile": "acaf_users.yaml",
+  "UserDataTemplateFile": "templates/userdata.erb",
+  "VpcId": "vpc-452fe120",
+  "VpcName": "ACAF",
+  "Components": [],
+  "SCM_prefix": "https://svn.nps.edu/repos/metoc",
+  "ReleaseGroup": "None",
+  "s3Store": "s3://cibootstrap",
+  "s3ProjectStore":  "s3://fnmoc.acaf.data  s3://fnmoc.climo.data", 
+  "s3SysStore": "s3://fnmoc.acaf.systems",
+  "ChangeLog": [
+    {
+      "date": "1494337413",
+      "msg": "Initial"
+    },
+    {
+      "date": "1494337413",
+      "msg": "djones migrateSchema: to version 20170226"
+    }
+  ],
+  "Environment": "Evaluation",
+  "Project": "ACAF"
+}

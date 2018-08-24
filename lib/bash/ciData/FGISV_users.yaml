@@ -1,0 +1,37 @@
+#  $HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/branches/rr_djones/ciData/users.yaml $
+#  $Id: users.yaml 54472 2016-10-05 19:48:31Z dljones@nps.edu $
+
+users:
+ - default
+ - name: djones
+   gecos: Dan Jones
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCYdoDhJhGhKBIGNwjxbOnQEELzbLt/mgw6Mld+pHKXeD5VRngRWjA8U36FilWRBzAXe5QN+WIOhOAd0pVNvShinswPa7MnwVqZNGDjo8UNXYvkzkEkG8EYXiW4KtPJSRtHEAXWc800MS+/W7wqHS5/eSFCiU8Rp4I8khvgsYrZgxCp4C2UAeAB0qJ9qSCCsEYjGovug0Sa3zih6Y99lj/PwDJ4QFTgXdqx4g1hrVg8yB14hmKboTIzccJJQg+3PJk5hlwu0O6mf+CybQu75IwzWF9/DrK1R1QK7kzioNM/JorkY1sT01d6L7pzPYF3kHWFeAthC6+ffrUSqdCvRJL5 JONES.DANIEL.L.1265422345 notAfter=Aug 31 23:59:59 2020 GMT
+ - name: ksezen
+   gecos: Kevin Sezen
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   groups:
+    - users
+    - wheel 
+   ssh-import-id: None
+   lock-passwd: true
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCP+Nmd48hkSlrBvi5xCqFpZ5PpamDrElMkShy9O91f6/9VqbrTBU8dVzPtrM+o9jYOT5sZyP9drEO7cp5qhmvp63mP1AT8Lhd62dqENYZrQyhGyGHGeAaVsEx4NCp4epK2X225w3G/N7hwlM0OCXcMvXdYZIJFwkgLNixdxcjVzn0UVBQBSGm+3DefpVD6Tm4RPT+XLHfi3uUbwZq80TCrZusdWxbj0kM6W49S3PAVLyjsw9QUWN9rGshp5xdLFinp9pmYIV3LESbz24ZN5Wbg/mFzQdwRdcO7pQBorBmgMKIFmQRHPccalior2cRKB3gN/gONNNvMaxt1qwDBgDzB SEZEN.KEVIN.SERMET.1412295257 notAfter=Aug 31 23:59:59 2020 GMT
+ - name: hroyer
+   gecos: Hans Royer
+   groups: users
+   ssh-import-id: None
+   lock-passwd: true
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   ssh-authorized-keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCS1mZjUmKlgsrYkUBqOGVmiN+Cx7peX4kTaxE3+c7nGgkRcRhZ50k9s55BB9D+OrX9oCg1v+ao3VpOx97XFf8Jnly2uUX0sLdL/IhYmIZdtw10JXC46Qftq1AEtjkXSQP0J1hgrzv56yqXj65RT/3g8GvGHVpMawveHnYwEsMkLqFrCEYgHLqiXNTRNB7KpLKG8/R3a+jH6LlOAOJ3Sd3Um2FipwxBPDBIlUtoZmF0hk3eMa7xNbw/l9AFqFPt/N4946Qxr3wTqeMDWTo0AmS7TL7O/dAfVJXSfyWEyM6VlF0VhlTH4kUpjnwDFSSNmIIHBXneVjJ57VDFxaws2Ma9 ROYER.HANS.BERNARD.1200400689 notAfter=Sep  4 23:59:59 2020 GMT
+
+
+# vim:syntax=yaml expandtab
+

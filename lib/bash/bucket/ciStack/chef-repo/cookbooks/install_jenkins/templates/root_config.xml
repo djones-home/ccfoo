@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<user>
+  <fullName>root</fullName>
+  <description></description>
+  <properties>
+    <jenkins.security.ApiTokenProperty>
+      <apiToken>iLBT2HyTNPmkaJ98oNrmcsrt3oJ9SOcRwBX97pQ8pB3h7jch3zi+ISZ7j+2eUVyl</apiToken>
+    </jenkins.security.ApiTokenProperty>
+    <com.cloudbees.plugins.credentials.UserCredentialsProvider_-UserCredentialsProperty plugin="credentials@2.1.4">
+      <domainCredentialsMap class="hudson.util.CopyOnWriteMap$Hash"/>
+    </com.cloudbees.plugins.credentials.UserCredentialsProvider_-UserCredentialsProperty>
+    <hudson.plugins.emailext.watching.EmailExtWatchAction_-UserProperty plugin="email-ext@2.44">
+      <triggers/>
+    </hudson.plugins.emailext.watching.EmailExtWatchAction_-UserProperty>
+    <hudson.model.MyViewsProperty>
+      <primaryViewName></primaryViewName>
+      <views>
+        <hudson.model.AllView>
+          <owner class="hudson.model.MyViewsProperty" reference="../../.."/>
+          <name>All</name>
+          <filterExecutors>false</filterExecutors>
+          <filterQueue>false</filterQueue>
+          <properties class="hudson.model.View$PropertyList"/>
+        </hudson.model.AllView>
+      </views>
+    </hudson.model.MyViewsProperty>
+    <hudson.model.PaneStatusProperties>
+      <collapsed/>
+    </hudson.model.PaneStatusProperties>
+    <hudson.search.UserSearchProperty>
+      <insensitiveSearch>false</insensitiveSearch>
+    </hudson.search.UserSearchProperty>
+    <hudson.tasks.Mailer_-UserProperty plugin="mailer@1.17">
+      <emailAddress>jbossapps@nps.edu</emailAddress>
+    </hudson.tasks.Mailer_-UserProperty>
+    <hudson.security.HudsonPrivateSecurityRealm_-Details>
+      <passwordHash>#jbcrypt:$2a$10$yOk6nYo7UV/7jSI02nmfQ.Lk30eGN2wo3Jz13ohyYrqe0Uj/cuM7C</passwordHash>
+    </hudson.security.HudsonPrivateSecurityRealm_-Details>
+    <org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl>
+      <authorizedKeys>ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCl00wcHkdeDBt3sXeSKg7JzjFQXqyHB4j1AxP4fSmfNffq0CWEIMK9FHzcwbThL34wQNdQ1acYC/MDIgWl6refRTy2aQv178L6dXLrHN0gq4pVSyvUQkdGTiyLxr05WBsoCPjUA50PQ8KOTQZybXwzS76u6QPhWmG1eaUgAwB/XBPi0jdbXSSbg+ASN8YxCCxes/EfbLxgY9Z61qxAeCxwPNTIaPXZRJIMlpdntWo9QjYaVqYfkEjf1UqtOymRWCzUQIAWUUj7vSXYzkZjqB0Stf3VuFV9M7joIW1XY5gLz8/FVL9NO1ZYvZdLPJ88y3Q5brWPMQV2HCyTp9X8RxLT root@ip-172-31-22-97</authorizedKeys>
+    </org.jenkinsci.main.modules.cli.auth.ssh.UserPropertyImpl>
+  </properties>
+</user>

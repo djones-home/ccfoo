@@ -1,0 +1,163 @@
+{
+  "Cookbook" : "cjg_ci",
+  "Environment": "Evaluation",
+  "InstanceRoles": {
+    "bastion": { "Profile": "bastion" },
+    "cjgBase": { "Profile": "app" },
+    "nfs": { "Profile": "app", "ImageId": "ami-7b4df41a"   },
+    "web": {
+      "Profile": "public"
+    },
+    "app": {
+      "Profile": "app"
+    },
+    "logger": {
+      "Profile": "app"
+    }
+  },
+  "Profiles": {
+    "app": { "SG": "app", "Subnet": "app-a" },
+    "default": {
+      "note": "Default settings included.",
+      "SG": "app",
+      "Subnet": "app-a",
+      "Profile": "el7",
+      "Schedule": "6-18:1-5:PST8PDT",
+      "KeyName": "JONES.DANIEL.L.1265422345",
+      "InstanceType": "t2.micro",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-CJG-ro"
+      },
+      "ImageId": "ami-6fc9770e",
+      "priceListAttributes": {
+        "location": "AWS GovCloud (US)",
+        "terms": "OnDemand",
+        "operatingSystem": "Linux"
+      }
+    },
+    "bastion": {
+      "SG": "bastion",
+      "Subnet": "web-a",
+      "IamInstanceProfile": {
+        "Name": "CI-vpc-CJG"
+      }
+    },
+    "public": {
+      "SG": "web",
+      "Subnet": "web-a"
+    },
+    "amazon": {
+      "ImageId": "ami-7b4df41a",
+      "ImageDescription": "Amazon Linux"
+    },
+    "el6": {
+      "ImageId": "ami-fd03bc9c",
+      "ImageDescription": "Enterprize Linux 6"
+    },
+    "el7": {
+      "ImageId": "ami-cb942aaa",
+      "ImageDescription": "Enterprize Linux 7"
+    },
+    "RHEL7": {
+      "ImageId": "ami-299e2248",
+      "ImageDescription": "RHEL7"
+    },
+    "db": {
+      "SG": "db",
+      "Subnet": "db-a"
+    }
+  },
+  "Schema": "20170226",
+  "priceListAttributes": {
+    "ami-6fc9770e": {
+      "description": "amazon"
+    },
+    "ami-299e2248": {
+      "description": "RHEL72",
+      "operatingSystem": "RHEL"
+    },
+    "ami-fd03bc9c": {
+      "description": "el6"
+    },
+    "ami-cb942aaa": {
+      "description": "el7"
+    },
+    "default": {
+      "location": "AWS GovCloud (US)",
+      "terms": "OnDemand",
+      "operatingSystem": "Linux"
+    }
+  },
+  "VpcId": "vpc-c1c617a4",
+  "UserDataTemplateFile": "templates/userdata.erb",
+  "DevMappingTemplateFile": "templates/devMapping.erb",
+  "UsersFile": "CJGusers.yaml",
+  "RuncmdFile": "runcmd.yaml",
+  "Description": "COAMPS-JG project Data used by CI processes for build, test, and release.",
+  "Version": "0.0.2-SNAPSHOT",
+  "ScmId": "$Id: AWS_CJG.json 67992 2018-02-04 15:39:19Z dljones@nps.edu $",
+  "VpcName": "CJG",
+  "Components": [],
+  "SCM_prefix": "https://svn.nps.edu/repos/metoc",
+  "ReleaseGroup": "None",
+  "s3Store": "s3://cibootstrap",
+  "s3ProjectStore": "s3://fnmoc.ci.dev",
+  "s3SysStore": "s3://fnmoc.ci.cjg.systems",
+  "Security": {
+    "SGoutBound": {
+      "nat": "80,443:anywhere",
+      "db": "",
+      "app": "",
+      "bastion": "",
+      "web": ""
+    },
+    "SGinBound": {
+      "bastion": "22:myIP,nps,fnmoc,devKL",
+      "nat": "80,443:sg-app,sg-db,sg-bastion 22:sg-bastion",
+      "db": "4444:sg-web,sg-bastion 22:sg-bastion",
+      "web": "80,443:nps,fnmoc 22:sg-bastion",
+      "app": "80,8080,8180,8280,8380,8443,8543,8643:sg-web,sg-bastion 22:sg-bastion,sg-login"
+    },
+    "SrcCidr": {
+      "fnmoc": "152.80.48.0/24",
+      "devKL": "192.168.1.64/32",
+      "nps": "205.155.65.226/32",
+      "anywhere": "0.0.0.0/0"
+    }
+  },
+  "ScmHeadURL": "$HeadURL: https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData/AWS_CJG.json $",
+  "CITOOLS_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/tools",
+  "CIDATA_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/ciData",
+  "s3Store_SCM": "https://svn.nps.edu/repos/metocgis/infrastructure/trunk/bucket",
+  "ChangeLog": [
+    {
+      "date": "1494359838",
+      "msg": "Initial"
+    },
+    {
+      "date": "1494359838",
+      "msg": "djones migrateSchema: to version 20170226"
+    }
+  ],
+  "Project": "CJG",
+  "Volumes": {
+    "Volumes": {
+      "vol4": {
+        "size": "50",
+        "VolumeId": "vol-012345",
+        "mount": "/scratch",
+        "InstanceName": "test-0"
+      },
+      "vol3": {
+        "size": "50",
+        "VolumeId": "none",
+        "InstanceName": "test-1"
+      }
+    }
+  },
+  "EIPs": {
+    "Bastion": "eipalloc-f2903c97",
+    "Proxy": "eipalloc-true"
+  },
+  "MapVolumes": {}
+}

@@ -1,0 +1,51 @@
+attributetype ( 1.2.840.113556.1.4.750 NAME 'groupType'
+   SYNTAX '1.3.6.1.4.1.1466.115.121.1.27' )
+
+attributetype ( 1.3.114.7.4.2.0.33 NAME 'memberOf'
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.26' 
+    SUP distinguishedName )
+
+attributetype ( 1.2.840.113556.1.4.656 NAME 'userPrincipalName'
+    EQUALITY caseIgnoreMatch
+    SUBSTR caseIgnoreSubstringsMatch
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.15'
+    SINGLE-VALUE )
+
+attributetype ( 1.2.840.113556.1.4.52 NAME 'lastLogon'
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.27' )
+
+attributetype ( 1.2.840.113556.1.4.159 NAME 'accountExpires'
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.27' )
+
+attributetype ( 1.2.840.113556.1.4.96 NAME 'pwdLastSet'
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.27' )
+
+attributetype ( 1.2.840.113556.1.4.221 NAME 'sAMAccountName'
+    EQUALITY caseIgnoreMatch
+    SUBSTR caseIgnoreSubstringsMatch
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.15'
+    SINGLE-VALUE )
+
+attributetype ( 1.2.840.113556.1.4.8 NAME 'userAccountControl'
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.27' )
+
+attributetype ( 1.2.840.113556.1.4.90 NAME 'unicodePwd'
+    SYNTAX '1.3.6.1.4.1.1466.115.121.1.40' )
+
+objectclass ( 1.2.840.113556.1.5.9 NAME 'user'
+        DESC 'a user'
+        SUP inetOrgPerson STRUCTURAL
+        MUST ( cn )
+        MAY ( userPassword $ memberOf $ userPrincipalName $ distinguishedName $ lastLogon $ accountExpires $ pwdLastSet $ sAMAccountName $ userAccountControl $ unicodePwd ) )
+
+objectclass ( 1.2.840.113556.1.5.8 NAME 'group'
+        DESC 'a group of users'
+        SUP top STRUCTURAL
+        MUST ( groupType $ cn )
+        MAY ( member ) )
+
+objectclass ( 1.2.840.113556.1.3.23 NAME 'container'
+        DESC 'a container'
+        SUP top STRUCTURAL
+        MUST ( cn ) )
+
