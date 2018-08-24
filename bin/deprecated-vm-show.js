@@ -1,20 +1,27 @@
 #!/usr/bin/env node
-const config = require('../lib/settings').load()
+const cfg = require('../lib/settings')
 const msRestAzure = require("ms-rest-azure");
 const { ComputeManagementClient } = require("azure-arm-compute");
 const cache = require('../lib/cache')
 const package = require('../package')
 const AzureEnvironment = msRestAzure.AzureEnvironment;
-const clientId = process.env.CLIENT_ID || config.CLIENT_ID || "";
-const secret = process.env.APPLICATION_SECRET || config.APPLICATION_SECRET || "";
-const domain = process.env.DOMAIN || config.DOMAIN || "";
-const username =  process.env.AZURE_USERNAME || config.AZURE_USERNAME || config.username || "";
-const password = process.env.AZURE_PASSWORD || config.AZURE_PASSWORD || config.password || "";
-const subscriptionId = process.env.AZURE_SUBSCRIPTION_ID || config.AZURE_SUBSCRIPTION_ID || config.id ||"";
 const profiles = require('../lib/profiles')
 const program = require('commander')
+var subject = __filename.split('-')[1]
+
+function increaseVerbosity(v, total) {
+  return total + 1;
+}
 
 async function main() {
+  let config = await cfg.load()
+  const clientId = process.env.CLIENT_ID || config.CLIENT_ID || "";
+  const secret = process.env.APPLICATION_SECRET || config.APPLICATION_SECRET || "";
+  const domain = process.env.DOMAIN || config.DOMAIN || "";
+  const username =  process.env.AZURE_USERNAME || config.AZURE_USERNAME || config.username || "";
+  const password = process.env.AZURE_PASSWORD || config.AZURE_PASSWORD || config.password || "";
+  const subscriptionId = process.env.AZURE_SUBSCRIPTION_ID || config.AZURE_SUBSCRIPTION_ID || config.id ||"";
+
   // make an id (cmdId) for indexing cashe.
   let cmdId = `${(profiles.env|| "az") + subject}.cmc.vm.listAll`
   let vms = cache.cGet(cmdId, program.ttl )
@@ -38,24 +45,16 @@ async function main() {
       (program.unit ? ` id by regexp /${program.unit}/,` : ''),
       (program.Name ? ` name == ${program.Name}\n` : ''),
       (program.verbose > 1 ? program : "")
-    )
+    );
+  program
+    .version(package.version)
+    .option(`-n --Name <${subject}Name>`, `Specify ${subject} name`)
+    .option(`-u --unit <regexp-filter>`, 'RegExp filter on Id')
+    .option('-v, --verbose [1]', 'Verbose log level', increaseVerbosity)
+    .option('-t --ttl <seconds>', 'Cache  Time-To-Live ', config.ttl || 600)
+  
+    program.parse(process.argv)
 }
-
-var subject = __filename.split('-')[1]
-
-function increaseVerbosity(v, total) {
-  return total + 1;
-}
-
-program
-  .version(package.version)
-  .option(`-n --Name <${subject}Name>`, `Specify ${subject} name`)
-  .option(`-u --unit <regexp-filter>`, 'RegExp filter on Id')
-  .option('-v, --verbose [1]', 'Verbose log level', increaseVerbosity)
-  .option('-t --ttl <seconds>', 'Cache  Time-To-Live ', config.ttl || 600)
-
-  program.parse(process.argv)
-
 main( ).catch((err) => {
       console.error("An error occurred: %O", err);    
 })
