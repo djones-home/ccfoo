@@ -1,6 +1,6 @@
 {
     "Project" : "SAM",
-    "Description": "SAMple Project settings for effective-settings tests",
+    "Description": "SAMple Project settings for effective-settings test",
     "Profiles": {
         "default" : { "image": "linux_of_coarse" , "sg":"default"},
         "a" : { "foo": "bar-a", "infoA": "profile-a"},

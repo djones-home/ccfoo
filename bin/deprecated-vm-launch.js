@@ -18,7 +18,7 @@ var subject = __filename.split('-')[1]
 if (process.env.CIDATA) {
   var cidata = JSON.parse(fs.readFileSync(process.env.CIDATA))
 } else {
-  var cidata = require('../tests/data/projectSettings')
+  var cidata = require('../test/data/projectSettings')
 }
 async function listResource() {
   // make an id (cmdId) for indexing cashe.
