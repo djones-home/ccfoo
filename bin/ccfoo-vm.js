@@ -5,9 +5,10 @@ const subject = __filename.split('-').pop().split('.')[0]
 const {show, terminate, stop, start, launch} = require('../lib/vm')
 const { incVerbose } = require('../lib/common')
 const cfg = require('../lib/settings')
-const config = cfg.load()
 
 async function main() {
+  const config = await cfg.load()
+
   var program = require('commander') 
    .version(package.version)
    .option(`-n --Name <${subject}Name>`, `Specify ${subject} name`)
