@@ -1,0 +1,1246 @@
+DEBUG: File logging enabled - writing logs to '/home/djones/.azurelogs'.
+DEBUG: Command arguments: ['vm', 'list', '--debug']
+DEBUG: Event: Cli.PreExecute []
+DEBUG: Event: CommandParser.OnGlobalArgumentsCreate [<function CLILogging.on_global_arguments at 0x7f31a8c96598>, <function OutputProducer.on_global_arguments at 0x7f31a8797950>, <function CLIQuery.on_global_arguments at 0x7f31a87b8488>]
+DEBUG: Event: CommandInvoker.OnPreCommandTableCreate [<function CLILogging.remove_logger_flags at 0x7f31a8c96620>]
+DEBUG: Installed command modules ['acr', 'acs', 'advisor', 'ams', 'appservice', 'backup', 'batch', 'batchai', 'billing', 'cdn', 'cloud', 'cognitiveservices', 'configure', 'consumption', 'container', 'cosmosdb', 'dla', 'dls', 'dms', 'eventgrid', 'eventhubs', 'extension', 'feedback', 'find', 'interactive', 'iot', 'keyvault', 'lab', 'monitor', 'network', 'profile', 'rdbms', 'redis', 'reservations', 'resource', 'role', 'servicebus', 'servicefabric', 'sql', 'storage', 'vm']
+DEBUG: Loaded module 'acr' in 0.002 seconds.
+DEBUG: Loaded module 'acs' in 0.001 seconds.
+DEBUG: Loaded module 'advisor' in 0.001 seconds.
+DEBUG: Event: CommandLoader.OnLoadCommandTable []
+DEBUG: Loaded module 'ams' in 0.002 seconds.
+DEBUG: Loaded module 'appservice' in 0.002 seconds.
+DEBUG: Loaded module 'backup' in 0.001 seconds.
+DEBUG: Event: CommandLoader.OnLoadCommandTable []
+DEBUG: Loaded module 'batch' in 0.004 seconds.
+DEBUG: Loaded module 'batchai' in 0.001 seconds.
+DEBUG: Loaded module 'billing' in 0.001 seconds.
+DEBUG: Event: CommandLoader.OnLoadCommandTable []
+DEBUG: Loaded module 'cdn' in 0.001 seconds.
+DEBUG: Loaded module 'cloud' in 0.001 seconds.
+DEBUG: Loaded module 'cognitiveservices' in 0.001 seconds.
+DEBUG: Loaded module 'configure' in 0.000 seconds.
+DEBUG: Loaded module 'consumption' in 0.002 seconds.
+DEBUG: Loaded module 'container' in 0.001 seconds.
+DEBUG: Loaded module 'cosmosdb' in 0.002 seconds.
+DEBUG: Loaded module 'dla' in 0.002 seconds.
+DEBUG: Loaded module 'dls' in 0.001 seconds.
+DEBUG: Loaded module 'dms' in 0.001 seconds.
+DEBUG: Loaded module 'eventgrid' in 0.001 seconds.
+DEBUG: Loaded module 'eventhubs' in 0.001 seconds.
+DEBUG: Loaded module 'extension' in 0.000 seconds.
+DEBUG: Loaded module 'feedback' in 0.000 seconds.
+DEBUG: Loaded module 'find' in 0.000 seconds.
+DEBUG: Loaded module 'interactive' in 0.000 seconds.
+DEBUG: Loaded module 'iot' in 0.002 seconds.
+DEBUG: Loaded module 'keyvault' in 0.002 seconds.
+DEBUG: Loaded module 'lab' in 0.001 seconds.
+DEBUG: Loaded module 'monitor' in 0.002 seconds.
+DEBUG: Loaded module 'network' in 0.010 seconds.
+DEBUG: Loaded module 'profile' in 0.001 seconds.
+DEBUG: Loaded module 'rdbms' in 0.001 seconds.
+DEBUG: Loaded module 'redis' in 0.001 seconds.
+DEBUG: Loaded module 'reservations' in 0.001 seconds.
+DEBUG: Loaded module 'resource' in 0.003 seconds.
+DEBUG: Loaded module 'role' in 0.001 seconds.
+DEBUG: Loaded module 'servicebus' in 0.002 seconds.
+DEBUG: Loaded module 'servicefabric' in 0.001 seconds.
+DEBUG: Loaded module 'sql' in 0.002 seconds.
+DEBUG: Event: CommandLoader.OnLoadCommandTable []
+DEBUG: Loaded module 'storage' in 0.011 seconds.
+DEBUG: Loaded module 'vm' in 0.005 seconds.
+DEBUG: Loaded all modules in 0.079 seconds. (note: there's always an overhead with the first module loaded)
+DEBUG: Extensions directory: '/home/djones/.azure/cliextensions'
+DEBUG: Event: CommandInvoker.OnPreCommandTableTruncate []
+DEBUG: Event: CommandInvoker.OnPostCommandTableCreate [<function add_id_parameters at 0x7f31a7c52510>]
+DEBUG: Event: CommandInvoker.OnCommandTableLoaded []
+DEBUG: Event: CommandInvoker.OnPreParseArgs [<function _documentdb_deprecate at 0x7f31a77a5488>]
+DEBUG: Event: CommandInvoker.OnPostParseArgs [<function OutputProducer.handle_output_argument at 0x7f31a87979d8>, <function CLIQuery.handle_query_parameter at 0x7f31a87b8510>, <function handler at 0x7f31a76eb6a8>]
+DEBUG: Getting management service client client_type=ComputeManagementClient
+DEBUG: attempting to read file /home/djones/.azure/accessTokens.json as utf-8-sig
+DEBUG: adal-python : 88b9b7cc-2cdf-4315-bfb8-481c6346aeb7 - Authority:Performing instance discovery: ...
+DEBUG: adal-python : 88b9b7cc-2cdf-4315-bfb8-481c6346aeb7 - Authority:Performing static instance discovery
+DEBUG: adal-python : 88b9b7cc-2cdf-4315-bfb8-481c6346aeb7 - Authority:Authority validated via static instance discovery
+INFO: adal-python : 88b9b7cc-2cdf-4315-bfb8-481c6346aeb7 - TokenRequest:Getting token from cache with refresh if necessary.
+DEBUG: adal-python : 88b9b7cc-2cdf-4315-bfb8-481c6346aeb7 - CacheDriver:finding with query keys: {'_clientId': '...', 'userId': '...'}
+DEBUG: adal-python : 88b9b7cc-2cdf-4315-bfb8-481c6346aeb7 - CacheDriver:Looking for potential cache entries: {'_clientId': '...', 'userId': '...'}
+DEBUG: adal-python : 88b9b7cc-2cdf-4315-bfb8-481c6346aeb7 - CacheDriver:Found 3 potential entries.
+DEBUG: adal-python : 88b9b7cc-2cdf-4315-bfb8-481c6346aeb7 - CacheDriver:Resource specific token found.
+DEBUG: adal-python : 88b9b7cc-2cdf-4315-bfb8-481c6346aeb7 - CacheDriver:Returning token from cache lookup, AccessTokenId: b'xc0/ygr6nLONE8cEUapcJZI08m5gU86WCKrCj7I9ZjA=', RefreshTokenId: b'Gmsc2erfW2QuOait/e9GzPCPNBLiT4g+0luNlIQ0v+E='
+DEBUG: msrest.pipeline : Configuring request: timeout=100, verify=True, cert=None
+DEBUG: msrest.pipeline : Configuring proxies: ''
+DEBUG: msrest.pipeline : Evaluate proxies against ENV settings: True
+DEBUG: msrest.pipeline : Configuring redirects: allow=True, max=30
+DEBUG: msrest.pipeline : Configuring retry: max_retries=4, backoff_factor=0.8, max_backoff=90
+DEBUG: urllib3.connectionpool : Starting new HTTPS connection (1): management.usgovcloudapi.net
+DEBUG: urllib3.connectionpool : https://management.usgovcloudapi.net:443 "GET /subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/providers/Microsoft.Compute/virtualMachines?api-version=2017-12-01 HTTP/1.1" 200 None
+DEBUG: msrest.http_logger : Request URL: 'https://management.usgovcloudapi.net/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/providers/Microsoft.Compute/virtualMachines?api-version=2017-12-01'
+DEBUG: msrest.http_logger : Request method: 'GET'
+DEBUG: msrest.http_logger : Request headers:
+DEBUG: msrest.http_logger :     'User-Agent': 'python/3.6.1 (Linux-4.4.0-130-generic-x86_64-with-debian-stretch-sid) requests/2.18.4 msrest/0.4.29 msrest_azure/0.4.29 computemanagementclient/4.0.0rc2 Azure-SDK-For-Python AZURECLI/2.0.32'
+DEBUG: msrest.http_logger :     'Accept-Encoding': 'gzip, deflate'
+DEBUG: msrest.http_logger :     'Accept': 'application/json'
+DEBUG: msrest.http_logger :     'Connection': 'keep-alive'
+DEBUG: msrest.http_logger :     'Authorization': '*****'
+DEBUG: msrest.http_logger :     'x-ms-client-request-id': 'd6717ed7-a857-11e8-88a8-9cebe84fcda3'
+DEBUG: msrest.http_logger :     'CommandName': 'vm list'
+DEBUG: msrest.http_logger :     'Content-Type': 'application/json; charset=utf-8'
+DEBUG: msrest.http_logger :     'accept-language': 'en-US'
+DEBUG: msrest.http_logger : Request body:
+DEBUG: msrest.http_logger : None
+DEBUG: msrest.http_logger : Response status: 200
+DEBUG: msrest.http_logger : Response headers:
+DEBUG: msrest.http_logger :     'Cache-Control': 'no-cache'
+DEBUG: msrest.http_logger :     'Pragma': 'no-cache'
+DEBUG: msrest.http_logger :     'Transfer-Encoding': 'chunked'
+DEBUG: msrest.http_logger :     'Content-Type': 'application/json; charset=utf-8'
+DEBUG: msrest.http_logger :     'Content-Encoding': 'gzip'
+DEBUG: msrest.http_logger :     'Expires': '-1'
+DEBUG: msrest.http_logger :     'Vary': 'Accept-Encoding'
+DEBUG: msrest.http_logger :     'x-ms-ratelimit-remaining-resource': 'Microsoft.Compute/HighCostGet3Min;137,Microsoft.Compute/HighCostGet30Min;697'
+DEBUG: msrest.http_logger :     'Strict-Transport-Security': 'max-age=31536000; includeSubDomains'
+DEBUG: msrest.http_logger :     'x-ms-served-by': '54be4930-fabf-4083-938c-4f54b76f2d1d_131733265704015824'
+DEBUG: msrest.http_logger :     'x-ms-request-id': '0df4b0b7-d1f9-40c8-9da3-4cfc78519063'
+DEBUG: msrest.http_logger :     'Server': 'Microsoft-HTTPAPI/2.0, Microsoft-HTTPAPI/2.0'
+DEBUG: msrest.http_logger :     'x-ms-ratelimit-remaining-subscription-reads': '14999'
+DEBUG: msrest.http_logger :     'x-ms-correlation-request-id': '86803c01-d1bb-4f39-9dd7-4782fed7bfb1'
+DEBUG: msrest.http_logger :     'x-ms-routing-request-id': 'USGOVIOWA:20180825T111305Z:86803c01-d1bb-4f39-9dd7-4782fed7bfb1'
+DEBUG: msrest.http_logger :     'X-Content-Type-Options': 'nosniff'
+DEBUG: msrest.http_logger :     'Date': 'Sat, 25 Aug 2018 11:13:04 GMT'
+DEBUG: msrest.http_logger : Response content:
+DEBUG: msrest.http_logger : b'{\r\n  "value": [\r\n    {\r\n      "properties": {\r\n        "vmId": "21b49e75-d35c-449f-ada4-8523c337e77e",\r\n        "hardwareProfile": {\r\n          "vmSize": "Standard_DS4_v2_Promo"\r\n        },\r\n        "storageProfile": {\r\n          "imageReference": {\r\n            "publisher": "MicrosoftRServer",\r\n            "offer": "MLServer-CentOS",\r\n            "sku": "Enterprise",\r\n            "version": "latest"\r\n          },\r\n          "osDisk": {\r\n            "osType": "Linux",\r\n            "name": "backuptest1_OsDisk_1_386908a6742046b5aa75f27773405c5c",\r\n            "createOption": "FromImage",\r\n            "caching": "ReadWrite",\r\n            "managedDisk": {\r\n              "storageAccountType": "Premium_LRS",\r\n              "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/Backup/providers/Microsoft.Compute/disks/backuptest1_OsDisk_1_386908a6742046b5aa75f27773405c5c"\r\n            },\r\n            "diskSizeGB": 30\r\n          },\r\n          "dataDisks": []\r\n        },\r\n        "osProfile": {\r\n          "computerName": "backuptest1",\r\n          "adminUsername": "jake",\r\n          "linuxConfiguration": {\r\n            "disablePasswordAuthentication": true,\r\n            "ssh": {\r\n              "publicKeys": [\r\n                {\r\n                  "path": "/home/jake/.ssh/authorized_keys",\r\n                  "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCRBXuvQBR+GXHA8wcKeXX8pd7pqMIdAWZrJGaAY/ayANT916Eyyh3jFup/azl56CeOvoiCWlqIpzfIBG2Ag6UkPfbbpEfht3MhkisF42XYTNreWL48nxFhF/3mlh7xxbCdukjR63/7IHQYbONUxOYLZN5jicf5fTkkY53/0beRvO9SBfsQALc6GITK6Vme7KTAR2vAlfxrW9JMgflyNElFA7xPiRjD24ShkPyoYfJjZ4zk4tDshnIlbV4A/VRu2/nIP97BuB0bHMZpRH1KqI+1uFMIG2JvFQsvMp1uRZJbygTB2KnushOLS4aRPw+6BqFI0UC2VhGPUscrPLljDCEh"\r\n                }\r\n              ]\r\n            }\r\n          },\r\n          "secrets": []\r\n        },\r\n        "networkProfile": {"networkInterfaces":[{"id":"/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/Backup/providers/Microsoft.Network/networkInterfaces/backuptest1398"}]},\r\n        "diagnosticsProfile": {\r\n          "bootDiagnostics": {\r\n            "enabled": true,\r\n            "storageUri": "https://backupdiag294.blob.core.usgovcloudapi.net/"\r\n          }\r\n        },\r\n        "provisioningState": "Succeeded"\r\n      },\r\n      "type": "Microsoft.Compute/virtualMachines",\r\n      "location": "usgovarizona",\r\n      "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/BACKUP/providers/Microsoft.Compute/virtualMachines/backuptest1",\r\n      "name": "backuptest1"\r\n    },\r\n    {\r\n      "properties": {\r\n        "vmId": "bf165065-eedd-45c5-a1b9-13e52c673a79",\r\n        "hardwareProfile": {\r\n          "vmSize": "Standard_A1_v2"\r\n        },\r\n        "storageProfile": {\r\n          "imageReference": {\r\n            "publisher": "RedHat",\r\n            "offer": "RHEL",\r\n            "sku": "7.4",\r\n            "version": "latest"\r\n          },\r\n          "osDisk": {\r\n            "osType": "Linux",\r\n            "name": "AppServer_OsDisk_1_c2d37c6d5dcb4edf8820a501b5711db1",\r\n            "createOption": "FromImage",\r\n            "caching": "ReadWrite",\r\n            "managedDisk": {\r\n              "storageAccountType": "Standard_LRS",\r\n              "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Compute/disks/AppServer_OsDisk_1_c2d37c6d5dcb4edf8820a501b5711db1"\r\n            },\r\n            "diskSizeGB": 32\r\n          },\r\n          "dataDisks": []\r\n        },\r\n        "osProfile": {\r\n          "computerName": "AppServer",\r\n          "adminUsername": "fnmocadmin",\r\n          "linuxConfiguration": {\r\n            "disablePasswordAuthentication": false\r\n          },\r\n          "secrets": []\r\n        },\r\n        "networkProfile": {"networkInterfaces":[{"id":"/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Network/networkInterfaces/appserver401"}]},\r\n        "provisioningState": "Succeeded"\r\n      },\r\n      "type": "Microsoft.Compute/virtualMachines",\r\n      "location": "usgovarizona",\r\n      "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CORECI/providers/Microsoft.Compute/virtualMachines/AppServer",\r\n      "name": "AppServer"\r\n    },\r\n    {\r\n      "properties": {\r\n        "vmId": "943a1710-1240-426c-af9d-c69d79d19f36",\r\n        "hardwareProfile": {\r\n          "vmSize": "Standard_A1_v2"\r\n        },\r\n        "storageProfile": {\r\n          "imageReference": {\r\n            "publisher": "RedHat",\r\n            "offer": "RHEL",\r\n            "sku": "7.2",\r\n            "version": "latest"\r\n          },\r\n          "osDisk": {\r\n            "osType": "Linux",\r\n            "name": "BastionServer_OsDisk_1_ec7c54f335b044d69153315d290d3687",\r\n            "createOption": "FromImage",\r\n            "caching": "ReadWrite",\r\n            "managedDisk": {\r\n              "storageAccountType": "Standard_LRS",\r\n              "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Compute/disks/BastionServer_OsDisk_1_ec7c54f335b044d69153315d290d3687"\r\n            },\r\n            "diskSizeGB": 32\r\n          },\r\n          "dataDisks": []\r\n        },\r\n        "osProfile": {\r\n          "computerName": "BastionServer",\r\n          "adminUsername": "fnmocadmin",\r\n          "linuxConfiguration": {\r\n            "disablePasswordAuthentication": false\r\n          },\r\n          "secrets": []\r\n        },\r\n        "networkProfile": {"networkInterfaces":[{"id":"/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Network/networkInterfaces/bastionserver20"}]},\r\n        "provisioningState": "Succeeded"\r\n      },\r\n      "type": "Microsoft.Compute/virtualMachines",\r\n      "location": "usgovarizona",\r\n      "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CORECI/providers/Microsoft.Compute/virtualMachines/BastionServer",\r\n      "name": "BastionServer"\r\n    },\r\n    {\r\n      "properties": {\r\n        "vmId": "3b54300d-d079-482b-84d1-f6805abe2fc4",\r\n        "hardwareProfile": {\r\n          "vmSize": "Standard_A1_v2"\r\n        },\r\n        "storageProfile": {\r\n          "imageReference": {\r\n            "publisher": "RedHat",\r\n            "offer": "RHEL",\r\n            "sku": "7-RAW",\r\n            "version": "latest"\r\n          },\r\n          "osDisk": {\r\n            "osType": "Linux",\r\n            "name": "DataServer_OsDisk_1_eebe1cbb1197442fa04cc5fcd30d1702",\r\n            "createOption": "FromImage",\r\n            "caching": "ReadWrite",\r\n            "managedDisk": {\r\n              "storageAccountType": "Standard_LRS",\r\n              "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Compute/disks/DataServer_OsDisk_1_eebe1cbb1197442fa04cc5fcd30d1702"\r\n            },\r\n            "diskSizeGB": 32\r\n          },\r\n          "dataDisks": []\r\n        },\r\n        "osProfile": {\r\n          "computerName": "DataServer",\r\n          "adminUsername": "fnmocadmin",\r\n          "linuxConfiguration": {\r\n            "disablePasswordAuthentication": false\r\n          },\r\n          "secrets": []\r\n        },\r\n        "networkProfile": {"networkInterfaces":[{"id":"/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Network/networkInterfaces/dataserver616"}]},\r\n        "provisioningState": "Succeeded"\r\n      },\r\n      "type": "Microsoft.Compute/virtualMachines",\r\n      "location": "usgovarizona",\r\n      "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CORECI/providers/Microsoft.Compute/virtualMachines/DataServer",\r\n      "name": "DataServer"\r\n    },\r\n    {\r\n      "properties": {\r\n        "vmId": "9da705e0-7262-471d-975d-8a8e212eafa8",\r\n        "hardwareProfile": {\r\n          "vmSize": "Standard_A1_v2"\r\n        },\r\n        "storageProfile": {\r\n          "imageReference": {\r\n            "publisher": "RedHat",\r\n            "offer": "RHEL",\r\n            "sku": "7-RAW",\r\n            "version": "latest"\r\n          },\r\n          "osDisk": {\r\n            "osType": "Linux",\r\n            "name": "WebServer_OsDisk_1_6378aa2563994ecc92a99f0888f6b823",\r\n            "createOption": "FromImage",\r\n            "caching": "ReadWrite",\r\n            "managedDisk": {\r\n              "storageAccountType": "Standard_LRS",\r\n              "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Compute/disks/WebServer_OsDisk_1_6378aa2563994ecc92a99f0888f6b823"\r\n            },\r\n            "diskSizeGB": 32\r\n          },\r\n          "dataDisks": []\r\n        },\r\n        "osProfile": {\r\n          "computerName": "WebServer",\r\n          "adminUsername": "fnmocadmin",\r\n          "linuxConfiguration": {\r\n            "disablePasswordAuthentication": false\r\n          },\r\n          "secrets": []\r\n        },\r\n        "networkProfile": {"networkInterfaces":[{"id":"/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Network/networkInterfaces/webserver453"}]},\r\n        "provisioningState": "Succeeded"\r\n      },\r\n      "type": "Microsoft.Compute/virtualMachines",\r\n      "location": "usgovarizona",\r\n      "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CORECI/providers/Microsoft.Compute/virtualMachines/WebServer",\r\n      "name": "WebServer"\r\n    },\r\n    {\r\n      "properties": {\r\n        "vmId": "bb0ed57e-555b-4eda-95dc-964d2640e9d0",\r\n        "hardwareProfile": {\r\n          "vmSize": "Standard_DS1_v2"\r\n        },\r\n        "storageProfile": {\r\n          "imageReference": {\r\n            "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/images/Centos7-cloud-init"\r\n          },\r\n          "osDisk": {\r\n            "osType": "Linux",\r\n            "name": "ci-el7-3_disk1_c7516b141e9142e8a9855e01b962439e",\r\n            "createOption": "FromImage",\r\n            "caching": "ReadWrite",\r\n            "managedDisk": {\r\n              "storageAccountType": "Standard_LRS",\r\n              "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/disks/ci-el7-3_disk1_c7516b141e9142e8a9855e01b962439e"\r\n            },\r\n            "diskSizeGB": 64\r\n          },\r\n          "dataDisks": []\r\n        },\r\n        "osProfile": {\r\n          "computerName": "ci-el7-3",\r\n          "adminUsername": "maintuser",\r\n          "linuxConfiguration": {\r\n            "disablePasswordAuthentication": true,\r\n            "ssh": {\r\n              "publicKeys": [\r\n                {\r\n                  "path": "/home/maintuser/.ssh/authorized_keys",\r\n                  "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCTI5lSKi9mjjitkutRS9JRTJEUy80N6UXV6jicNQGGLJCbhVgaaSdFLQPJn1IPHH2jwPe0zzflBoNQ5m+4L6vJBZbdrfYTqATvU3WDrzN0qW3Omr5jMFD1YipuPhlBASgslQ9DIraH+dCx0k/KLksQ3cxvhzO5QHXKTQnqCKpLVkSxoVQGPda1jsKgoVRnHm65G9yuZfpMk5x0+l7ArNQMW7FSR9euWW+Wf+ZW7VwQ2ZttrbzaC5qhfbVhUzBE6fNvnAPFBFMCra/tQk/8SrxXDBD1gkt2GuN+1BmA7sR5q5FeS4bAnfcGeil2NyKGBF9kTuz6ky9wA2YveBNcxejJ JONES.DANIEL.L.1265422345 "\r\n                }\r\n              ]\r\n            }\r\n          },\r\n          "secrets": []\r\n        },\r\n        "networkProfile": {"networkInterfaces":[{"id":"/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Network/networkInterfaces/ci-el7-3VMNic"}]},\r\n        "provisioningState": "Succeeded"\r\n      },\r\n      "type": "Microsoft.Compute/virtualMachines",\r\n      "location": "usgovarizona",\r\n      "tags": {},\r\n      "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/FOOBAR/providers/Microsoft.Compute/virtualMachines/ci-el7-3",\r\n      "name": "ci-el7-3"\r\n    },\r\n    {\r\n      "properties": {\r\n        "vmId": "24e47aed-a165-4919-9b94-5da08e557869",\r\n        "hardwareProfile": {\r\n          "vmSize": "Standard_DS1_v2"\r\n        },\r\n        "storageProfile": {\r\n          "imageReference": {\r\n            "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/images/Centos7-cloud-init"\r\n          },\r\n          "osDisk": {\r\n            "osType": "Linux",\r\n            "name": "ci-el7-4_disk1_7af8339cd9994062a84f630e2936c4fd",\r\n            "createOption": "FromImage",\r\n            "caching": "ReadWrite",\r\n            "managedDisk": {\r\n              "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/disks/ci-el7-4_disk1_7af8339cd9994062a84f630e2936c4fd"\r\n            }\r\n          },\r\n          "dataDisks": []\r\n        },\r\n        "osProfile": {\r\n          "computerName": "ci-el7-4",\r\n          "adminUsername": "maintuser",\r\n          "linuxConfiguration": {\r\n            "disablePasswordAuthentication": true,\r\n            "ssh": {\r\n              "publicKeys": [\r\n                {\r\n                  "path": "/home/maintuser/.ssh/authorized_keys",\r\n                  "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAqciloYGeYkAaFdby0bSBV5uaYZJ28w/5xeQo4XVi3qZIpOXunJqUbM0T+m8P/TjXNCSjGkrbD9hg/woTYBLONMy+mdrn1I5cJI95mVKL+gcC9GCLPTfxuajIDxV1/dSTSwjUouf0LCP5zXK7zL/wvomjRxuAcIocZGYu0Kh7Hnuw9QYrb+jG6j6j6fjmGO7KmAxC8aqww1JnX4Dw8FEn1dgVPMqOQ6Kz1c5sfuv9h23whPrt9ICUOEW6F4B8vThDX2dmTxs3tab6veVB9YV/EbtsNIGpIzwPKC9dfNUvpU2FbbhkMEuO/df0pwgAvl4GPpzLlT594uBQhV5I0EtQWQ== djones@zircon-m2.ern.nps.edu\\n"\r\n                }\r\n              ]\r\n            }\r\n          },\r\n          "secrets": []\r\n        },\r\n        "networkProfile": {"networkInterfaces":[{"id":"/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Network/networkInterfaces/ci-el7-4VMNic"}]},\r\n        "provisioningState": "Succeeded"\r\n      },\r\n      "type": "Microsoft.Compute/virtualMachines",\r\n      "location": "usgovarizona",\r\n      "tags": {},\r\n      "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/FOOBAR/providers/Microsoft.Compute/virtualMachines/ci-el7-4",\r\n      "name": "ci-el7-4"\r\n    },\r\n    {\r\n      "properties": {\r\n        "vmId": "f7e2a2dd-dad4-4dc2-8d8a-1132e8986bf0",\r\n        "hardwareProfile": {\r\n          "vmSize": "Standard_DS1_v2"\r\n        },\r\n        "storageProfile": {\r\n          "imageReference": {\r\n            "publisher": "OpenLogic",\r\n            "offer": "CentOS-LVM",\r\n            "sku": "7-LVM",\r\n            "version": "7.5.20180524"\r\n          },\r\n          "osDisk": {\r\n            "osType": "Linux",\r\n            "name": "el7-1_OsDisk_1_c73a4706901146c5bdd4d3922cb2e1ea",\r\n            "createOption": "FromImage",\r\n            "caching": "ReadWrite",\r\n            "managedDisk": {\r\n              "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/disks/el7-1_OsDisk_1_c73a4706901146c5bdd4d3922cb2e1ea"\r\n            }\r\n          },\r\n          "dataDisks": []\r\n        },\r\n        "osProfile": {\r\n          "computerName": "el7-1",\r\n          "adminUsername": "djones",\r\n          "linuxConfiguration": {\r\n            "disablePasswordAuthentication": true,\r\n            "ssh": {\r\n              "publicKeys": [\r\n                {\r\n                  "path": "/home/djones/.ssh/authorized_keys",\r\n                  "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCNPI6+as1HShE3QKA4Yx41Ez2zFwEOB/hbSQtNV1AirGZk4S3XfurwLkIFUeKX+t3N8ao+0opaXQFtlu3GKipaQ2FQ3eOcH2kTffWV87YvZi8ZsCiM9bE5bINYuMPq6hVmVoryktSX5ZJgD9yjASinmJmFpKFmLQqbJgXGx80Y7NpSdYHSwHLElxQsDWgllcPFYy1O4BTHZk6yOp3Ude8WrYaL86POM1M1iBaVdd/cfLk0AGrAnLTsiOoqBmcz2CqSkH3ODAqkdAFG2ei6TwO9dO6iqt8D3FRu0oA5FFmBKaCOsj1tpK3wEqH9pj1F9g8GYm3VZUyIPdO8xMemBmel"\r\n                }\r\n              ]\r\n            }\r\n          },\r\n          "secrets": []\r\n        },\r\n        "networkProfile": {"networkInterfaces":[{"id":"/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Network/networkInterfaces/el7-1VMNic"}]},\r\n        "provisioningState": "Succeeded"\r\n      },\r\n      "type": "Microsoft.Compute/virtualMachines",\r\n      "location": "usgovarizona",\r\n      "tags": {},\r\n      "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/FOOBAR/providers/Microsoft.Compute/virtualMachines/el7-1",\r\n      "name": "el7-1"\r\n    },\r\n    {\r\n      "properties": {\r\n        "vmId": "842fae0e-1694-4395-9d08-18a48aab360b",\r\n        "hardwareProfile": {\r\n          "vmSize": "Standard_DS1_v2"\r\n        },\r\n        "storageProfile": {\r\n          "imageReference": {\r\n            "publisher": "OpenLogic",\r\n            "offer": "CentOS-CI",\r\n            "sku": "7-CI",\r\n            "version": "7.4.20180124"\r\n          },\r\n          "osDisk": {\r\n            "osType": "Linux",\r\n            "name": "ol-ci_OsDisk_1_827e89e246dd413d89c5326ed11ef22b",\r\n            "createOption": "FromImage",\r\n            "caching": "ReadWrite",\r\n            "managedDisk": {\r\n              "storageAccountType": "Premium_LRS",\r\n              "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/disks/ol-ci_OsDisk_1_827e89e246dd413d89c5326ed11ef22b"\r\n            },\r\n            "diskSizeGB": 30\r\n          },\r\n          "dataDisks": [\r\n            {\r\n              "lun": 0,\r\n              "name": "ci-el7_disk1_bbcb3036232d4ee3aff07739867715e6",\r\n              "createOption": "Attach",\r\n              "caching": "None",\r\n              "managedDisk": {\r\n                "storageAccountType": "Standard_LRS",\r\n                "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/disks/ci-el7_disk1_bbcb3036232d4ee3aff07739867715e6"\r\n              },\r\n              "diskSizeGB": 64\r\n            }\r\n          ]\r\n        },\r\n        "osProfile": {\r\n          "computerName": "ol-ci",\r\n          "adminUsername": "djones",\r\n          "linuxConfiguration": {\r\n            "disablePasswordAuthentication": true,\r\n            "ssh": {\r\n              "publicKeys": [\r\n                {\r\n                  "path": "/home/djones/.ssh/authorized_keys",\r\n                  "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCTI5lSKi9mjjitkutRS9JRTJEUy80N6UXV6jicNQGGLJCbhVgaaSdFLQPJn1IPHH2jwPe0zzflBoNQ5m+4L6vJBZbdrfYTqATvU3WDrzN0qW3Omr5jMFD1YipuPhlBASgslQ9DIraH+dCx0k/KLksQ3cxvhzO5QHXKTQnqCKpLVkSxoVQGPda1jsKgoVRnHm65G9yuZfpMk5x0+l7ArNQMW7FSR9euWW+Wf+ZW7VwQ2ZttrbzaC5qhfbVhUzBE6fNvnAPFBFMCra/tQk/8SrxXDBD1gkt2GuN+1BmA7sR5q5FeS4bAnfcGeil2NyKGBF9kTuz6ky9wA2YveBNcxejJ JONES.DANIEL.L.1265422345 "\r\n                }\r\n              ]\r\n            }\r\n          },\r\n          "secrets": []\r\n        },\r\n        "networkProfile": {"networkInterfaces":[{"id":"/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Network/networkInterfaces/ol-ciVMNic"}]},\r\n        "provisioningState": "Succeeded"\r\n      },\r\n      "type": "Microsoft.Compute/virtualMachines",\r\n      "location": "usgovarizona",\r\n      "tags": {},\r\n      "identity": {\r\n        "type": "SystemAssigned",\r\n        "principalId": "e3ba45d9-1b0e-4f42-9105-76e0de900e60",\r\n        "tenantId": "24a80cbc-4ff2-4d77-83ae-3aeec0ed78da"\r\n      },\r\n      "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/FOOBAR/providers/Microsoft.Compute/virtualMachines/ol-ci",\r\n      "name": "ol-ci"\r\n    },\r\n    {\r\n      "properties": {\r\n        "vmId": "73b0e3a9-35b6-4df9-9bee-f5680be8ab6b",\r\n        "hardwareProfile": {\r\n          "vmSize": "Standard_DS4_v2"\r\n        },\r\n        "storageProfile": {\r\n          "imageReference": {\r\n            "publisher": "OpenLogic",\r\n            "offer": "CentOS",\r\n            "sku": "7.3",\r\n            "version": "latest"\r\n          },\r\n          "osDisk": {\r\n            "osType": "Linux",\r\n            "name": "navgemmaster_OsDisk_1_190a1aca9d714cf5bfb07bb1aebd8748",\r\n            "createOption": "FromImage",\r\n            "caching": "ReadOnly",\r\n            "managedDisk": {\r\n              "storageAccountType": "Premium_LRS",\r\n              "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/disks/navgemmaster_OsDisk_1_190a1aca9d714cf5bfb07bb1aebd8748"\r\n            },\r\n            "diskSizeGB": 30\r\n          },\r\n          "dataDisks": [\r\n            {\r\n              "lun": 0,\r\n              "name": "navgemmaster_disk2_643daa159b1e439f88ae56875018bf4b",\r\n              "createOption": "Empty",\r\n              "caching": "None",\r\n              "managedDisk": {\r\n                "storageAccountType": "Premium_LRS",\r\n                "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/disks/navgemmaster_disk2_643daa159b1e439f88ae56875018bf4b"\r\n              },\r\n              "diskSizeGB": 128\r\n            },\r\n            {\r\n              "lun": 1,\r\n              "name": "navgemmaster_disk3_1808289274b0478d87b85230e775d33c",\r\n              "createOption": "Empty",\r\n              "caching": "None",\r\n              "managedDisk": {\r\n                "storageAccountType": "Premium_LRS",\r\n                "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/disks/navgemmaster_disk3_1808289274b0478d87b85230e775d33c"\r\n              },\r\n              "diskSizeGB": 128\r\n            },\r\n            {\r\n              "lun": 2,\r\n              "name": "navgemmaster_disk4_306a57921f554057a438db394d69a1ac",\r\n              "createOption": "Empty",\r\n              "caching": "None",\r\n              "managedDisk": {\r\n                "storageAccountType": "Premium_LRS",\r\n                "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/disks/navgemmaster_disk4_306a57921f554057a438db394d69a1ac"\r\n              },\r\n              "diskSizeGB": 128\r\n            },\r\n            {\r\n              "lun": 3,\r\n              "name": "navgemmaster_disk5_dc48dfa8a28349ed80b6e54ce5e95870",\r\n              "createOption": "Empty",\r\n              "caching": "None",\r\n              "managedDisk": {\r\n                "storageAccountType": "Premium_LRS",\r\n                "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/disks/navgemmaster_disk5_dc48dfa8a28349ed80b6e54ce5e95870"\r\n              },\r\n              "diskSizeGB": 128\r\n            }\r\n          ]\r\n        },\r\n        "osProfile": {\r\n          "computerName": "navgemmaster",\r\n          "adminUsername": "djones",\r\n          "linuxConfiguration": {\r\n            "disablePasswordAuthentication": true,\r\n            "ssh": {\r\n              "publicKeys": [\r\n                {\r\n                  "path": "/home/djones/.ssh/authorized_keys",\r\n                  "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCNPI6+as1HShE3QKA4Yx41Ez2zFwEOB/hbSQtNV1AirGZk4S3XfurwLkIFUeKX+t3N8ao+0opaXQFtlu3GKipaQ2FQ3eOcH2kTffWV87YvZi8ZsCiM9bE5bINYuMPq6hVmVoryktSX5ZJgD9yjASinmJmFpKFmLQqbJgXGx80Y7NpSdYHSwHLElxQsDWgllcPFYy1O4BTHZk6yOp3Ude8WrYaL86POM1M1iBaVdd/cfLk0AGrAnLTsiOoqBmcz2CqSkH3ODAqkdAFG2ei6TwO9dO6iqt8D3FRu0oA5FFmBKaCOsj1tpK3wEqH9pj1F9g8GYm3VZUyIPdO8xMemBmel"\r\n                }\r\n              ]\r\n            }\r\n          },\r\n          "secrets": []\r\n        },\r\n        "networkProfile": {"networkInterfaces":[{"id":"/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgem/providers/Microsoft.Network/networkInterfaces/navgemmasternic"}]},\r\n        "provisioningState": "Succeeded"\r\n      },\r\n      "resources": [\r\n        {\r\n          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/virtualMachines/navgemmaster/extensions/ext"\r\n        }\r\n      ],\r\n      "type": "Microsoft.Compute/virtualMachines",\r\n      "location": "usgovarizona",\r\n      "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/virtualMachines/navgemmaster",\r\n      "name": "navgemmaster"\r\n    },\r\n    {\r\n      "properties": {\r\n        "vmId": "f6fd5c18-e786-4aae-9879-4c28c6ece515",\r\n        "hardwareProfile": {\r\n          "vmSize": "Standard_DS2_v2"\r\n        },\r\n        "storageProfile": {\r\n          "imageReference": {\r\n            "publisher": "OpenLogic",\r\n            "offer": "CentOS",\r\n            "sku": "7.4",\r\n            "version": "latest"\r\n          },\r\n          "osDisk": {\r\n            "osType": "Linux",\r\n            "name": "hpclabmaster_OsDisk_1_2798748f0bd641d28c23db09c91a5a8f",\r\n            "createOption": "FromImage",\r\n            "caching": "ReadOnly",\r\n            "managedDisk": {\r\n              "storageAccountType": "Premium_LRS",\r\n              "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgemBeeGFS/providers/Microsoft.Compute/disks/hpclabmaster_OsDisk_1_2798748f0bd641d28c23db09c91a5a8f"\r\n            },\r\n            "diskSizeGB": 30\r\n          },\r\n          "dataDisks": [\r\n            {\r\n              "lun": 0,\r\n              "name": "hpclabmaster_disk2_c89ebb478c7f4bbfa3b223a1c05d268c",\r\n              "createOption": "Empty",\r\n              "caching": "None",\r\n              "managedDisk": {\r\n                "storageAccountType": "Premium_LRS",\r\n                "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgemBeeGFS/providers/Microsoft.Compute/disks/hpclabmaster_disk2_c89ebb478c7f4bbfa3b223a1c05d268c"\r\n              },\r\n              "diskSizeGB": 128\r\n            },\r\n            {\r\n              "lun": 1,\r\n              "name": "hpclabmaster_disk3_1857a1fa5899492aaf80864d279147b6",\r\n              "createOption": "Empty",\r\n              "caching": "None",\r\n              "managedDisk": {\r\n                "storageAccountType": "Premium_LRS",\r\n                "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgemBeeGFS/providers/Microsoft.Compute/disks/hpclabmaster_disk3_1857a1fa5899492aaf80864d279147b6"\r\n              },\r\n              "diskSizeGB": 128\r\n            },\r\n            {\r\n              "lun": 2,\r\n              "name": "hpclabmaster_disk4_3715986ed7f146d2b1aa65a38f8d904d",\r\n              "createOption": "Empty",\r\n              "caching": "None",\r\n              "managedDisk": {\r\n                "storageAccountType": "Premium_LRS",\r\n                "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgemBeeGFS/providers/Microsoft.Compute/disks/hpclabmaster_disk4_3715986ed7f146d2b1aa65a38f8d904d"\r\n              },\r\n              "diskSizeGB": 128\r\n            },\r\n            {\r\n              "lun": 3,\r\n              "name": "hpclabmaster_disk5_f9874edf09bf4989bc5d869406ec9c27",\r\n              "createOption": "Empty",\r\n              "caching": "None",\r\n              "managedDisk": {\r\n                "storageAccountType": "Premium_LRS",\r\n                "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgemBeeGFS/providers/Microsoft.Compute/disks/hpclabmaster_disk5_f9874edf09bf4989bc5d869406ec9c27"\r\n              },\r\n              "diskSizeGB": 128\r\n            }\r\n          ]\r\n        },\r\n        "osProfile": {\r\n          "computerName": "hpclabmaster",\r\n          "adminUsername": "arevalo",\r\n          "linuxConfiguration": {\r\n            "disablePasswordAuthentication": true,\r\n            "ssh": {\r\n              "publicKeys": [\r\n                {\r\n                  "path": "/home/arevalo/.ssh/authorized_keys",\r\n                  "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCTm3UopRvYcQcqvwrkhxZ2dBJvzglL4wqDEnwPc4b7Rjh5iBCUd95MkhBHDxncTT8j+dGY4/98ErCzxYNEcbxYFhEhLzkIuF93mKGRr0bogOcsYYXuhZKjoIeQ+gynBax2hvgY6aIAvnCJ54YKbOTnqdvgMJiFNXWu6pJz1XrDuyGyqBDGKwGaslnaRsXk3DkG8iZrd160gQ66oGFHZtSD7ZVoDhdWfEB1fVWqg2VnqP29MArzD1wgO3y1y4s/h/yDWBrFFnE+SsM0frsLQo2ddZ8WkyyErQJpgqIHVhS8oqgxjCcWLODYhW8201vnbutC0oq34MpGekpwtCfT/Aon arevalo@navgemmaster"\r\n                }\r\n              ]\r\n            }\r\n          },\r\n          "secrets": []\r\n        },\r\n        "networkProfile": {"networkInterfaces":[{"id":"/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgemBeeGFS/providers/Microsoft.Network/networkInterfaces/hpclabmasternic"}]},\r\n        "provisioningState": "Succeeded"\r\n      },\r\n      "resources": [\r\n        {\r\n          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEMBEEGFS/providers/Microsoft.Compute/virtualMachines/hpclabmaster/extensions/ext"\r\n        }\r\n      ],\r\n      "type": "Microsoft.Compute/virtualMachines",\r\n      "location": "usgovarizona",\r\n      "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEMBEEGFS/providers/Microsoft.Compute/virtualMachines/hpclabmaster",\r\n      "name": "hpclabmaster"\r\n    }\r\n  ]\r\n}'
+DEBUG: Event: CommandInvoker.OnTransformResult [<function _resource_group_transform at 0x7f31a7bebb70>, <function _x509_from_base64_to_hex_transform at 0x7f31a7bebbf8>]
+DEBUG: Event: CommandInvoker.OnFilterResult []
+[
+  {
+    "additionalProperties": {},
+    "availabilitySet": null,
+    "diagnosticsProfile": {
+      "additionalProperties": {},
+      "bootDiagnostics": {
+        "additionalProperties": {},
+        "enabled": true,
+        "storageUri": "https://backupdiag294.blob.core.usgovcloudapi.net/"
+      }
+    },
+    "hardwareProfile": {
+      "additionalProperties": {},
+      "vmSize": "Standard_DS4_v2_Promo"
+    },
+    "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/BACKUP/providers/Microsoft.Compute/virtualMachines/backuptest1",
+    "identity": null,
+    "instanceView": null,
+    "licenseType": null,
+    "location": "usgovarizona",
+    "name": "backuptest1",
+    "networkProfile": {
+      "additionalProperties": {},
+      "networkInterfaces": [
+        {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/Backup/providers/Microsoft.Network/networkInterfaces/backuptest1398",
+          "primary": null,
+          "resourceGroup": "Backup"
+        }
+      ]
+    },
+    "osProfile": {
+      "additionalProperties": {},
+      "adminPassword": null,
+      "adminUsername": "jake",
+      "computerName": "backuptest1",
+      "customData": null,
+      "linuxConfiguration": {
+        "additionalProperties": {},
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "additionalProperties": {},
+          "publicKeys": [
+            {
+              "additionalProperties": {},
+              "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCRBXuvQBR+GXHA8wcKeXX8pd7pqMIdAWZrJGaAY/ayANT916Eyyh3jFup/azl56CeOvoiCWlqIpzfIBG2Ag6UkPfbbpEfht3MhkisF42XYTNreWL48nxFhF/3mlh7xxbCdukjR63/7IHQYbONUxOYLZN5jicf5fTkkY53/0beRvO9SBfsQALc6GITK6Vme7KTAR2vAlfxrW9JMgflyNElFA7xPiRjD24ShkPyoYfJjZ4zk4tDshnIlbV4A/VRu2/nIP97BuB0bHMZpRH1KqI+1uFMIG2JvFQsvMp1uRZJbygTB2KnushOLS4aRPw+6BqFI0UC2VhGPUscrPLljDCEh",
+              "path": "/home/jake/.ssh/authorized_keys"
+            }
+          ]
+        }
+      },
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "plan": null,
+    "provisioningState": "Succeeded",
+    "resourceGroup": "BACKUP",
+    "resources": null,
+    "storageProfile": {
+      "additionalProperties": {},
+      "dataDisks": [],
+      "imageReference": {
+        "additionalProperties": {},
+        "id": null,
+        "offer": "MLServer-CentOS",
+        "publisher": "MicrosoftRServer",
+        "sku": "Enterprise",
+        "version": "latest"
+      },
+      "osDisk": {
+        "additionalProperties": {},
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "diskSizeGb": 30,
+        "encryptionSettings": null,
+        "image": null,
+        "managedDisk": {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/Backup/providers/Microsoft.Compute/disks/backuptest1_OsDisk_1_386908a6742046b5aa75f27773405c5c",
+          "resourceGroup": "Backup",
+          "storageAccountType": "Premium_LRS"
+        },
+        "name": "backuptest1_OsDisk_1_386908a6742046b5aa75f27773405c5c",
+        "osType": "Linux",
+        "vhd": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "tags": null,
+    "type": "Microsoft.Compute/virtualMachines",
+    "vmId": "21b49e75-d35c-449f-ada4-8523c337e77e",
+    "zones": null
+  },
+  {
+    "additionalProperties": {},
+    "availabilitySet": null,
+    "diagnosticsProfile": null,
+    "hardwareProfile": {
+      "additionalProperties": {},
+      "vmSize": "Standard_A1_v2"
+    },
+    "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CORECI/providers/Microsoft.Compute/virtualMachines/AppServer",
+    "identity": null,
+    "instanceView": null,
+    "licenseType": null,
+    "location": "usgovarizona",
+    "name": "AppServer",
+    "networkProfile": {
+      "additionalProperties": {},
+      "networkInterfaces": [
+        {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Network/networkInterfaces/appserver401",
+          "primary": null,
+          "resourceGroup": "CoreCI"
+        }
+      ]
+    },
+    "osProfile": {
+      "additionalProperties": {},
+      "adminPassword": null,
+      "adminUsername": "fnmocadmin",
+      "computerName": "AppServer",
+      "customData": null,
+      "linuxConfiguration": {
+        "additionalProperties": {},
+        "disablePasswordAuthentication": false,
+        "ssh": null
+      },
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "plan": null,
+    "provisioningState": "Succeeded",
+    "resourceGroup": "CORECI",
+    "resources": null,
+    "storageProfile": {
+      "additionalProperties": {},
+      "dataDisks": [],
+      "imageReference": {
+        "additionalProperties": {},
+        "id": null,
+        "offer": "RHEL",
+        "publisher": "RedHat",
+        "sku": "7.4",
+        "version": "latest"
+      },
+      "osDisk": {
+        "additionalProperties": {},
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "diskSizeGb": 32,
+        "encryptionSettings": null,
+        "image": null,
+        "managedDisk": {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Compute/disks/AppServer_OsDisk_1_c2d37c6d5dcb4edf8820a501b5711db1",
+          "resourceGroup": "CoreCI",
+          "storageAccountType": "Standard_LRS"
+        },
+        "name": "AppServer_OsDisk_1_c2d37c6d5dcb4edf8820a501b5711db1",
+        "osType": "Linux",
+        "vhd": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "tags": null,
+    "type": "Microsoft.Compute/virtualMachines",
+    "vmId": "bf165065-eedd-45c5-a1b9-13e52c673a79",
+    "zones": null
+  },
+  {
+    "additionalProperties": {},
+    "availabilitySet": null,
+    "diagnosticsProfile": null,
+    "hardwareProfile": {
+      "additionalProperties": {},
+      "vmSize": "Standard_A1_v2"
+    },
+    "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CORECI/providers/Microsoft.Compute/virtualMachines/BastionServer",
+    "identity": null,
+    "instanceView": null,
+    "licenseType": null,
+    "location": "usgovarizona",
+    "name": "BastionServer",
+    "networkProfile": {
+      "additionalProperties": {},
+      "networkInterfaces": [
+        {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Network/networkInterfaces/bastionserver20",
+          "primary": null,
+          "resourceGroup": "CoreCI"
+        }
+      ]
+    },
+    "osProfile": {
+      "additionalProperties": {},
+      "adminPassword": null,
+      "adminUsername": "fnmocadmin",
+      "computerName": "BastionServer",
+      "customData": null,
+      "linuxConfiguration": {
+        "additionalProperties": {},
+        "disablePasswordAuthentication": false,
+        "ssh": null
+      },
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "plan": null,
+    "provisioningState": "Succeeded",
+    "resourceGroup": "CORECI",
+    "resources": null,
+    "storageProfile": {
+      "additionalProperties": {},
+      "dataDisks": [],
+      "imageReference": {
+        "additionalProperties": {},
+        "id": null,
+        "offer": "RHEL",
+        "publisher": "RedHat",
+        "sku": "7.2",
+        "version": "latest"
+      },
+      "osDisk": {
+        "additionalProperties": {},
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "diskSizeGb": 32,
+        "encryptionSettings": null,
+        "image": null,
+        "managedDisk": {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Compute/disks/BastionServer_OsDisk_1_ec7c54f335b044d69153315d290d3687",
+          "resourceGroup": "CoreCI",
+          "storageAccountType": "Standard_LRS"
+        },
+        "name": "BastionServer_OsDisk_1_ec7c54f335b044d69153315d290d3687",
+        "osType": "Linux",
+        "vhd": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "tags": null,
+    "type": "Microsoft.Compute/virtualMachines",
+    "vmId": "943a1710-1240-426c-af9d-c69d79d19f36",
+    "zones": null
+  },
+  {
+    "additionalProperties": {},
+    "availabilitySet": null,
+    "diagnosticsProfile": null,
+    "hardwareProfile": {
+      "additionalProperties": {},
+      "vmSize": "Standard_A1_v2"
+    },
+    "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CORECI/providers/Microsoft.Compute/virtualMachines/DataServer",
+    "identity": null,
+    "instanceView": null,
+    "licenseType": null,
+    "location": "usgovarizona",
+    "name": "DataServer",
+    "networkProfile": {
+      "additionalProperties": {},
+      "networkInterfaces": [
+        {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Network/networkInterfaces/dataserver616",
+          "primary": null,
+          "resourceGroup": "CoreCI"
+        }
+      ]
+    },
+    "osProfile": {
+      "additionalProperties": {},
+      "adminPassword": null,
+      "adminUsername": "fnmocadmin",
+      "computerName": "DataServer",
+      "customData": null,
+      "linuxConfiguration": {
+        "additionalProperties": {},
+        "disablePasswordAuthentication": false,
+        "ssh": null
+      },
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "plan": null,
+    "provisioningState": "Succeeded",
+    "resourceGroup": "CORECI",
+    "resources": null,
+    "storageProfile": {
+      "additionalProperties": {},
+      "dataDisks": [],
+      "imageReference": {
+        "additionalProperties": {},
+        "id": null,
+        "offer": "RHEL",
+        "publisher": "RedHat",
+        "sku": "7-RAW",
+        "version": "latest"
+      },
+      "osDisk": {
+        "additionalProperties": {},
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "diskSizeGb": 32,
+        "encryptionSettings": null,
+        "image": null,
+        "managedDisk": {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Compute/disks/DataServer_OsDisk_1_eebe1cbb1197442fa04cc5fcd30d1702",
+          "resourceGroup": "CoreCI",
+          "storageAccountType": "Standard_LRS"
+        },
+        "name": "DataServer_OsDisk_1_eebe1cbb1197442fa04cc5fcd30d1702",
+        "osType": "Linux",
+        "vhd": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "tags": null,
+    "type": "Microsoft.Compute/virtualMachines",
+    "vmId": "3b54300d-d079-482b-84d1-f6805abe2fc4",
+    "zones": null
+  },
+  {
+    "additionalProperties": {},
+    "availabilitySet": null,
+    "diagnosticsProfile": null,
+    "hardwareProfile": {
+      "additionalProperties": {},
+      "vmSize": "Standard_A1_v2"
+    },
+    "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CORECI/providers/Microsoft.Compute/virtualMachines/WebServer",
+    "identity": null,
+    "instanceView": null,
+    "licenseType": null,
+    "location": "usgovarizona",
+    "name": "WebServer",
+    "networkProfile": {
+      "additionalProperties": {},
+      "networkInterfaces": [
+        {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Network/networkInterfaces/webserver453",
+          "primary": null,
+          "resourceGroup": "CoreCI"
+        }
+      ]
+    },
+    "osProfile": {
+      "additionalProperties": {},
+      "adminPassword": null,
+      "adminUsername": "fnmocadmin",
+      "computerName": "WebServer",
+      "customData": null,
+      "linuxConfiguration": {
+        "additionalProperties": {},
+        "disablePasswordAuthentication": false,
+        "ssh": null
+      },
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "plan": null,
+    "provisioningState": "Succeeded",
+    "resourceGroup": "CORECI",
+    "resources": null,
+    "storageProfile": {
+      "additionalProperties": {},
+      "dataDisks": [],
+      "imageReference": {
+        "additionalProperties": {},
+        "id": null,
+        "offer": "RHEL",
+        "publisher": "RedHat",
+        "sku": "7-RAW",
+        "version": "latest"
+      },
+      "osDisk": {
+        "additionalProperties": {},
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "diskSizeGb": 32,
+        "encryptionSettings": null,
+        "image": null,
+        "managedDisk": {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/CoreCI/providers/Microsoft.Compute/disks/WebServer_OsDisk_1_6378aa2563994ecc92a99f0888f6b823",
+          "resourceGroup": "CoreCI",
+          "storageAccountType": "Standard_LRS"
+        },
+        "name": "WebServer_OsDisk_1_6378aa2563994ecc92a99f0888f6b823",
+        "osType": "Linux",
+        "vhd": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "tags": null,
+    "type": "Microsoft.Compute/virtualMachines",
+    "vmId": "9da705e0-7262-471d-975d-8a8e212eafa8",
+    "zones": null
+  },
+  {
+    "additionalProperties": {},
+    "availabilitySet": null,
+    "diagnosticsProfile": null,
+    "hardwareProfile": {
+      "additionalProperties": {},
+      "vmSize": "Standard_DS1_v2"
+    },
+    "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/FOOBAR/providers/Microsoft.Compute/virtualMachines/ci-el7-3",
+    "identity": null,
+    "instanceView": null,
+    "licenseType": null,
+    "location": "usgovarizona",
+    "name": "ci-el7-3",
+    "networkProfile": {
+      "additionalProperties": {},
+      "networkInterfaces": [
+        {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Network/networkInterfaces/ci-el7-3VMNic",
+          "primary": null,
+          "resourceGroup": "foobar"
+        }
+      ]
+    },
+    "osProfile": {
+      "additionalProperties": {},
+      "adminPassword": null,
+      "adminUsername": "maintuser",
+      "computerName": "ci-el7-3",
+      "customData": null,
+      "linuxConfiguration": {
+        "additionalProperties": {},
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "additionalProperties": {},
+          "publicKeys": [
+            {
+              "additionalProperties": {},
+              "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCTI5lSKi9mjjitkutRS9JRTJEUy80N6UXV6jicNQGGLJCbhVgaaSdFLQPJn1IPHH2jwPe0zzflBoNQ5m+4L6vJBZbdrfYTqATvU3WDrzN0qW3Omr5jMFD1YipuPhlBASgslQ9DIraH+dCx0k/KLksQ3cxvhzO5QHXKTQnqCKpLVkSxoVQGPda1jsKgoVRnHm65G9yuZfpMk5x0+l7ArNQMW7FSR9euWW+Wf+ZW7VwQ2ZttrbzaC5qhfbVhUzBE6fNvnAPFBFMCra/tQk/8SrxXDBD1gkt2GuN+1BmA7sR5q5FeS4bAnfcGeil2NyKGBF9kTuz6ky9wA2YveBNcxejJ JONES.DANIEL.L.1265422345 ",
+              "path": "/home/maintuser/.ssh/authorized_keys"
+            }
+          ]
+        }
+      },
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "plan": null,
+    "provisioningState": "Succeeded",
+    "resourceGroup": "FOOBAR",
+    "resources": null,
+    "storageProfile": {
+      "additionalProperties": {},
+      "dataDisks": [],
+      "imageReference": {
+        "additionalProperties": {},
+        "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/images/Centos7-cloud-init",
+        "offer": null,
+        "publisher": null,
+        "resourceGroup": "foobar",
+        "sku": null,
+        "version": null
+      },
+      "osDisk": {
+        "additionalProperties": {},
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "diskSizeGb": 64,
+        "encryptionSettings": null,
+        "image": null,
+        "managedDisk": {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/disks/ci-el7-3_disk1_c7516b141e9142e8a9855e01b962439e",
+          "resourceGroup": "foobar",
+          "storageAccountType": "Standard_LRS"
+        },
+        "name": "ci-el7-3_disk1_c7516b141e9142e8a9855e01b962439e",
+        "osType": "Linux",
+        "vhd": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "tags": {},
+    "type": "Microsoft.Compute/virtualMachines",
+    "vmId": "bb0ed57e-555b-4eda-95dc-964d2640e9d0",
+    "zones": null
+  },
+  {
+    "additionalProperties": {},
+    "availabilitySet": null,
+    "diagnosticsProfile": null,
+    "hardwareProfile": {
+      "additionalProperties": {},
+      "vmSize": "Standard_DS1_v2"
+    },
+    "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/FOOBAR/providers/Microsoft.Compute/virtualMachines/ci-el7-4",
+    "identity": null,
+    "instanceView": null,
+    "licenseType": null,
+    "location": "usgovarizona",
+    "name": "ci-el7-4",
+    "networkProfile": {
+      "additionalProperties": {},
+      "networkInterfaces": [
+        {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Network/networkInterfaces/ci-el7-4VMNic",
+          "primary": null,
+          "resourceGroup": "foobar"
+        }
+      ]
+    },
+    "osProfile": {
+      "additionalProperties": {},
+      "adminPassword": null,
+      "adminUsername": "maintuser",
+      "computerName": "ci-el7-4",
+      "customData": null,
+      "linuxConfiguration": {
+        "additionalProperties": {},
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "additionalProperties": {},
+          "publicKeys": [
+            {
+              "additionalProperties": {},
+              "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAqciloYGeYkAaFdby0bSBV5uaYZJ28w/5xeQo4XVi3qZIpOXunJqUbM0T+m8P/TjXNCSjGkrbD9hg/woTYBLONMy+mdrn1I5cJI95mVKL+gcC9GCLPTfxuajIDxV1/dSTSwjUouf0LCP5zXK7zL/wvomjRxuAcIocZGYu0Kh7Hnuw9QYrb+jG6j6j6fjmGO7KmAxC8aqww1JnX4Dw8FEn1dgVPMqOQ6Kz1c5sfuv9h23whPrt9ICUOEW6F4B8vThDX2dmTxs3tab6veVB9YV/EbtsNIGpIzwPKC9dfNUvpU2FbbhkMEuO/df0pwgAvl4GPpzLlT594uBQhV5I0EtQWQ== djones@zircon-m2.ern.nps.edu\n",
+              "path": "/home/maintuser/.ssh/authorized_keys"
+            }
+          ]
+        }
+      },
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "plan": null,
+    "provisioningState": "Succeeded",
+    "resourceGroup": "FOOBAR",
+    "resources": null,
+    "storageProfile": {
+      "additionalProperties": {},
+      "dataDisks": [],
+      "imageReference": {
+        "additionalProperties": {},
+        "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/images/Centos7-cloud-init",
+        "offer": null,
+        "publisher": null,
+        "resourceGroup": "foobar",
+        "sku": null,
+        "version": null
+      },
+      "osDisk": {
+        "additionalProperties": {},
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "diskSizeGb": null,
+        "encryptionSettings": null,
+        "image": null,
+        "managedDisk": {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/disks/ci-el7-4_disk1_7af8339cd9994062a84f630e2936c4fd",
+          "resourceGroup": "foobar",
+          "storageAccountType": null
+        },
+        "name": "ci-el7-4_disk1_7af8339cd9994062a84f630e2936c4fd",
+        "osType": "Linux",
+        "vhd": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "tags": {},
+    "type": "Microsoft.Compute/virtualMachines",
+    "vmId": "24e47aed-a165-4919-9b94-5da08e557869",
+    "zones": null
+  },
+  {
+    "additionalProperties": {},
+    "availabilitySet": null,
+    "diagnosticsProfile": null,
+    "hardwareProfile": {
+      "additionalProperties": {},
+      "vmSize": "Standard_DS1_v2"
+    },
+    "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/FOOBAR/providers/Microsoft.Compute/virtualMachines/el7-1",
+    "identity": null,
+    "instanceView": null,
+    "licenseType": null,
+    "location": "usgovarizona",
+    "name": "el7-1",
+    "networkProfile": {
+      "additionalProperties": {},
+      "networkInterfaces": [
+        {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Network/networkInterfaces/el7-1VMNic",
+          "primary": null,
+          "resourceGroup": "foobar"
+        }
+      ]
+    },
+    "osProfile": {
+      "additionalProperties": {},
+      "adminPassword": null,
+      "adminUsername": "djones",
+      "computerName": "el7-1",
+      "customData": null,
+      "linuxConfiguration": {
+        "additionalProperties": {},
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "additionalProperties": {},
+          "publicKeys": [
+            {
+              "additionalProperties": {},
+              "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCNPI6+as1HShE3QKA4Yx41Ez2zFwEOB/hbSQtNV1AirGZk4S3XfurwLkIFUeKX+t3N8ao+0opaXQFtlu3GKipaQ2FQ3eOcH2kTffWV87YvZi8ZsCiM9bE5bINYuMPq6hVmVoryktSX5ZJgD9yjASinmJmFpKFmLQqbJgXGx80Y7NpSdYHSwHLElxQsDWgllcPFYy1O4BTHZk6yOp3Ude8WrYaL86POM1M1iBaVdd/cfLk0AGrAnLTsiOoqBmcz2CqSkH3ODAqkdAFG2ei6TwO9dO6iqt8D3FRu0oA5FFmBKaCOsj1tpK3wEqH9pj1F9g8GYm3VZUyIPdO8xMemBmel",
+              "path": "/home/djones/.ssh/authorized_keys"
+            }
+          ]
+        }
+      },
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "plan": null,
+    "provisioningState": "Succeeded",
+    "resourceGroup": "FOOBAR",
+    "resources": null,
+    "storageProfile": {
+      "additionalProperties": {},
+      "dataDisks": [],
+      "imageReference": {
+        "additionalProperties": {},
+        "id": null,
+        "offer": "CentOS-LVM",
+        "publisher": "OpenLogic",
+        "sku": "7-LVM",
+        "version": "7.5.20180524"
+      },
+      "osDisk": {
+        "additionalProperties": {},
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "diskSizeGb": null,
+        "encryptionSettings": null,
+        "image": null,
+        "managedDisk": {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/disks/el7-1_OsDisk_1_c73a4706901146c5bdd4d3922cb2e1ea",
+          "resourceGroup": "foobar",
+          "storageAccountType": null
+        },
+        "name": "el7-1_OsDisk_1_c73a4706901146c5bdd4d3922cb2e1ea",
+        "osType": "Linux",
+        "vhd": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "tags": {},
+    "type": "Microsoft.Compute/virtualMachines",
+    "vmId": "f7e2a2dd-dad4-4dc2-8d8a-1132e8986bf0",
+    "zones": null
+  },
+  {
+    "additionalProperties": {},
+    "availabilitySet": null,
+    "diagnosticsProfile": null,
+    "hardwareProfile": {
+      "additionalProperties": {},
+      "vmSize": "Standard_DS1_v2"
+    },
+    "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/FOOBAR/providers/Microsoft.Compute/virtualMachines/ol-ci",
+    "identity": {
+      "additionalProperties": {},
+      "identityIds": null,
+      "principalId": "e3ba45d9-1b0e-4f42-9105-76e0de900e60",
+      "tenantId": "24a80cbc-4ff2-4d77-83ae-3aeec0ed78da",
+      "type": "SystemAssigned"
+    },
+    "instanceView": null,
+    "licenseType": null,
+    "location": "usgovarizona",
+    "name": "ol-ci",
+    "networkProfile": {
+      "additionalProperties": {},
+      "networkInterfaces": [
+        {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Network/networkInterfaces/ol-ciVMNic",
+          "primary": null,
+          "resourceGroup": "foobar"
+        }
+      ]
+    },
+    "osProfile": {
+      "additionalProperties": {},
+      "adminPassword": null,
+      "adminUsername": "djones",
+      "computerName": "ol-ci",
+      "customData": null,
+      "linuxConfiguration": {
+        "additionalProperties": {},
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "additionalProperties": {},
+          "publicKeys": [
+            {
+              "additionalProperties": {},
+              "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCTI5lSKi9mjjitkutRS9JRTJEUy80N6UXV6jicNQGGLJCbhVgaaSdFLQPJn1IPHH2jwPe0zzflBoNQ5m+4L6vJBZbdrfYTqATvU3WDrzN0qW3Omr5jMFD1YipuPhlBASgslQ9DIraH+dCx0k/KLksQ3cxvhzO5QHXKTQnqCKpLVkSxoVQGPda1jsKgoVRnHm65G9yuZfpMk5x0+l7ArNQMW7FSR9euWW+Wf+ZW7VwQ2ZttrbzaC5qhfbVhUzBE6fNvnAPFBFMCra/tQk/8SrxXDBD1gkt2GuN+1BmA7sR5q5FeS4bAnfcGeil2NyKGBF9kTuz6ky9wA2YveBNcxejJ JONES.DANIEL.L.1265422345 ",
+              "path": "/home/djones/.ssh/authorized_keys"
+            }
+          ]
+        }
+      },
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "plan": null,
+    "provisioningState": "Succeeded",
+    "resourceGroup": "FOOBAR",
+    "resources": null,
+    "storageProfile": {
+      "additionalProperties": {},
+      "dataDisks": [
+        {
+          "additionalProperties": {},
+          "caching": "None",
+          "createOption": "Attach",
+          "diskSizeGb": 64,
+          "image": null,
+          "lun": 0,
+          "managedDisk": {
+            "additionalProperties": {},
+            "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/disks/ci-el7_disk1_bbcb3036232d4ee3aff07739867715e6",
+            "resourceGroup": "foobar",
+            "storageAccountType": "Standard_LRS"
+          },
+          "name": "ci-el7_disk1_bbcb3036232d4ee3aff07739867715e6",
+          "vhd": null,
+          "writeAcceleratorEnabled": null
+        }
+      ],
+      "imageReference": {
+        "additionalProperties": {},
+        "id": null,
+        "offer": "CentOS-CI",
+        "publisher": "OpenLogic",
+        "sku": "7-CI",
+        "version": "7.4.20180124"
+      },
+      "osDisk": {
+        "additionalProperties": {},
+        "caching": "ReadWrite",
+        "createOption": "FromImage",
+        "diskSizeGb": 30,
+        "encryptionSettings": null,
+        "image": null,
+        "managedDisk": {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/foobar/providers/Microsoft.Compute/disks/ol-ci_OsDisk_1_827e89e246dd413d89c5326ed11ef22b",
+          "resourceGroup": "foobar",
+          "storageAccountType": "Premium_LRS"
+        },
+        "name": "ol-ci_OsDisk_1_827e89e246dd413d89c5326ed11ef22b",
+        "osType": "Linux",
+        "vhd": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "tags": {},
+    "type": "Microsoft.Compute/virtualMachines",
+    "vmId": "842fae0e-1694-4395-9d08-18a48aab360b",
+    "zones": null
+  },
+  {
+    "additionalProperties": {},
+    "availabilitySet": null,
+    "diagnosticsProfile": null,
+    "hardwareProfile": {
+      "additionalProperties": {},
+      "vmSize": "Standard_DS4_v2"
+    },
+    "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/virtualMachines/navgemmaster",
+    "identity": null,
+    "instanceView": null,
+    "licenseType": null,
+    "location": "usgovarizona",
+    "name": "navgemmaster",
+    "networkProfile": {
+      "additionalProperties": {},
+      "networkInterfaces": [
+        {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgem/providers/Microsoft.Network/networkInterfaces/navgemmasternic",
+          "primary": null,
+          "resourceGroup": "navgem"
+        }
+      ]
+    },
+    "osProfile": {
+      "additionalProperties": {},
+      "adminPassword": null,
+      "adminUsername": "djones",
+      "computerName": "navgemmaster",
+      "customData": null,
+      "linuxConfiguration": {
+        "additionalProperties": {},
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "additionalProperties": {},
+          "publicKeys": [
+            {
+              "additionalProperties": {},
+              "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCNPI6+as1HShE3QKA4Yx41Ez2zFwEOB/hbSQtNV1AirGZk4S3XfurwLkIFUeKX+t3N8ao+0opaXQFtlu3GKipaQ2FQ3eOcH2kTffWV87YvZi8ZsCiM9bE5bINYuMPq6hVmVoryktSX5ZJgD9yjASinmJmFpKFmLQqbJgXGx80Y7NpSdYHSwHLElxQsDWgllcPFYy1O4BTHZk6yOp3Ude8WrYaL86POM1M1iBaVdd/cfLk0AGrAnLTsiOoqBmcz2CqSkH3ODAqkdAFG2ei6TwO9dO6iqt8D3FRu0oA5FFmBKaCOsj1tpK3wEqH9pj1F9g8GYm3VZUyIPdO8xMemBmel",
+              "path": "/home/djones/.ssh/authorized_keys"
+            }
+          ]
+        }
+      },
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "plan": null,
+    "provisioningState": "Succeeded",
+    "resourceGroup": "NAVGEM",
+    "resources": [
+      {
+        "additionalProperties": {},
+        "autoUpgradeMinorVersion": null,
+        "forceUpdateTag": null,
+        "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/virtualMachines/navgemmaster/extensions/ext",
+        "instanceView": null,
+        "location": null,
+        "name": null,
+        "protectedSettings": null,
+        "provisioningState": null,
+        "publisher": null,
+        "resourceGroup": "NAVGEM",
+        "settings": null,
+        "tags": null,
+        "type": null,
+        "typeHandlerVersion": null,
+        "virtualMachineExtensionType": null
+      }
+    ],
+    "storageProfile": {
+      "additionalProperties": {},
+      "dataDisks": [
+        {
+          "additionalProperties": {},
+          "caching": "None",
+          "createOption": "Empty",
+          "diskSizeGb": 128,
+          "image": null,
+          "lun": 0,
+          "managedDisk": {
+            "additionalProperties": {},
+            "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/disks/navgemmaster_disk2_643daa159b1e439f88ae56875018bf4b",
+            "resourceGroup": "NAVGEM",
+            "storageAccountType": "Premium_LRS"
+          },
+          "name": "navgemmaster_disk2_643daa159b1e439f88ae56875018bf4b",
+          "vhd": null,
+          "writeAcceleratorEnabled": null
+        },
+        {
+          "additionalProperties": {},
+          "caching": "None",
+          "createOption": "Empty",
+          "diskSizeGb": 128,
+          "image": null,
+          "lun": 1,
+          "managedDisk": {
+            "additionalProperties": {},
+            "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/disks/navgemmaster_disk3_1808289274b0478d87b85230e775d33c",
+            "resourceGroup": "NAVGEM",
+            "storageAccountType": "Premium_LRS"
+          },
+          "name": "navgemmaster_disk3_1808289274b0478d87b85230e775d33c",
+          "vhd": null,
+          "writeAcceleratorEnabled": null
+        },
+        {
+          "additionalProperties": {},
+          "caching": "None",
+          "createOption": "Empty",
+          "diskSizeGb": 128,
+          "image": null,
+          "lun": 2,
+          "managedDisk": {
+            "additionalProperties": {},
+            "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/disks/navgemmaster_disk4_306a57921f554057a438db394d69a1ac",
+            "resourceGroup": "NAVGEM",
+            "storageAccountType": "Premium_LRS"
+          },
+          "name": "navgemmaster_disk4_306a57921f554057a438db394d69a1ac",
+          "vhd": null,
+          "writeAcceleratorEnabled": null
+        },
+        {
+          "additionalProperties": {},
+          "caching": "None",
+          "createOption": "Empty",
+          "diskSizeGb": 128,
+          "image": null,
+          "lun": 3,
+          "managedDisk": {
+            "additionalProperties": {},
+            "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/disks/navgemmaster_disk5_dc48dfa8a28349ed80b6e54ce5e95870",
+            "resourceGroup": "NAVGEM",
+            "storageAccountType": "Premium_LRS"
+          },
+          "name": "navgemmaster_disk5_dc48dfa8a28349ed80b6e54ce5e95870",
+          "vhd": null,
+          "writeAcceleratorEnabled": null
+        }
+      ],
+      "imageReference": {
+        "additionalProperties": {},
+        "id": null,
+        "offer": "CentOS",
+        "publisher": "OpenLogic",
+        "sku": "7.3",
+        "version": "latest"
+      },
+      "osDisk": {
+        "additionalProperties": {},
+        "caching": "ReadOnly",
+        "createOption": "FromImage",
+        "diskSizeGb": 30,
+        "encryptionSettings": null,
+        "image": null,
+        "managedDisk": {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEM/providers/Microsoft.Compute/disks/navgemmaster_OsDisk_1_190a1aca9d714cf5bfb07bb1aebd8748",
+          "resourceGroup": "NAVGEM",
+          "storageAccountType": "Premium_LRS"
+        },
+        "name": "navgemmaster_OsDisk_1_190a1aca9d714cf5bfb07bb1aebd8748",
+        "osType": "Linux",
+        "vhd": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "tags": null,
+    "type": "Microsoft.Compute/virtualMachines",
+    "vmId": "73b0e3a9-35b6-4df9-9bee-f5680be8ab6b",
+    "zones": null
+  },
+  {
+    "additionalProperties": {},
+    "availabilitySet": null,
+    "diagnosticsProfile": null,
+    "hardwareProfile": {
+      "additionalProperties": {},
+      "vmSize": "Standard_DS2_v2"
+    },
+    "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEMBEEGFS/providers/Microsoft.Compute/virtualMachines/hpclabmaster",
+    "identity": null,
+    "instanceView": null,
+    "licenseType": null,
+    "location": "usgovarizona",
+    "name": "hpclabmaster",
+    "networkProfile": {
+      "additionalProperties": {},
+      "networkInterfaces": [
+        {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgemBeeGFS/providers/Microsoft.Network/networkInterfaces/hpclabmasternic",
+          "primary": null,
+          "resourceGroup": "navgemBeeGFS"
+        }
+      ]
+    },
+    "osProfile": {
+      "additionalProperties": {},
+      "adminPassword": null,
+      "adminUsername": "arevalo",
+      "computerName": "hpclabmaster",
+      "customData": null,
+      "linuxConfiguration": {
+        "additionalProperties": {},
+        "disablePasswordAuthentication": true,
+        "ssh": {
+          "additionalProperties": {},
+          "publicKeys": [
+            {
+              "additionalProperties": {},
+              "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCTm3UopRvYcQcqvwrkhxZ2dBJvzglL4wqDEnwPc4b7Rjh5iBCUd95MkhBHDxncTT8j+dGY4/98ErCzxYNEcbxYFhEhLzkIuF93mKGRr0bogOcsYYXuhZKjoIeQ+gynBax2hvgY6aIAvnCJ54YKbOTnqdvgMJiFNXWu6pJz1XrDuyGyqBDGKwGaslnaRsXk3DkG8iZrd160gQ66oGFHZtSD7ZVoDhdWfEB1fVWqg2VnqP29MArzD1wgO3y1y4s/h/yDWBrFFnE+SsM0frsLQo2ddZ8WkyyErQJpgqIHVhS8oqgxjCcWLODYhW8201vnbutC0oq34MpGekpwtCfT/Aon arevalo@navgemmaster",
+              "path": "/home/arevalo/.ssh/authorized_keys"
+            }
+          ]
+        }
+      },
+      "secrets": [],
+      "windowsConfiguration": null
+    },
+    "plan": null,
+    "provisioningState": "Succeeded",
+    "resourceGroup": "NAVGEMBEEGFS",
+    "resources": [
+      {
+        "additionalProperties": {},
+        "autoUpgradeMinorVersion": null,
+        "forceUpdateTag": null,
+        "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/NAVGEMBEEGFS/providers/Microsoft.Compute/virtualMachines/hpclabmaster/extensions/ext",
+        "instanceView": null,
+        "location": null,
+        "name": null,
+        "protectedSettings": null,
+        "provisioningState": null,
+        "publisher": null,
+        "resourceGroup": "NAVGEMBEEGFS",
+        "settings": null,
+        "tags": null,
+        "type": null,
+        "typeHandlerVersion": null,
+        "virtualMachineExtensionType": null
+      }
+    ],
+    "storageProfile": {
+      "additionalProperties": {},
+      "dataDisks": [
+        {
+          "additionalProperties": {},
+          "caching": "None",
+          "createOption": "Empty",
+          "diskSizeGb": 128,
+          "image": null,
+          "lun": 0,
+          "managedDisk": {
+            "additionalProperties": {},
+            "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgemBeeGFS/providers/Microsoft.Compute/disks/hpclabmaster_disk2_c89ebb478c7f4bbfa3b223a1c05d268c",
+            "resourceGroup": "navgemBeeGFS",
+            "storageAccountType": "Premium_LRS"
+          },
+          "name": "hpclabmaster_disk2_c89ebb478c7f4bbfa3b223a1c05d268c",
+          "vhd": null,
+          "writeAcceleratorEnabled": null
+        },
+        {
+          "additionalProperties": {},
+          "caching": "None",
+          "createOption": "Empty",
+          "diskSizeGb": 128,
+          "image": null,
+          "lun": 1,
+          "managedDisk": {
+            "additionalProperties": {},
+            "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgemBeeGFS/providers/Microsoft.Compute/disks/hpclabmaster_disk3_1857a1fa5899492aaf80864d279147b6",
+            "resourceGroup": "navgemBeeGFS",
+            "storageAccountType": "Premium_LRS"
+          },
+          "name": "hpclabmaster_disk3_1857a1fa5899492aaf80864d279147b6",
+          "vhd": null,
+          "writeAcceleratorEnabled": null
+        },
+        {
+          "additionalProperties": {},
+          "caching": "None",
+          "createOption": "Empty",
+          "diskSizeGb": 128,
+          "image": null,
+          "lun": 2,
+          "managedDisk": {
+            "additionalProperties": {},
+            "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgemBeeGFS/providers/Microsoft.Compute/disks/hpclabmaster_disk4_3715986ed7f146d2b1aa65a38f8d904d",
+            "resourceGroup": "navgemBeeGFS",
+            "storageAccountType": "Premium_LRS"
+          },
+          "name": "hpclabmaster_disk4_3715986ed7f146d2b1aa65a38f8d904d",
+          "vhd": null,
+          "writeAcceleratorEnabled": null
+        },
+        {
+          "additionalProperties": {},
+          "caching": "None",
+          "createOption": "Empty",
+          "diskSizeGb": 128,
+          "image": null,
+          "lun": 3,
+          "managedDisk": {
+            "additionalProperties": {},
+            "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgemBeeGFS/providers/Microsoft.Compute/disks/hpclabmaster_disk5_f9874edf09bf4989bc5d869406ec9c27",
+            "resourceGroup": "navgemBeeGFS",
+            "storageAccountType": "Premium_LRS"
+          },
+          "name": "hpclabmaster_disk5_f9874edf09bf4989bc5d869406ec9c27",
+          "vhd": null,
+          "writeAcceleratorEnabled": null
+        }
+      ],
+      "imageReference": {
+        "additionalProperties": {},
+        "id": null,
+        "offer": "CentOS",
+        "publisher": "OpenLogic",
+        "sku": "7.4",
+        "version": "latest"
+      },
+      "osDisk": {
+        "additionalProperties": {},
+        "caching": "ReadOnly",
+        "createOption": "FromImage",
+        "diskSizeGb": 30,
+        "encryptionSettings": null,
+        "image": null,
+        "managedDisk": {
+          "additionalProperties": {},
+          "id": "/subscriptions/b156ff74-abbe-49c8-bc92-b80e8a7bad23/resourceGroups/navgemBeeGFS/providers/Microsoft.Compute/disks/hpclabmaster_OsDisk_1_2798748f0bd641d28c23db09c91a5a8f",
+          "resourceGroup": "navgemBeeGFS",
+          "storageAccountType": "Premium_LRS"
+        },
+        "name": "hpclabmaster_OsDisk_1_2798748f0bd641d28c23db09c91a5a8f",
+        "osType": "Linux",
+        "vhd": null,
+        "writeAcceleratorEnabled": null
+      }
+    },
+    "tags": null,
+    "type": "Microsoft.Compute/virtualMachines",
+    "vmId": "f6fd5c18-e786-4aae-9879-4c28c6ece515",
+    "zones": null
+  }
+]
+DEBUG: Event: Cli.PostExecute []
