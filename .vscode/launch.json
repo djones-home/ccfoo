@@ -43,7 +43,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/bin/ccfoo.js"
+            "program": "${workspaceFolder}/bin/ccfoo.js", "args": ["-h"]
         }
     ]
 }

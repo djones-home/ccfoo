@@ -7,11 +7,14 @@ const { incVerbose } = require('../lib/common')
 const cfg = require('../lib/settings')
 
 async function main() {
+  // cfg.load looks for a -p or --profile option, now, before commander kicks in.
   const config = await cfg.load()
 
   var program = require('commander') 
    .version(package.version)
    .option(`-n --Name <${subject}Name>`, `Specify ${subject} name`)
+   .option(`-p --profile <settingsKeyName>`, `Specify ${subject} name`, profileName)
+
    .option(`-u --unit <regexp-filter>`, 'RegExp filter on Id')
    .option('-v, --verbose [1]', 'Verbose log level', incVerbose)
    .option('-t --ttl <seconds>', 'Cache  Time-To-Live ', config.ttl || 600)
