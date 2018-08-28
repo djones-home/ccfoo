@@ -13,8 +13,7 @@ async function main() {
   var program = require('commander') 
    .version(package.version)
    .option(`-n --Name <${subject}Name>`, `Specify ${subject} name`)
-   .option(`-p --profile <settingsKeyName>`, `Specify ${subject} name`, profileName)
-
+   .option(`-p --profile <settingsKeyName>`, `Specify ${subject} name`, config.profileName)
    .option(`-u --unit <regexp-filter>`, 'RegExp filter on Id')
    .option('-v, --verbose [1]', 'Verbose log level', incVerbose)
    .option('-t --ttl <seconds>', 'Cache  Time-To-Live ', config.ttl || 600)
