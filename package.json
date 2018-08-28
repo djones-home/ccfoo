@@ -2,8 +2,9 @@
   "name": "ccfoo",
   "version": "1.0.0",
   "description": "Just like Foo is a nonsense place-holder word,  this is just a placeholder for Cloud Crud Facade interface WIP",
-  "main": "index.js",
+  "main": "./bin/ccfoo.js",
   "scripts": {
+    "start": "node ./bin/ccfoo.js",
     "test": "testfoo"
   },
   "bin": {
