@@ -1,9 +1,10 @@
+#!/usr/bin/env node
 const assert = require("assert");
 
 const log = console.log;
 
-const settings = require('../lib/settings')
-const tokenCashe = require("../lib/azureToken");
+const cfg = require('../lib/settings')
+const azureToken = require("../lib/azureToken");
 
 
 describe('Test commands of azureToken.. ', () => {
@@ -13,9 +14,9 @@ describe('Test commands of azureToken.. ', () => {
 
 
     it('should get azure creds for current profile...', () => {
-      const profile = settings.load();
+      const config = await cfg.load();
 
-      tokenCashe.getCredentials(profile)
+      azureToken.getCredentials(config)
       .then(credentials => {
         assert(credentials);
       })
