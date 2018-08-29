@@ -22,6 +22,7 @@ async function main() {
   // action (built-in) commands 
   program.command('config <cmd> [key] [value]')
     .description( "Configure local settings: config [show|set <key value>|del <k>]")
+    .option( '-p --profile <name>', 'Settings profile name')
     .action( (cmd, k, v, options) => cfg.action(program, config, cmd, k, v) )
   
   program.parse(process.argv);

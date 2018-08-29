@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 "use strick"
 const package = require('../package')
-const subject = __filename.split('-').pop().split('.')[0]
-const {show, terminate, stop, start, launch} = require('../lib/vm')
 const { incVerbose } = require('../lib/common')
 const cfg = require('../lib/settings')
-
+const cidata = require('../lib/cidata')
+const subject = 'vm'
+const cloud = { azure: require('../lib/azure'), aws: require('../lib/aws') }
 async function main() {
   // cfg.load looks for a -p or --profile option, now, before commander kicks in.
-  const config = await cfg.load()
+  const config = await cfg.load(cloud)
 
   var program = require('commander') 
    .version(package.version)
@@ -27,22 +27,22 @@ async function main() {
    program.command('show')
    .description('Show VM instances')
    .action( () => {
-     show({subject: 'vm', program, config})
+     cloud[config.provider].show({subject: 'vm', program, config})
    })
    program.command('stop')
    .description('Stop VM instance')
    .action( () => {
-     stop({subject: 'vm', program, config})
+     cloud[config.provider].stop({subject: 'vm', program, config})
    })
    program.command('start')
    .description('Start VM instance')
    .action( () => {
-     start({subject: 'vm', program, config})
+     cloud[config.provider].start({subject: 'vm', program, config})
    })
    program.command('terminate')
    .description('Teriminate VM instance')
    .action( () => {
-     terminate({subject: 'vm', program, config})
+     cloud[config.provider].terminate({subject: 'vm', program, config})
    })
   
    // exec (external) commands
