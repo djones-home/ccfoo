@@ -13,13 +13,6 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "vm-list",
-            "program": "${workspaceFolder}/bin/ccfoo-vm-launch.js"
-            
-        },
-        {
-            "type": "node",
-            "request": "launch",
             "name": "Mocha Tests",
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
             "args": [
@@ -28,7 +21,7 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceFolder}/tests/test"
+                "${workspaceFolder}/test"
             ],
             "internalConsoleOptions": "openOnSessionStart"
         },
@@ -36,7 +29,7 @@
             "type": "node",
             "request": "launch",
             "name": "doit",
-            "program": "${workspaceFolder}/tests/doit.js"
+            "program": "${workspaceFolder}/test/doit.js"
             
         },
         {
