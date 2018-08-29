@@ -14,15 +14,17 @@ describe('Test commands of azureToken.. ', () => {
 
 
     it('should get azure creds for current profile...', () => {
-      const config = await cfg.load();
+      cfg.load().then(config => {
+        azureToken.getCredentials(config)
+        .then(credentials => {
+          assert(credentials);
+        })
+        .catch(err => {
+          log(err)
+        })
 
-      azureToken.getCredentials(config)
-      .then(credentials => {
-        assert(credentials);
       })
-      .catch(err => {
-        log(err)
-      })
+
     });
 
   });
