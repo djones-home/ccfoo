@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 "use strick"
 const package = require('../package')
-const { incVerbose } = require('../lib/common')
 const cfg = require('../lib/settings')
 const cidata = require('../lib/cidata')
 const subject = 'vm'
@@ -55,3 +54,7 @@ async function main() {
   program.parse(process.argv);
 }
 main().catch(e => { console.error(e); process.exit(1) })
+
+function incVerbose(v, total) {
+  return total + 1;
+}
