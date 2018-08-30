@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "foo" : { "defaultValue": "bar", "type": "string"}
+    },
+    "variables": {},
+    "resources": [
+        { "comments": "",
+        "type": "Microsoft.Compute/disks",
+         "sku": {
+             "name":"Premium_LRS",
+             "tier": "Premium"
+         },
+         "name": "el7_1_Os",
+         "apiVersion": "2017-03-30",
+         "location": "usgovarizona",
+         "tags": {
+         "lifecycle": "terminate"
+         },
+         "properties":{
+             "osType":"Linux",
+             "creationData": {
+                "createOption":"FromImage",
+                "imageReference":{
+                    "id": ""
+                }
+              },
+              "diskSizeGB":64
+
+             },
+             "dependsOn": [
+                 
+             ]
+         }
+    ],
+    "outputs": {}
+}

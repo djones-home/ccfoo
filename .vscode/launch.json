@@ -1,54 +1,4 @@
 {
-<<<<<<< HEAD
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "show",
-            "program": "${workspaceFolder}/bin/ccfoo-vm.js", "args": ["show"]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "vm-list",
-            "program": "${workspaceFolder}/bin/ccfoo-vm-launch.js"
-            
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Mocha Tests",
-            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-            "args": [
-                "-u",
-                "tdd",
-                "--timeout",
-                "999999",
-                "--colors",
-                "${workspaceFolder}/tests/test"
-            ],
-            "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "doit",
-            "program": "${workspaceFolder}/tests/doit.js"
-            
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}/bin/ccfoo.js", "args": ["-h"]
-        }
-    ]
-}
-=======
   // Use IntelliSense to learn about possible attributes.
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
@@ -91,4 +41,3 @@
     }
   ]
 }
->>>>>>> 810734d5643250bb85f3dea169192960f054bb38
