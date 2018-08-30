@@ -7,8 +7,8 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "net show",
-      "program": "${workspaceFolder}/bin/ccfoo-network.js",
+      "name": "show",
+      "program": "${workspaceFolder}/bin/ccfoo-vm.js",
       "args": ["show"]
     },
     {
