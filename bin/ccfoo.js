@@ -4,7 +4,9 @@ const fs = require('fs');
 const path = require("path");
 const cfg = require('../lib/settings')
 const package = require('../package')
-
+const token = { aws: require('../lib/awsToken'), azure: require('../lib/azureToken')}
+const cloud = { aws: require('../lib/aws'), azure: require('../lib/azure')}
+global.__basedir = __dirname;
 var program = require('commander') 
 .version(package.version)
 
@@ -25,6 +27,16 @@ async function main() {
     .option( '-p --profile <name>', 'Settings profile name')
     .action( (cmd, k, v, options) => cfg.action(program, config, cmd, k, v) )
   
+  program.command('token <cmd> [lifetime]')
+    .description( "Session token [show|get [lifetime]|del]")
+    .option( '-p --profile <name>', 'Settings profile name')
+    .action((cmd, lifetime, options) => {
+      // load the profile again, this time with cloud providers.
+       cfg.load(cloud).then(profile=> {
+        token[config.provider].action({program, config: profile, cmd, lifetime})
+       })
+    })
+
   program.parse(process.argv);
 }
 main( ).catch((err) => {

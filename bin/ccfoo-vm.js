@@ -4,6 +4,7 @@ const package = require('../package')
 const cfg = require('../lib/settings')
 const cidata = require('../lib/cidata')
 const subject = 'vm'
+global.__basedir = __dirname;
 const cloud = { azure: require('../lib/azure'), aws: require('../lib/aws') }
 async function main() {
   // cfg.load looks for a -p or --profile option, now, before commander kicks in.
@@ -21,27 +22,27 @@ async function main() {
    program.command('launch')
    .description('Launch VM instance')
    .action( () => {
-     launch({subject: 'vm', program, config})
+     cloud[config.provider].launch({subject, program, config})
    })
    program.command('show')
    .description('Show VM instances')
    .action( () => {
-     cloud[config.provider].show({subject: 'vm', program, config})
+     cloud[config.provider].show({subject, program, config})
    })
    program.command('stop')
    .description('Stop VM instance')
    .action( () => {
-     cloud[config.provider].stop({subject: 'vm', program, config})
+     cloud[config.provider].stop({subject, program, config})
    })
    program.command('start')
    .description('Start VM instance')
    .action( () => {
-     cloud[config.provider].start({subject: 'vm', program, config})
+     cloud[config.provider].start({subject, program, config})
    })
    program.command('terminate')
    .description('Teriminate VM instance')
    .action( () => {
-     cloud[config.provider].terminate({subject: 'vm', program, config})
+     cloud[config.provider].terminate({subject, program, config})
    })
   
    // exec (external) commands

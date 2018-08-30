@@ -147,5 +147,20 @@
       "GDIT": [ "155.95.90.242/32", "155.95.90.0/24", "155.95.80.0/24" ],
       "anywhere": [ "0.0.0.0/0", "::/0" ]
     }
+  },
+  "Map": {
+    "aws": { 
+         "ImageId/el7" : "img-123" 
+    } ,
+    "aws/usgovwest1": {
+         "ImageId/el7" : "img-567" 
+    },
+    "azure": {
+       "map": {
+            "ImageId": { }
+        }
+    } ,
+    "azure/usgovarizona": {
+         "ImageId/el7" : "img-abc"}
   }
 } 
