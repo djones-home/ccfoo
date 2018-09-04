@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "usgovarizona"
+        },
+        "virtualMachineName": {
+            "value": "rolename"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_D2s_v3"
+        },
+        "adminUsername": {
+            "value": "maintuser"
+        },
+        "virtualNetworkName": {
+            "value": "CoreCI-Web"
+        },
+        "networkInterfaceName": {
+            "value": "rolename858"
+        },
+        "networkSecurityGroupName": {
+            "value": "rolename-nsg"
+        },
+        "adminPublicKey": {
+            "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCTI5lSKi9mjjitkutRS9JRTJEUy80N6UXV6jicNQGGLJCbhVgaaSdFLQPJn1IPHH2jwPe0zzflBoNQ5m+4L6vJBZbdrfYTqATvU3WDrzN0qW3Omr5jMFD1YipuPhlBASgslQ9DIraH+dCx0k/KLksQ3cxvhzO5QHXKTQnqCKpLVkSxoVQGPda1jsKgoVRnHm65G9yuZfpMk5x0+l7ArNQMW7FSR9euWW+Wf+ZW7VwQ2ZttrbzaC5qhfbVhUzBE6fNvnAPFBFMCra/tQk/8SrxXDBD1gkt2GuN+1BmA7sR5q5FeS4bAnfcGeil2NyKGBF9kTuz6ky9wA2YveBNcxejJ"
+        },
+        "diagnosticsStorageAccountName": {
+            "value": "vmrgdiag420"
+        },
+        "diagnosticsStorageAccountType": {
+            "value": "Standard_LRS"
+        },
+        "diagnosticsStorageAccountId": {
+            "value": "Microsoft.Storage/storageAccounts/vmrgdiag420"
+        },
+        "subnetName": {
+            "value": "Web"
+        },
+        "publicIpAddressName": {
+            "value": "rolename-ip"
+        },
+        "publicIpAddressType": {
+            "value": "Dynamic"
+        },
+        "publicIpAddressSku": {
+            "value": "Basic"
+        }
+    }
+}

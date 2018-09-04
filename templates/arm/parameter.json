@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+      "location": {
+          "value": null
+      },
+      "availabilitySets": {
+          "value": null
+      },
+      "virtualNetwork": {
+          "value": null
+      },
+      "networkSecurityGroup": {
+          "value": null
+      },
+      "applicationSecurityGroups": {
+          "value": null
+      },
+      "subnet": {
+          "value": null
+      },
+      "securityRules_Bastion_HTTP_name": {
+          "value": null
+      }
+  }
+}
