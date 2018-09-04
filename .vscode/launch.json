@@ -7,6 +7,12 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "vm launch",
+      "program": "${workspaceFolder}/bin/ccfoo-vm.js", "args": ["launch", "-n", "bastion"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "show",
       "program": "${workspaceFolder}/bin/ccfoo-vm.js",
       "args": ["show"]
@@ -35,7 +41,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "ccfoo --help",
       "program": "${workspaceFolder}/bin/ccfoo.js",
       "args": ["-h"]
     }

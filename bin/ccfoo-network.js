@@ -3,11 +3,9 @@
 const package = require('../package')
 //const subject = __filename.split('-').pop().split('.')[0]
 const subject = 'network'
-const { incVerbose } = require('../lib/common')
 const cfg = require('../lib/settings')
 const cidata = require('../lib/cidata')
-const subject = 'vm'
-const cloud = { azure: require('/lib/azure/network'), aws: require('../lib/aws/network') }
+const cloud = { azure: require('../lib/azure/network'), aws: require('../lib/aws/network') }
 
 async function main() {
   const config = await cfg.load(cloud)
@@ -38,5 +36,7 @@ async function main() {
   
   program.parse(process.argv);
 }
-
+function incVerbose(v, total) {
+  return total + 1;
+}
 main().catch(e => { console.error(e); process.exit(1) })
