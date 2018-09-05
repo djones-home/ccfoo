@@ -5,6 +5,7 @@ const log = console.log;
 
 const cfg = require('../lib/settings')
 const azure = require("../lib/azure");
+const cidata = require('../lib/cidata')
 const cloud = { azure: azure }
 
 
@@ -14,7 +15,7 @@ describe('Test commands of azure login.. ', () => {
   describe('the azure login token cashe', () => {
 
 
-    it('should get azure creds for current profile...', () => {
+    xit('should get azure creds for current profile...', () => {
       cfg.load(cloud).then(config => {
         azure.getCreds({ config })
           .then(credentials => {
@@ -25,34 +26,33 @@ describe('Test commands of azure login.. ', () => {
           })
 
       })
+    });
+
+    it('should get create a resource group...', () => {
+      let client;
+
+
+      cfg.load(cloud).then(config => {
+        assert(config);
+        azure.getCreds({ config })
+          .then(credentials => {
+            assert(credentials);
+            return azure.establishResourceGroup(credentials, config, "vm")
+          }).then(result => {
+            assert(result.group);
+          })
+          .catch(err => {
+            log(err)
+          })
+
+      })
 
     });
 
-    // it('should get create a resource group...', () => {
-    //   let client;
-
-
-    //   cfg.load(cloud).then(config => {
-    //     assert(config);
-    //     azure.getCreds({ config })
-    //       .then(credentials => {
-    //         assert(credentials);
-    //         return azure.establishResourceGroup(credentials, config, "vm")
-    //       }).then(result => {
-    //         assert(result.group);
-    //       })
-    //       .catch(err => {
-    //         log(err)
-    //       })
-
-    //   })
-
-    // });
 
 
 
-
-    it('should deploy a template VM to  resource group...', () => {
+    xit('should deploy a template VM to  resource group...', () => {
 
       cfg.load(cloud).then(config => {
         assert(config);
@@ -77,7 +77,24 @@ describe('Test commands of azure login.. ', () => {
 
     });
 
-  });
+    it('should extract parameters...', () => {
 
+      cfg.load(cloud)
+        .then(config => {
+          assert(config);
+          let target = {};
+          let roleData = cidata.getVm({ data: config.cidata, name: 'bastion' })
+
+          let result = azure.mapToAzureVMParameters(target, roleData);
+          assert(result.subnetName)
+          console.log(result.virtualMachineName)
+        })
+        .catch(err => {
+          log(err)
+        })
+
+    })
+
+  });
 
 });

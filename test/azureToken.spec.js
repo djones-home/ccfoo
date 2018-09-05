@@ -13,7 +13,7 @@ describe('Test commands of azureToken.. ', () => {
   describe('the azure token cashe', () =>  {
 
 
-    it('should get azure creds for current profile...', () => {
+    xit('should get azure creds for current profile...', () => {
       cfg.load().then(config => {
         azureToken.getCredentials(config)
         .then(credentials => {
