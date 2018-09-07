@@ -20,13 +20,16 @@
         "networkInterfaceName": {
             "type": "string"
         },
-        "networkSecurityGroupName": {
+        "networkSecurityGroupId": {
             "type": "string"
         },
         "adminPublicKey": {
             "type": "string"
         },
         "diagnosticsStorageAccountName": {
+            "type": "string"
+        },
+        "diagnosticsStorageAccountId": {
             "type": "string"
         },
         "diagnosticsStorageAccountType": {
@@ -43,6 +46,20 @@
         },
         "publicIpAddressSku": {
             "type": "string"
+        },
+        "imageReferencePublisher": {
+            "type": "string",
+            "default": "RedHat"
+        },
+        "imageReferenceOffer": {
+            "type": "string",
+            "default": "RHEL"
+        },"imageReferenceSku": {
+            "type": "string",
+            "default": "7.2"
+        },"imageReferenceVersion": {
+            "type": "string",
+            "default": "latest"
         }
     },
     "variables": {
@@ -80,10 +97,10 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "publisher": "RedHat",
-                        "offer": "RHEL",
-                        "sku": "7.2",
-                        "version": "latest"
+                        "publisher": "[parameters('imageReferencePublisher')]",
+                        "offer": "[parameters('imageReferenceOffer')]",
+                        "sku": "[parameters('imageReferenceSku')]",
+                        "version": "[parameters('imageReferenceVersion')]"
                     },
                     "osDisk": {
                         "createOption": "fromImage",
@@ -142,7 +159,7 @@
                     }
                 ],
                 "networkSecurityGroup": {
-                    "id": "[resourceId('vmRG', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                    "id": "[parameters('networkSecurityGroupId')]"
                 }
             }
         },

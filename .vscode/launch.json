@@ -13,9 +13,9 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "show",
-      "program": "${workspaceFolder}/bin/ccfoo-vm.js",
-      "args": ["show"]
+      "name": "completion",
+      "program": "${workspaceFolder}/bin/ccfoo.js",
+      "args": ["completion",  "--", "ccfoo", "config", "se"]
     },
     {
       "type": "node",
@@ -36,7 +36,7 @@
       "type": "node",
       "request": "launch",
       "name": "doit",
-      "program": "${workspaceFolder}/test/doit.js"
+      "program": "${workspaceFolder}/lib/tans.js"
     },
     {
       "type": "node",
