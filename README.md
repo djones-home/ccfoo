@@ -1,5 +1,5 @@
 # [ccfoo]
-Does this work? No, Im just testing here.  __[Foo]__ is in the name for a good reason.  This repo is just a nonsense placeholder, for me while I am  experimenting with a new cloud provider, commander CLI, NodeJS,  NPM, oh and vsCode too.
+Does this work? No, Im just testing here.  __[Foo]__ is in the name for a good reason.  This repo is just a nonsense placeholder, for me while I am  experimenting with a new cloud provider, commander CLI, NodeJS,  NPM, oh and vsCode, git workflow  too.
 
 The platform I'm runing on is Linux: 
 * Xubuntu 14.4 LTS
