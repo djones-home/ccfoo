@@ -83,7 +83,7 @@ describe('Test commands of azure login.. ', () => {
         .then(config => {
           assert(config);
           let target = {};
-          let roleData = cidata.getVm({ data: config.cidata, name: 'bastion' })
+          let roleData = cidata.getVm({ data: config.cidata, name: 'bastion', config })
 
           let result = azure.mapToAzureVMParameters(target, roleData);
           assert(result.subnetName)
